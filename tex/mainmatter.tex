@@ -1,0 +1,75 @@
+\chapter{Contraction Hierarchy}
+
+\section{Vertex Contraction}
+While contraction a vertex \emph{v} for each in-neighbor \emph{u} and each out-neighbor \emph{w} a shortcut \emph{(u, w)} needs to be inserted whenever \emph{(u, v, w)} is the only shortest path from \emph{u} to \emph{w}.
+The correctness of the algorithm holds if more shortcuts than necessary are inserted.
+
+Ideas how to generate shortcuts
+\begin{itemize}
+      \item
+            witness  search
+
+      \item
+            upper bound distance oracle for \emph{(u, w)}
+
+      \item
+            all pairs shortcuts
+
+      \item
+            all pairs shortcuts with upper bound distance oracle for \emph{(u, v)} and \emph{(v, w)}.
+            Only insert a shortcut if these edges are not ruled out by the distance oracle.
+
+\end{itemize}
+
+\section{Vertex Ordering}
+The ordering of the contraction can be adaptive (TODO what does that mean) or non-adaptive.
+
+\subsection{Adaptive vertex ordering}
+Vertex ordering can be categorized in two ways: Ordering using simulated contraction and ordering not using simulated contraction.
+
+Depending on the graph size and running time of the \emph{priority function} used (which is normally the case for simulated contraction), it might not be feasible to execute the function for all uncontracted vertices and choose the minimum.
+In such cases it necessary to define ways that can combat this.
+
+Assumption: For all vertices, the priority function is strictly increasing in the graph contraction process.
+
+Ideas how to order adaptively:
+\begin{itemize}
+      \item
+            Lazy popping
+
+
+      \item
+            Neighbor updates
+\end{itemize}
+
+\chapter{Graph contraction}
+The vertices are contracted one by one (or multiple at the same time if they are \emph{independent}). The contraction order has influence to both the quality of the result (average query time, number of shortcuts added, size of hub labels) and the time needed for the contraction of the whole graph.
+
+The order can be decided one in the beginning (\emph{fixed vertex ordering}) or after each contraction reevaluated (\emph{adaptive vertex ordering}).
+
+simulated contraction using wittness search or heuristic
+
+contraction can be done in the following ways:
+
+ch:
+fixed vertex ordering
+
+adaptive node ordering
+- with simulated contraction
+- without simulated contraction
+
+
+hl:
+from ch
+
+top down (is equivalent to ch with fixed node ordering)
+
+
+
+\chapter{Technical Introduction}
+
+\chapter{Method}
+
+\chapter{Results}
+
+\chapter{Conclusions}
