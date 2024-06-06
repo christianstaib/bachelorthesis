@@ -5,18 +5,27 @@ from tqdm import tqdm
 
 @click.command()
 @click.option(
+    "-i",
     "--input_file",
     required=True,
     type=click.Path(exists=True, dir_okay=False),
     help="Input file path.",
 )
 @click.option(
+    "-o",
     "--output_file",
     required=True,
     type=click.Path(dir_okay=False, writable=True),
     help="Output file path.",
 )
-def process_file(input_file, output_file):
+@click.option(
+    "-d",
+    "--divider",
+    type=click.IntRange(min=1),
+    default=1,
+    help="Value that divides all edge weights.",
+)
+def process_file(input_file, output_file, divider):
     """
     Processes the input file and writes to the output file.
     """
@@ -36,15 +45,12 @@ def process_file(input_file, output_file):
             outfile.write(infile.readline())
 
         for _ in tqdm(range(int(num_edges)), desc="Processing edges"):
-            line = infile.readline()
-            new_line = []
+            numbers = infile.readline().split()
 
-            for number in line.split():
-                if "." in number:
-                    number = str(math.ceil(float(number)))
-                new_line.append(number)
+            # process edge weights
+            numbers[2] = str(math.ceil(float(numbers[2]) / divider))
 
-            outfile.write(" ".join(new_line) + "\n")
+            outfile.write(" ".join(numbers) + "\n")
 
 
 if __name__ == "__main__":
