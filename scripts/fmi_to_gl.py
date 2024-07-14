@@ -1,4 +1,3 @@
-import math
 import click
 from tqdm import tqdm
 
@@ -19,13 +18,13 @@ from tqdm import tqdm
     help="Output file path.",
 )
 @click.option(
-    "-c",
-    "--divider_coordinates",
+    "-d",
+    "--divider",
     type=click.IntRange(min=1),
     default=1,
     help="Value that divides all edge weights.",
 )
-def process_file(input_file, output_file, divider_coordinates):
+def process_file(input_file, output_file, divider):
     """
     Processes the input file and writes to the output file.
     """
@@ -33,7 +32,6 @@ def process_file(input_file, output_file, divider_coordinates):
         with open(input_file, "r") as infile, open(output_file, "w") as outfile:
             while True:
                 line = infile.readline().strip()
-                outfile.write(line + "\n")
                 if not line.startswith("#"):
                     break
 
@@ -42,26 +40,24 @@ def process_file(input_file, output_file, divider_coordinates):
             outfile.write(num_vertices + "\n")
             outfile.write(num_edges + "\n")
 
-            for _ in tqdm(
+            for _vertex_id in tqdm(
                 range(int(num_vertices)), desc="Processing vertices", leave=False
             ):
                 vertex_data = infile.readline().split()
+                longitude = float(vertex_data[3]) / divider
+                latitude = float(vertex_data[2]) / divider
+                outfile.write(f"{longitude} {latitude}\n")
 
-                id1 = int(vertex_data[0])
-                id2 = int(vertex_data[1])
-                latitude = float(vertex_data[2]) / divider_coordinates
-                longitude = float(vertex_data[3]) / divider_coordinates
-
-                outfile.write(f"{id1} {id2} {latitude} {longitude}\n")
-
-            for _ in tqdm(range(int(num_edges)), desc="Processing edges", leave=False):
+            for _edge_id in tqdm(
+                range(int(num_edges)), desc="Processing edges", leave=False
+            ):
                 edge_data = infile.readline().split()
+                tail = edge_data[0]
+                head = edge_data[1]
+                width = 1
+                color = 2
 
-                tail = int(edge_data[0])
-                head = int(edge_data[1])
-                width = int(math.ceil(float(edge_data[2])))
-
-                outfile.write(f"{tail} {head} {width}\n")
+                outfile.write(f"{tail} {head} {width} {color}\n")
 
     except:
         print(f"error in {input_file}")
