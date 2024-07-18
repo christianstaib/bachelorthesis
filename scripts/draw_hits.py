@@ -32,7 +32,7 @@ picture_path = "test2.png"
     help="Input file path.",
 )
 def draw_hits(graph_file, paths_file, diagram_path):
-    graph = FmiGraph.from_fmi_file(graph_file)
+    graph = FmiGraph.vertices_from_fmi_file(graph_file)
 
     with open(paths_file) as f:
         d = json.load(f)

@@ -8,7 +8,7 @@ class FmiGraph:
     vertices: np.ndarray
     edges: np.ndarray
 
-    def from_fmi_file(filename):
+    def vertices_and_edges_from_fmi_file(filename):
         with open(filename, "r") as infile:
             while True:
                 line = infile.readline().strip()
@@ -41,6 +41,31 @@ class FmiGraph:
                 graph.edges[edge_id][0] = tail
                 graph.edges[edge_id][1] = head
                 graph.edges[edge_id][2] = weight
+
+            return graph
+
+    def vertices_from_fmi_file(filename):
+        with open(filename, "r") as infile:
+            while True:
+                line = infile.readline().strip()
+                if not line.startswith("#"):
+                    break
+
+            num_vertices = infile.readline().strip()
+            num_edges = infile.readline().strip()
+
+            vertices = np.empty([int(num_vertices), 2], dtype=np.float64)
+            edges = np.empty([int(num_edges), 3], dtype=np.uint32)
+            graph = FmiGraph(vertices, edges)
+
+            for vertex_id in tqdm(
+                range(int(num_vertices)), desc="Processing vertices", leave=False
+            ):
+                vertex_data = infile.readline().split()
+                longitude = float(vertex_data[2])
+                latitude = float(vertex_data[3])
+                graph.vertices[vertex_id][0] = longitude
+                graph.vertices[vertex_id][1] = latitude
 
             return graph
 
