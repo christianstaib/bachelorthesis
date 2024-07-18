@@ -3,6 +3,7 @@ import json
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import click
+import numpy as np
 
 graph_file = "../aegaeis-ref-visibility.fmi"
 paths_file = "../random_paths.json"
@@ -34,6 +35,8 @@ picture_path = "test2.png"
 def draw_hits(graph_file, paths_file, diagram_path):
     graph = FmiGraph.vertices_from_fmi_file(graph_file)
 
+    graph.vertices /= 100_000
+
     with open(paths_file) as f:
         d = json.load(f)
     paths = [x["vertices"] for x in d]
@@ -47,25 +50,39 @@ def draw_hits(graph_file, paths_file, diagram_path):
     for i in range(len(hits)):
         hits[i] /= max_hits
 
-    min_lon = min(graph.vertices[:, 0]) / 100000
-    max_lon = max(graph.vertices[:, 0]) / 100000
-    min_lat = min(graph.vertices[:, 1]) / 100000
-    max_lat = max(graph.vertices[:, 1]) / 100000
+    min_lon = min(graph.vertices[:, 0])
+    max_lon = max(graph.vertices[:, 0])
+    min_lat = min(graph.vertices[:, 1])
+    max_lat = max(graph.vertices[:, 1])
 
     diff_lon = max_lon - min_lon
     diff_lat = max_lat - min_lat
 
     fig, ax = plt.subplots()
-    fig.set_dpi(200)
 
     fig.set_size_inches(diff_lon, diff_lat)
 
-    plt.scatter(x=graph.vertices[:, 0], y=graph.vertices[:, 1], s=0.1, c="black")
     plt.scatter(
-        x=graph.vertices[:, 0], y=graph.vertices[:, 1], s=0.75, alpha=hits, c="red"
+        x=graph.vertices[:, 0],
+        y=graph.vertices[:, 1],
+        s=0.1,
+        marker="o",
+        c="black",
+        lw=0,
+    )
+    plt.scatter(
+        x=graph.vertices[:, 0],
+        y=graph.vertices[:, 1],
+        s=1,
+        alpha=hits,
+        c="red",
+        lw=0,
     )
 
-    plt.savefig(diagram_path)
+    plt.xlabel("Longitude in DD")
+    plt.ylabel("Latitude in DD")
+
+    plt.savefig(diagram_path, dpi=600)
 
 
 if __name__ == "__main__":
