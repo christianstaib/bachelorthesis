@@ -64,7 +64,7 @@ def process_file(input_file, output_file, draw_vertices, draw_edges):
     """
     Processes the input file and writes to the output file.
     """
-    graph = FmiGraph.from_fmi_file(input_file)
+    graph = FmiGraph.vertices_from_fmi_file(input_file)
     graph.to_fmi_file("test.fmi")
 
     dots_per_degree = 300
