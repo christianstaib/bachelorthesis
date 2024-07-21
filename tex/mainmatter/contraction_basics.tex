@@ -1,0 +1,14 @@
+\section{Contraction Hierarchies}
+\todo{background, history}
+
+\subsection{CH idea}
+This thesis explores different ways to archive the same goal: Preprocess a graph in way, that CH queries can be run. For this reason an independent defintion the CH query is required.
+
+Consider a finite directed graph $G = (V, E)$ and a \emph{level} function $l \colon V \to \mathbb{N}$, which assignes each vertex a level, intuitively representing some information about the hierachical position of the vertex.
+Let $p \colon V \times V \mapsto \mathbb{N}$ be the function that calculates \emph{the} shortest path weight and $P \colon V \times V \mapsto V^{n}$ ($n$ is not fixed, as the number of vertices visited by a shortest path is not fixed) the function that calculates the vertices visited by \emph{a} the shortest path.
+
+With this information, the \emph{CH graph} can be defined, consisting of the \emph{upward graph} $G_{\uparrow} \coloneqq (V, E_{\uparrow})$, the \emph{downward graph} $G_{\downarrow} \coloneqq (V, E_{\downarrow})$.
+$E_{\uparrow}$ is definied as follows: For each $s, t \in V$ the edge $(s, t, p(s, t))$ is in $E_{\uparrow}$ if $l(s) \leq l(t)$ and $\forall v \in P(s, t)$ (where $v \neq s$ and $v \neq t$) $l(v) < l(s)$.
+Similar the $E_{\downarrow}$ is defined but all greater and greater or equal signs are flipped.
+
+A forward search on the upward graph from vertex $s$ therefore only visits vertices with a higher level than $s$, hence the name upward graph.
