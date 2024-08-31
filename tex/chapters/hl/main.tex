@@ -1,5 +1,33 @@
 \chapter{Hub Labels}
 
-\input{tex/chapters/hl/hl_from_ch.tex}
+Grundidee von HL ist es, den CH Suchbaum für jeden Vertex zu berechnen und zu speichern.
+Jeder Vertex hat demensprechend ein forward und backward label.
+Wieder, wenn bidirectional, dann forward label == backward label.:wege
 
-\input{tex/chapters/hl/search_per_vertex.tex}
+Die HL Query ist es dann den overlapp zweier Labels zu finden.
+Damit das leicht möglich ist, werden die Einträge (Vertex, Distanz, Vorgänger Index) im Label nach Vertex sortiert gespeichert.
+Die Abfrage ist dann ein merge sort likes vergleichen beider Label. Ein Weg existiert, wenn es ein Vertex gibt, welches in beiden Labeln vorhanden ist.
+der kürzste pfad ist dementsprechend dann der Vertex mit geringster forward = backward distanz.
+Der Vorgänger ist jeweils nicht der Vertex im Label der unter Vorgänger Index zu finden ist. Der Vertex, dem das Label label gehört hat keinen Vorgänger.
+
+Shortcut replacement analog zu CH.
+
+\section{Erstellung}
+
+\subsection{Merging}
+Gibt es bereits eine CH, dann kann diese leicht in eine HL umgewandelt werden.
+Für jeden Vertex wird ein Label erstellt, dass den Vertex enthält.
+Vom Vertex mit dem höchstem Level zum niedrigsten Level werden die Labels der Nachbarn gemerged, wobei für duplikate unter den Vertices die niedrigste Distanz gewähl wird.
+
+Da CH Suchbaum nicht optimal ist, ist das Label viel größer, als es sein müsste. Daher sollte das Label noch geprunt werden.
+Beim Pruning werden die Vertices aus dem Label entfernt, die keine optimale Distanz haben.
+Da ein Label nur Vertices mit mindestem dem gleichem Level wie sich selbst enhält sind die für diese Vertices die Label bereits erstellt.
+Diese können zum prunnen verwendet werden.
+Das nennt man Boostraping.
+
+\subsection{Brute force}
+Dijksta Suche.
+max level path ist eine HashMap die den bisher größten Level auf dem Pfad zur Wurzel beschreibt.
+Ein Label enthält genau die Knoten für die gilt level(vertesx) == max level path.
+
+Shortcut wieder schwierig.

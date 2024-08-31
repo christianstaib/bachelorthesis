@@ -1,7 +1,46 @@
 \chapter{Graphs}
 
-\input{tex/chapters/graphs/definitions.tex}
+Verschieden Graph Strukturen
 
-\input{tex/chapters/graphs/data_structures.tex}
+Grundlegende Idee:
+Ein Interface Graph welches nur ausgehende Kanten kennt.
+get edge distance, set edge distance
 
-\input{tex/chapters/graphs/visibility_graphs}
+Dieses habe ich für verschiedene Graphen implementiert.
+Wichtigste:
+VecVec: Ein Vec. Jeder Vertex hat hat einen Eintrag vom Typ Vec in dem die kanten sortiert nach Head sind.
+VecHashMap: Ein Vec. Jeder Vertex hat einen Eintrag vom Typ HashMap (Head, Distance).
+Vec: Zwei Vec. Einer für (Head, Distance), zweiter für startindex, stopindex für Vec.
+TODO Indexmap?
+
+Häufig eine Abwägung wie schnell gequeriet werden kann vs wie schnell bearbeitet werden kann.
+
+
+für reverse dijkstra uä muss aber auch Vorgänger bekannt sein.
+Idee: Reversible Graph aus einem Vorwärtsgrapg und Rückwärtgraph
+Beide sind aber grundätzlich gleiche Struktur. Daher ist Vorwärts und Rückwärtssuche gleiche Funktion.
+
+
+Gleiches gilt für Contracted Graph. Zwei Graphen Upward Graph und Downward Graph. Downward Graph ist aber \"umgedreht\" zur Definition aus dem Paper, es wird also beides mal eine Vorwärtssuche gemacht.
+
+
+\section{Graph File Format}
+Beliebig viele Kommentar lines
+leere line
+num Vertices
+num Edges
+Vertices
+Edges
+
+Suche
+Für Dijkstra verscheidene Datenstrukturen getestet.
+Data (predecessor, distance)
+Queue (min heap)
+is\_expanded
+
+jeweils ein Interface.
+
+TODO. Testen verschiedener Kombinationen.
+TODO. Wann ist reuse of allocation sinvoll?
+TODO Decrease key
+

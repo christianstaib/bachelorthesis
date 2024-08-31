@@ -1,7 +1,115 @@
 \chapter{Contraction Hierarchy}
 
-\input{tex/chapters/ch/basics}
+Wir erstellen zwei neue Graphen aus einem input Graphen.
 
-\input{tex/chapters/ch/vertex_contraction}
+Upward Graph: (u, v) ist Kante wenn der V des höchsten Leven auf dem kürzstem Pfad von u nach v hat und u den zweithöchsten.
 
-\input{tex/chapters/ch/search_per_vertex.tex}
+Downward Graph: (u, v) ist in Kante wenn v den höchsten Level auf dem Kürzsten Pfad von v nach u hat und u den zweithöchsten.
+TODO ist das so richtig?
+
+Wenn Graph bidirectional ist, dann upward graph == downard graph
+
+((u, v), s) ist jeweils ein shortcut, wenn der kürzste Pfand länger als 2 Hops ist.
+
+Die Auswahl von S ist nicht genau definiert, jedoch muss es am Ende möglich sein die Shortcuts auszupacken.
+Bei single step contraction verstehe ich das, bei brute Force ist mir das aber noch nicht ganz klar. Reicht 1 HashMap dann oder brauche ich jeweils für eine für Up and Downward Graph.
+
+
+Diese Defintion ist ein bisschen anders als vielleicht anders gesehen. Häufig? wird auf dem Downward Graph eine Rückwärtssuche gemacht. Ich möchte aber keine extra Suche und so dafür implementieren, daher ist der Downward graph auch ein Out Graph.
+
+Datenstruktur ähnlich zu Reversible Graph. Da einmal fester Graph nicht mehr verändert wird nutze ich einen VecGraph wobei die Edges nach Level Tail geordnet sind.
+
+\section{Query}
+Auf jedem kürsten Pfad gibt es einen Vertex mit höchstem Level. Die Suchen auf dem upward und downard graph treffen sich in diesem.
+
+Bild Zicksack. Mit Shortcuts
+
+Early stop nicht trivial möglich TODO WARUM (Es gab auf Stackoverflow mal ein Gegenbeispiel aber ich finde es nicht mehr :( Der CH Graph ist garantiert ein Shortest Path Tree (Bei Bruteforce aber schon, daher kein Stall notwendig??? TODO))
+
+Warum schnell? Wir betrachten nur einen Teil der Vertices, die haben dafür aber garantiert? mehr Nachbarn. Trotzdem Tradeofff? Immer?
+
+\subsection{Heuristic}
+
+Ist es möglich, bzw lohnt es sich Heuristic zu verwenden? Lowerbound für Zielfindung oder Upperbound welche nicht verwendet werden müssen?
+
+
+\section{Single Step contraction}
+Zuerst normalen Vorgang erklären. Dann sind die Wörter, die später benutzt werden bereits definiert.
+
+Contraction Heuristiken
+
+Wir betrachten Vertex v. tail -> v -> head.
+Füge shortcut tail -> head ein, wenn tail -> v -> head der einzigste kürzste Weg ist.
+Dafür eine one to many without v Vorwärtssuche.
+shortcut wenn shortcut cost < dijkstra cost
+without kann deutlich teuerer machen (TODO Beweis).
+
+daher besser ohne without. Dann aber shortcut wenn cost <= dijkstra cost.
+Die Ungleichung wird also abgeschwächt.
+Zusätzlich kann man noch max\_hops anschauen, aber das ist für die Visibility Graphen nur bedingt sinvoll, da kürzste wege nur wenig hops. TODO Beweis
+
+Heuristic.
+Statt suche kann man auch heursitc benutzten.
+shortcut distance < dijksta cost ==> shortcut distance <= upper bound
+also shortcut distance <= upper bound => füge shortcut ein
+
+Used heuristics:
+TrivialeHeuristic (all in). Füge jeden shortcut ein.
+
+Landmarks. Gut für größere Entfernungen.
+Es reicht zu zeigen, dass shortcut distance > upperbound für ein Landmark ist. Dann bereits kein shortcut.
+Viele Landmakrs, weniger shortcuts, mehr checks (vielleicht gibt es Break-Even point?). Wenige Landmarks, mehr shortcuts, weniger checks?
+TODO Vielleicht noch check einbauen dass wenn shortcut distance == lower bound, dann shortcut zwingen notwendig ist.
+TODO Wenn shortcut distance == lowerbound(head) - lowerbound(tail) dann checken ob tail auf landmark path (head). Oder ist das unnötig nach oben?
+
+CH / HL als Heuristic.
+Dann ist lowerbound == upperbound und damit wie dijkstra ohne without. Kann sich unter umständen lohnen.
+
+
+single step contraction?? TODO name
+
+\subsection{Bottum-Up}
+
+Greddy lazy poping vs neighbor update.
+
+lazy poping für vis graphen nicht sinvoll?
+
+Neighbor update für vis graphen nicht sinvoll?
+Vielleicht nur updaten, nachdem n nachbarn contracted worden?
+
+Vielleicht nur n mal insgesammt updaten? alle 10\% neu berechnen?
+
+
+
+Heuristic egde difference (zufall)
+Vis graphen haben sehr hohen degree (TODO Beweis).
+Daher degree x degree viele checks, das gehtn schnell in die Millionen bis Milliarden.
+Idee: betrachte nur ein Subset (tails, heads) und schaue ob und wie genau dieses die Edge difference aproximiert.
+
+Das kann dann wieder für andere Methoden benutzt werden.
+
+
+
+\subsection{Top-Down}
+
+Level-to-vertex
+
+TODO Edge difference factor
+überlegung ist, nur wenige hops. Daher reicht es eigenbtlich direkte Nachbarn anschauen.
+
+Hitting set
+Berechne Hitting Set mit Dijkstra oder CH, HL aus vorheriger Runde.
+TODO Qualität des Hitting Set durch aproximitation der HL Size.
+
+Bottum up contraction auf graph, verwende dieses für Vis Graph.
+TODO
+
+Random
+
+
+\section{Brute force}
+
+Berechne die Kanten stupide nach Defintion. Hoffnung: Suche ist relativ lokal? TODO Beweis? Avg dijksta rang?
+
+Das mit den Shortcuts ist dann nicht so einfach. TODO Bild
+
