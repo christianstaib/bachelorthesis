@@ -1,0 +1,59 @@
+\chapter{Einleitung}
+
+Diese Arbeit beschäftigt sich mit der Anwendung von \emph{Construction Hierarchies} und \emph{Hierarchical Hub Labeling} auf zwei Typen von Nicht-Straßengraphen.
+Beide Graphentypen verbinden Punkte entlang der Küstenlinie der Erde, einmal als Sichtbarkeitsgraph und einmal in einer triangulierten Version dieses Sichtbarkeitsgraphen.
+
+\todo{Ausschnit vergleich vis vs graph.}
+
+Die Details dieser Trianguliereung sind außerhalb dieser Arbeit, es gilt jedoch, dass jeder Knoten, des visibility Graphens auch im triangulierten Graphen enthalten ist und das der kürzste Pfad Abstand zweier Knoten des visiblity Graphens im triangulierten Graphen mindestens gleich groß ist.
+In \autoref{table:input_graphs} ist eine Übersicht der bearbeiten Graphen zu sehen. Graphen mit der Endung \emph{-graph} sind dabei triangulierte Graphen, mit der Endung \emph{-visibility} Sichtbarkeitsgraph.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lrrr}
+        \toprule
+        Graph              & \# Knoten   & \# Kanten     & $\varnothing Grad$ \\ \midrule
+        aegaeis-graph      & 524\,881    & 2\,795\,322   & 5.32562999994      \\
+        aegaeis-visibility & 201\,040    & 310\,231\,834 & 1543.13486868      \\
+        medi-graph         & 795\,606    & 4\,223\,566   & 5.30861506826      \\
+        medi-visibility    & 310\,114    & 730\,772\,544 & 2356.46421638      \\
+        pata-graph         & 2\,240\,339 & 11\,632\,900  & 5.1924731034       \\
+        pata-visibility    & 1\,002\,171 & 315\,653\,758 &                    \\ \bottomrule
+    \end{tabular}
+    \caption{Bearbeite Graphen}
+    \label{table:input_graphs}
+\end{table}
+
+Das Suchen von kürzesten Pfaden mittels Dijkstras Algorithmus ist auf diesen Graphen sehr zeitaufändig.
+\autoref{table:dijkstra_one_to_one} zeigt durschnittliche Zeiten und Werte für random-pair dijkstra one-to-one Suchen.
+Durch den hohen durschnittlichen Grad muss müssen einerseits viel geprüft werden, ob der aktuelle Knoten ein besser Vorgänger ist, andereseits bläst sich die Queue auf.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lrrr}
+        \toprule
+        Graph              & $\varnothing$ t & $\varnothing$ dijkstra rank & $\varnothing$ heap pops \\ \midrule
+        aegaeis-graph      & 57.842784ms     & 264333.75                   & 330705.34               \\
+        aegaeis-visibility &                 & 100766.69                   & 530060.2                \\
+        medi-graph         &                 &                             &                         \\
+        medi-visibility    &                 &                             &                         \\
+        pata-graph         &                 &                             &                         \\
+        pata-visibility    &                 &                             &                         \\ \bottomrule
+    \end{tabular}
+    \caption{Dijkstra one-to-one}
+    \label{table:dijkstra_one_to_one}
+\end{table}
+
+Für die triangulierten Graphen ist es möglich den klassischen Contraction Hierarchie Algorithmus mit der Knoten-Differenz und Lazy-poping (\cite{geisberger2008contraction}) anzuwenden, wobei auch ein signifikanter Speedup erzielt werden kann. \todo{Tabelle Speedup}
+Darauf aufbauend kann auch ein Hub Labeling erstellt werden, wodurch nochmals ein signifikanter Speedup erzielt werden kann.
+Für die Sichtbarkeitsgraphen gilt dies jedoch nicht, auf den verwendeten Computern konnte für keinen von ihnen innerhalb von drei Tagen eine Erstellung abgeschlossen werden. \todo{Wie weit sind sie gekommen? Was ist der größtmögliche Graph, für den dies möglich ist?}
+Der Grund hierfür ist naheliegend: Der Algorithmus führt für jeden In-Nachbar eine one-to-many Suche zu allen Out-Nachbarn aus.
+Die Durschnitliche Suchtiefe ist dabei sehr hoch, da Knoten des Sichtbarkeitsgraphen mit einer hohen Wahrscheinlichkeit eine Kanten mit großem Gewicht haben, die zum Beispiel über einen Ozean auf die am weitest entfernte Küste zeigt.
+Das begrenzen der Suche auf wenige Hops ist dabei auch nicht hilfreich, da die Durschnitliche Hop-Länge von kürzesten Pfaden auf Sichtbarkeitsgraph gering ist eine so begrenzte Suche also viele kürzeste Pfade nicht finden würde.
+
+Daher müssen für die Sichtbarkeitsgraphen andere Methoden gefunden werden.
+Die naheliegendste Idee ist das direkte Berechnen der CH Edges und HL Labels.
+Dies ist zwar sehr rechenintensiv, es muss für jeden Knoten eine one-to-many bzw. one-to-all Suche durchgeführt werden, dies ist jedoch schneller möglich, also für jeden in-Nachbar eine one-to-many Suche zu berechnen.
+
+
+
