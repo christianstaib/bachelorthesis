@@ -10,15 +10,20 @@ In \autoref{table:input_graphs} ist eine Übersicht der bearbeiten Graphen zu se
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{lrrr}
+    \begin{tabular}{
+            l % Graph
+            S[table-format = 7.0] % Zeit
+            S[table-format = 9.0] % Zeit
+            S[table-format = 4.1] % Zeit
+        }
         \toprule
-        Graph              & \# Knoten   & \# Kanten     & $\varnothing Grad$ \\ \midrule
-        aegaeis-graph      & 524\,881    & 2\,795\,322   & 5.32562999994      \\
-        aegaeis-visibility & 201\,040    & 310\,231\,834 & 1543.13486868      \\
-        medi-graph         & 795\,606    & 4\,223\,566   & 5.30861506826      \\
-        medi-visibility    & 310\,114    & 730\,772\,544 & 2356.46421638      \\
-        pata-graph         & 2\,240\,339 & 11\,632\,900  & 5.1924731034       \\
-        pata-visibility    & 1\,002\,171 & 315\,653\,758 &                    \\ \bottomrule
+        {Graph}            & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad} \\ \midrule
+        aegaeis-graph      & 524881      & 2795322     & 5.32562999994        \\
+        aegaeis-visibility & 201040      & 310231834   & 1543.13486868        \\
+        medi-graph         & 795606      & 4223566     & 5.30861506826        \\
+        medi-visibility    & 310114      & 730772544   & 2356.46421638        \\
+        pata-graph         & 2240339     & 11632900    & 5.1924731034         \\
+        pata-visibility    & 1002171     & 315653758   & 314.969958221        \\ \bottomrule
     \end{tabular}
     \caption{Bearbeite Graphen}
     \label{table:input_graphs}
@@ -30,19 +35,25 @@ Durch den hohen durschnittlichen Grad muss müssen einerseits viel geprüft werd
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{lrrr}
+    \begin{tabular}{
+            l % Graph
+            S[table-format = 4.1] % Zeit
+            S[table-format = 7.1] % Rank
+            S[table-format = 7.1] % Pops
+        }
         \toprule
-        Graph              & $\varnothing$ t & $\varnothing$ dijkstra rank & $\varnothing$ heap pops \\ \midrule
-        aegaeis-graph      & 57.842784ms     & 264333.75                   & 330705.34               \\
-        aegaeis-visibility &                 & 100766.69                   & 530060.2                \\
-        medi-graph         &                 &                             &                         \\
-        medi-visibility    &                 &                             &                         \\
-        pata-graph         &                 &                             &                         \\
-        pata-visibility    &                 &                             &                         \\ \bottomrule
+        {Graph}            & {$\varnothing$ t (ms)} & {$\varnothing$ dijkstra rank} & {$\varnothing$ heap pops} \\ \midrule
+        aegaeis-graph      & 57.741663              & 261887                        & 261887                    \\
+        aegaeis-visibility & 660.650039             & 100305                        & 526932                    \\
+        medi-graph         & 87.245208              & 397788                        & 498239                    \\
+        medi-visibility    & 1346.084703            & 153922                        & 958598                    \\
+        pata-graph         & 246.705331             & 1125935                       & 1393816                   \\
+        pata-visibility    & 977.955177             & 502238                        & 2448780                   \\ \bottomrule
     \end{tabular}
     \caption{Dijkstra one-to-one}
     \label{table:dijkstra_one_to_one}
 \end{table}
+
 
 Für die triangulierten Graphen ist es möglich den klassischen Contraction Hierarchie Algorithmus mit der Knoten-Differenz und Lazy-poping (\cite{geisberger2008contraction}) anzuwenden, wobei auch ein signifikanter Speedup erzielt werden kann. \todo{Tabelle Speedup}
 Darauf aufbauend kann auch ein Hub Labeling erstellt werden, wodurch nochmals ein signifikanter Speedup erzielt werden kann.
