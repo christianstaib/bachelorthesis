@@ -1,8 +1,44 @@
 \chapter{Ergebnisse}
 
+Sämtlichen Ergebisse wurden im BwUniCluster2.0 erzeugt. Sofern nicht anders erwähnt wurden
+2x Intel Xeon Gold 6230
+180GB RAM verwendet.
 
 
 
+Ich habe Rust verwendet.
+
+Knoten und Distanzen wurden getypdef als u32
+
+\section{Baseline}
+
+Zum Berechnen einer Baseline wurden für jeden der Graphen wurden \num{10000} sequentielle, single-threaded Dijkstra Suchen ausgeführt.
+\todo{Muss das sein? Kann ich nicht einfach parallel? Weil Dijkstra ist schon langsam}.
+Als Datenstruktur zur Speicherung der Distanzen und Vorgänger wurde jeweils ein Vec benutzt. Die Queue ist ein BinaryHeap. Zum Speichern ob ein Knoten bereits expanded wurde, wurde ein ein Bitset benutzt.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{
+            l % Graph
+            S[table-format = 4.1] % Zeit
+        }
+        \toprule
+        {Graph}            & {$\varnothing$ t (ms)} \\ \midrule
+        aegaeis-graph      & 57.741663              \\
+        aegaeis-visibility & 660.650039             \\
+        medi-graph         & 87.245208              \\
+        medi-visibility    & 1346.084703            \\
+        pata-graph         & 246.705331             \\
+        pata-visibility    & 977.955177             \\ \bottomrule
+    \end{tabular}
+    \caption{Dijkstra one-to-one}
+    \label{ergebnisse::table:dijkstra_one_to_one}
+\end{table}
+
+
+
+
+\section{TODO}
 Für jeden der Graphen wurde mittels
 
 Hitting Set Berechnung.
