@@ -1,0 +1,2 @@
+{"rule":"DE_CASE","sentence":"^\\QDie Graphen mit dem Präfix aegaeis beinhalten das Ägäische Meer, mit medi das Mittelmeer und mit die mit pata die Chilenische Fjorde.\\E$"}
+{"rule":"DE_CASE","sentence":"^\\QDie Graphen mit dem Präfix aegaeis beinhalten das Ägäische Meer, mit medi das Mittelmeer und die mit pata die Chilenische Fjorde.\\E$"}

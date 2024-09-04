@@ -1,4 +1,127 @@
-\chapter{Contraction Hierarchy}
+\chapter{Contraction Hierarchies}\label{chapter:ch}
+
+\todo{Historie und Zitieren}
+
+Ein \emph{Contracted Graph} ist die Datenstruktur, mit deren Hilfe schnell kürzeste Wege gefunden werden können.
+Bevor im Folgenden verschiedene Arten beschrieben werden, wie, ein Contracted Graph erstellt werden kann, wird eine allgemeingültige Definition eingeführt.
+
+\begin{definition}[Contracted Graph]
+    Sei $G = (V, E)$ und ${vtl} \coloneq V \to \mathbb{N}$ die injektive \emph{vertex-to-level} Funktion.
+    ${C} = (G_u, G_d, s)$ ist ein zu $G$ gehörender \emph{Contracted Graph}, wenn gilt:
+    \begin{enumerate}
+        \item
+              $G_u = (V, E_u)$ mit
+              \begin{enumerate}
+                  \item\label{ch:definition:legal_edges}
+                  $E_u$ enthält nur Kanten mit einem Gewicht, welches mindestens dem kürzesten Pfad Abstand in ${out}(G)$ entspricht
+
+                  \item\label{ch:definition:upward}
+                  $E_u$ enthält mindestens alle Kanten $(u, v, {spd}_{{out}(G)}((u, v)))$, $u, v \in V$, für die gilt, dass $v$ das größte Level und $v$ das zweitgrößte Level auf dem kürzesten Weg auf ${out}(G)$ von $u$ nach $v$ hat.
+              \end{enumerate}
+
+        \item
+              $G_d = (V, E_d)$ mit.
+              \begin{enumerate}
+                  \item
+                        $E_d$ enthält nur Kanten mit einem Gewicht, welches mindestens dem kürzesten Pfad Abstand in ${in}(G)$ entspricht
+
+                        \item\label{ch:definition:downward}
+                        $E_d$ enthält mindestens alle Kanten $(u, v, {spd}_{{in}(G)}((u, v)))$, $u, v \in V$, für die gilt, dass $v$ das größte Level und $v$ das zweitgrößte Level auf dem kürzesten Weg auf ${in}(G)$ von $u$ nach $v$ hat.
+              \end{enumerate}
+
+        \item
+              Wenn $s \coloneq A \to V$ mit $A \subset (V \times V)$ wiederholt auf die Kanten eines Pfades aus $G_u$ angewendet wird, so entsteht letztlich ein legaler Pfad auf $G$. Gleiches gilt für einen umgekehrten Pfad auf ${in}(G)$.
+    \end{enumerate}
+
+
+    $G_u$ wird \emph{upward Graph} genannt, da er nach \ref{ch:definition:upward} im out-Graphen Knoten $(u, v)$ verbindet, für die gilt ${vtl}(v) > {vtl}(u)$. Analog dazu heißt $G_d$ \emph{downward Graph}, da er nach \ref{ch:definition:downward} im in-Graphen entsprechend Knoten verbinden.
+
+    Ist $G$ ungerichtet, dann gilt $G_u = G_d$.
+\end{definition}
+
+
+Die Suche eines kürzesten Pfades von $u$ nach $v$ auf einem Contracted Graph gestaltet sich nun wie folgt:
+Auf $G_u$ wird eine Breitensuche von $u$ und auf $G_d$ eine Breitensuche von $v$ durchgeführt.
+\autoref{fig:ch:beispiel_suche} zeigt das auf- und absteigen der Level an einem Beispiel.
+
+Gibt es einen Pfad von $u$ nach $v$, so werden beide Suchen den Knoten $t$ mit dem höchsten Level auf dem kürzesten Pfad finden.
+Die kürzeste Pfad Distanz ist dann die Summe der Distanz der upward Suche ($u \to t$) und der downward Suche ($v \to t$).
+Der kürzeste Pfad ist der setzt sich aus den beiden Pfaden der upward und downward Suche zusammen, wobei der in beiden Teilen vorkommenden Knoten $t$ in einem Teil entfernt und werden muss.
+Da $G_d$ den Pfad von $v$ nach $t$ findet, muss dieser Teil des Pfades invertiert werden, bevor die Teilpfade konkatiniert werden.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node[circle, draw] at (0 * 1.5, -5 * 0.75)  (a)    {u};
+        \node[circle, draw] at (1 * 1.5, -7 * 0.75)  (b)    {b};
+        \node[circle, draw] at (2 * 1.5, -6 * 0.75)  (c)    {c};
+        \node[circle, draw] at (3 * 1.5, -1 * 0.75)  (d)    {d};
+        \node[circle, draw] at (4 * 1.5, -0 * 0.75)  (e)    {t};
+        \node[circle, draw] at (5 * 1.5, -3 * 0.75)  (f)    {f};
+        \node[circle, draw] at (6 * 1.5, -2 * 0.75)  (g)    {g};
+        \node[circle, draw] at (7 * 1.5, -4 * 0.75)  (h)    {v};
+
+        % draw axis
+        \draw[->] (-1, -7 * 0.75) -- (-1, 0) node[above] {Level};
+
+        \draw[->]  (a) -- (d) -- (e);
+        \draw[->]  (h) -- (g) -- (e);
+
+        \draw[->, dotted]  (a) -- (b) -- (c) -- (d);
+        \draw[->, dotted]  (g) -- (f) -- (e);
+
+    \end{tikzpicture}
+    \caption{Beispiel einer Suche in einem Contrated Graph}
+    \label{fig:ch:beispiel_suche}
+\end{figure}
+
+\begin{beweis}
+    Der Beweis der Korrektheit folgt in zwei Schritte.
+
+    \begin{enumerate}
+        \item
+              Es existiert ein kürzester Pfad von $u$ nach $v$ in $G$ $\Rightarrow$ Er wird in $C$ gefunden.
+
+              Da ${vtl}$ injektiv ist, existiert genau ein Knoten $t$ mit dem höchstem Level. Zerscheide den Pfad $(u, \dotsc, v)$ in zwei Teile:  und $(u, \dotsc, t)$ und $(t, \dotsc, v)$. Die Tupel benachbarten Knoten in $(u, \dotsc, t)$ sind nach \autoref{ch:definition:downward} der Definition des upward Graph Kanten von $G_u$. Daher wird $t$ im upward Graph gefunden. Analog dazu wird $t$ in $G_d$ gefunden, die Tupel benachbarter Knoten im Pfad $(t, \dotsc, v)$ sind nach \autoref{ch:definition:upward} der Definition des downward Graphs Kanten von $G_d$.
+
+              Da die Tupel Kanten der Graphen sind, findet eine Breitensuche sie.
+
+        \item
+              Es existiert kein kürzester Pfad von $u$ nach $v$ in $G$ $\Rightarrow$ Es wird in $C$ kein Pfad gefunden gefunden.
+
+              Angenommen, es würde ein Pfad in C gefunden werden. Die Tupel benachbarter Knoten des Pfades müssten dann Kanten in C sein.
+              Mindestens einer diese Kanten hätte dann ein Gewicht welches gegen \autoref{ch:definition:legal_edges} der Definition verstoßt.
+    \end{enumerate}
+
+    Daher gilt, die Suche der kürzesten Pfad Distanz in $C$ ist äquivalent zu der in $G$
+\end{beweis}
+
+\section{Erstellung}
+
+Das Ziel der Contraction Hierarchies ist es aus dem Graph zwei Teilgraphe mit Abkürzungen (\emph{shortcuts}) zu erstellen.
+Auf diesen Graphen kann mit einer Breitensuche effizient ein Knoten gefunden werden, der auf dem kürzesten Pfad zwischen zwei Knoten liegt.
+
+\subsection{Contraction}
+
+
+\subsubsection{Bottom-Up}
+
+
+\clearpage
+
+Für die triangulierten Graphen ist es möglich den klassischen Contraction Hierarchie Algorithmus mit der Knoten-Differenz und Lazy-poping (\cite{geisberger2008contraction}) anzuwenden, wobei auch ein signifikanter Speedup erzielt werden kann. \todo{Tabelle Speedup}
+Darauf aufbauend kann auch ein Hub Labeling erstellt werden, wodurch nochmals ein signifikanter Speedup erzielt werden kann.
+Für die Sichtbarkeitsgraphen gilt dies jedoch nicht, auf den verwendeten Computern konnte für keinen von ihnen innerhalb von drei Tagen eine Erstellung abgeschlossen werden.
+\todo{Wie weit sind sie gekommen? Was ist der größtmögliche Graph, für den dies möglich ist?}
+Der Grund hierfür ist naheliegend: Der Algorithmus führt für jeden In-Nachbar eine one-to-many Suche zu allen Out-Nachbarn aus.
+Die Durschnitliche Suchtiefe ist dabei sehr hoch, da Knoten des Sichtbarkeitsgraphen mit einer hohen Wahrscheinlichkeit eine Kanten mit großem Gewicht haben, die zum Beispiel über einen Ozean auf die am weitest entfernte Küste zeigt.
+Das begrenzen der Suche auf wenige Hops ist dabei auch nicht hilfreich, da die Durschnitliche Hop-Länge von kürzesten Pfaden auf Sichtbarkeitsgraph gering ist eine so begrenzte Suche also viele kürzeste Pfade nicht finden würde.
+
+Daher müssen für die Sichtbarkeitsgraphen andere Methoden gefunden werden.
+Die naheliegendste Idee ist das direkte Berechnen der CH Edges und HL Labels.
+Dies ist zwar sehr rechenintensiv, es muss für jeden Knoten eine one-to-many bzw. one-to-all Suche durchgeführt werden, dies ist jedoch schneller möglich, also für jeden in-Nachbar eine one-to-many Suche zu berechnen.
+
+
 
 Wir erstellen zwei neue Graphen aus einem input Graphen.
 
@@ -92,6 +215,11 @@ Plot hitting set vs bottom-up order
 
 
 \subsection{Top-Down}
+
+
+
+\section{Hitting Set Berechnung}
+Vorraussetzung für das Bruteforcing ist eine Funktion $f \coloneq V \to \mathbb{N}$, welche den Knoten einem \emph{Level}
 
 Level-to-vertex
 

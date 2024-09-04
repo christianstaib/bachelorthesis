@@ -3,7 +3,7 @@
 
 \usepackage{todonotes}
 
-\usepackage[english,main=ngerman]{babel}
+\usepackage[ngerman]{babel}
 
 \usepackage{physics}
 \usepackage{mathtools}
@@ -11,6 +11,11 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{subfig}
+
+\usepackage{csquotes}
+\usepackage{microtype}
+
+\usepackage{tikz}
 
 \usepackage{amsmath}
 \DeclareMathOperator{\avg}{\diameter}
@@ -24,3 +29,18 @@
 \sisetup{
     table-auto-round = true % Round numbers in S-columns
 }
+
+\usepackage{amsthm}
+
+\newtheoremstyle{break}% name
+{}%         Space above, empty = `usual value'
+{}%         Space below
+{\itshape}% Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}% Thm head font
+{.}%        Punctuation after thm head
+{\newline}% Space after thm head: \newline = linebreak
+{}%         Thm head spec
+\theoremstyle{break}
+\newtheorem{definition}{Defintion}
+\newtheorem{beweis}{Beweis}

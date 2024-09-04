@@ -1,24 +1,37 @@
 \chapter{Einleitung}
 
-Diese Arbeit beschäftigt sich mit der Anwendung von Techniken zur schnellen Findung von kürzesten Pfanden (\emph{Construction Hierarchies} und \emph{Hierarchical Hub Labeling}) auf zwei Typen von Nicht-Straßengraphen.
-Beide Graphentypen verbinden Punkte entlang der Küstenlinie der Erde, einmal als Sichtbarkeitsgraph und einmal in einer triangulierten Version dieses Sichtbarkeitsgraphen.
-\autoref{fig:thessaloniki} zeigt den Bereich des Hafens von Thessaloniki und vergleicht den Aufgbau beider Typen.
-Da der Sicht
+\section{Problemstellung}
+Sichtbarkeitsgraphen sind Graphen die alle Knotenpaare miteinander verbinden, die sich \emph{sehen} können, auf deren Luftlinie sich also keine \emph{Hindernisse befinden}.
+Aus einer Küstenlinie kann ein Sichtbarkeitsgraph erstellt werden, indem die Knoten mit allen Knoten verbunden werden, deren Luftlinie keine Küste kreuzt.
+\autoref{fig:thessaloniki-visibility} zeigt einen Ausschnitt eines solchen Sichtbarkeitsgraphen.
+Zu sehen ist der Hafen der griechischen Stadt Thessaloniki.
+Dass der Ausschnitt einen Hafen zeigt, ist kein Zufall, solch ein Sichtbarkeitsgraph kann für das Finden von kürzesten Schiffsrouten benutzt werden.
+\todo{Navigation in 2D ist fast immer Sichtbarkeitsgraph}
 
-\begin{figure}[h]%
+Das Finden von kürzesten Pfaden ist auf solchen Graphen deutlich rechenintensiver als etwa auf Straßengraphen mit vergleichbarer Knotenanzahl, da sie unter anderem einen hohen durchschnittlichen Knotengrad und keine inhärente Hierarchische Struktur besitzen.
+Zwar gibt es Möglichkeiten den Graphen zu verändern und schneller Wege zwischen Knoten zu berechnen, etwa durch Triangulierung oder Rasterisierung, jedoch sind diese Wege nicht mehr garantiert optimal.
+
+Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden von kürzesten Pfaden und kürzester Pfad Distanzen (\emph{Contraction Hierarchies} und \emph{Hierarchical Hub Labeling}), auf diese Graphen anwenden lassen.
+
+\begin{figure}[ht]%
     \centering
-    \subfloat[\centering aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
-    %\qquad
-    \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
-    \caption{Hafen von Thessaloniki}%
-    \label{fig:thessaloniki}%
+    \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth]{img/thessaloniki-visibility.png}}}%
+    \caption{Sichtbarkeitsgraph des Hafens von Thessaloniki}%
+    \label{fig:thessaloniki-visibility}%
 \end{figure}
 
+\section{Bearbeite Graphen}
 
-Die Details dieser Trianguliereung sind außerhalb dieser Arbeit, es gilt jedoch, dass jeder Knoten, des visibility Graphens auch im triangulierten Graphen enthalten ist und das der kürzste Pfad Abstand zweier Knoten des visiblity Graphens im triangulierten Graphen mindestens gleich groß ist.
-In \autoref{table:input_graphs} ist eine Übersicht der bearbeiten Graphen zu sehen. Graphen mit der Endung \emph{-graph} sind dabei triangulierte Graphen, mit der Endung \emph{-visibility} Sichtbarkeitsgraph.
+Der Fokus dieser Arbeit liegt auf 3 Sichtbarketisgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
+Für jeden dieser 3 Graphen existiert zusätzlich eine Triangulation.
+\autoref{table:input_graphs} listet die Graphen auf.
+Die Graphen mit dem Präfix \emph{aegaeis} beinhalten das Ägäische Meer, mit \emph{medi} das Mittelmeer und mit \emph{pata} die Chilenische Fjorde.
+Graphen mit dem Postfix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulationen.
+Die bearbeiteten Graphen sind ungerichtet, werden im folgenden jedoch als gerichtet betrachtet.
+Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kanten als gerichteter Graph zu interpretieren.
+Die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(b, a)$.
 
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \begin{tabular}{
             l % Graph
@@ -39,9 +52,33 @@ In \autoref{table:input_graphs} ist eine Übersicht der bearbeiten Graphen zu se
     \label{table:input_graphs}
 \end{table}
 
-Das Suchen von kürzesten Pfaden mittels Dijkstras Algorithmus ist auf diesen Graphen sehr zeitaufändig.
-\autoref{table:dijkstra_one_to_one} zeigt durschnittliche Zeiten und Werte für random-pair dijkstra one-to-one Suchen.
-Durch den hohen durschnittlichen Grad muss müssen einerseits viel geprüft werden, ob der aktuelle Knoten ein besser Vorgänger ist, andereseits bläst sich die Queue auf.
+\subsection{Triangulation}
+
+\todo{Daniel nach Details fragen, wie die Triangulation zustande gekommen ist.}
+
+Die Knoten eines triangulierten Graphen $G_g$ bilden eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
+Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, darf sie aber vergrößern.
+
+
+\begin{figure}[ht]%
+    \centering
+    \subfloat[\centering aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
+    %\qquad
+    \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
+    \caption{Hafen von Thessaloniki}%
+    \label{fig:thessaloniki}%
+\end{figure}
+
+\section{Speedup-Techniken}
+
+Die betrachteten Speedup-Techniken zum Finden kürzester Pfade benötigen eine Phase der Vorbehandlung. (\emph{preprocessing}), damit danach kürzeste Pfad Anfragen (\emph{queries}) schneller beantwortet werden können.
+Die für das Preprocessing benutzte Rechenzeit und der Memory-Overhead sollte dabei in einem sinnvollen Verhältnis zum Speedup und der Anzahl der Queries stehen.
+Ist der Speedup besonders hoch, so lohnt es sich mehr in das Preprocessing zu investieren.
+
+
+Beim Hierarchical Hub Labeling werden für jeden Knoten zwei \emph{Label} erstellt, welche den Suchbaum der Breitensuche repräsentieren.
+Ein Vergleich beider Label liefert damit einen Knoten, welcher wieder auf dem kürzesten Pfad zwischen zwei Knoten liegt.
+Eine genaue Beschreibung beider Techniken erfolgt in \autoref{chapter:ch} und \autoref{chapter:hl}.
 
 \begin{table}[h]
     \centering
@@ -62,18 +99,6 @@ Durch den hohen durschnittlichen Grad muss müssen einerseits viel geprüft werd
     \label{table:dijkstra_one_to_one}
 \end{table}
 
-
-Für die triangulierten Graphen ist es möglich den klassischen Contraction Hierarchie Algorithmus mit der Knoten-Differenz und Lazy-poping (\cite{geisberger2008contraction}) anzuwenden, wobei auch ein signifikanter Speedup erzielt werden kann. \todo{Tabelle Speedup}
-Darauf aufbauend kann auch ein Hub Labeling erstellt werden, wodurch nochmals ein signifikanter Speedup erzielt werden kann.
-Für die Sichtbarkeitsgraphen gilt dies jedoch nicht, auf den verwendeten Computern konnte für keinen von ihnen innerhalb von drei Tagen eine Erstellung abgeschlossen werden.
-\todo{Wie weit sind sie gekommen? Was ist der größtmögliche Graph, für den dies möglich ist?}
-Der Grund hierfür ist naheliegend: Der Algorithmus führt für jeden In-Nachbar eine one-to-many Suche zu allen Out-Nachbarn aus.
-Die Durschnitliche Suchtiefe ist dabei sehr hoch, da Knoten des Sichtbarkeitsgraphen mit einer hohen Wahrscheinlichkeit eine Kanten mit großem Gewicht haben, die zum Beispiel über einen Ozean auf die am weitest entfernte Küste zeigt.
-Das begrenzen der Suche auf wenige Hops ist dabei auch nicht hilfreich, da die Durschnitliche Hop-Länge von kürzesten Pfaden auf Sichtbarkeitsgraph gering ist eine so begrenzte Suche also viele kürzeste Pfade nicht finden würde.
-
-Daher müssen für die Sichtbarkeitsgraphen andere Methoden gefunden werden.
-Die naheliegendste Idee ist das direkte Berechnen der CH Edges und HL Labels.
-Dies ist zwar sehr rechenintensiv, es muss für jeden Knoten eine one-to-many bzw. one-to-all Suche durchgeführt werden, dies ist jedoch schneller möglich, also für jeden in-Nachbar eine one-to-many Suche zu berechnen.
 
 
 
