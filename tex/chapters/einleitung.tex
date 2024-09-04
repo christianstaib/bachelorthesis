@@ -1,9 +1,19 @@
 \chapter{Einleitung}
 
-Diese Arbeit beschäftigt sich mit der Anwendung von \emph{Construction Hierarchies} und \emph{Hierarchical Hub Labeling} auf zwei Typen von Nicht-Straßengraphen.
+Diese Arbeit beschäftigt sich mit der Anwendung von Techniken zur schnellen Findung von kürzesten Pfanden (\emph{Construction Hierarchies} und \emph{Hierarchical Hub Labeling}) auf zwei Typen von Nicht-Straßengraphen.
 Beide Graphentypen verbinden Punkte entlang der Küstenlinie der Erde, einmal als Sichtbarkeitsgraph und einmal in einer triangulierten Version dieses Sichtbarkeitsgraphen.
+\autoref{fig:thessaloniki} zeigt den Bereich des Hafens von Thessaloniki und vergleicht den Aufgbau beider Typen.
+Da der Sicht
 
-\todo{Ausschnit vergleich vis vs graph.}
+\begin{figure}[h]%
+    \centering
+    \subfloat[\centering aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
+    %\qquad
+    \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
+    \caption{Hafen von Thessaloniki}%
+    \label{fig:thessaloniki}%
+\end{figure}
+
 
 Die Details dieser Trianguliereung sind außerhalb dieser Arbeit, es gilt jedoch, dass jeder Knoten, des visibility Graphens auch im triangulierten Graphen enthalten ist und das der kürzste Pfad Abstand zweier Knoten des visiblity Graphens im triangulierten Graphen mindestens gleich groß ist.
 In \autoref{table:input_graphs} ist eine Übersicht der bearbeiten Graphen zu sehen. Graphen mit der Endung \emph{-graph} sind dabei triangulierte Graphen, mit der Endung \emph{-visibility} Sichtbarkeitsgraph.
@@ -38,17 +48,15 @@ Durch den hohen durschnittlichen Grad muss müssen einerseits viel geprüft werd
     \begin{tabular}{
             l % Graph
             S[table-format = 4.1] % Zeit
-            S[table-format = 7.1] % Rank
-            S[table-format = 7.1] % Pops
         }
         \toprule
-        {Graph}            & {$\varnothing$ t (ms)} & {$\varnothing$ dijkstra rank} & {$\varnothing$ heap pops} \\ \midrule
-        aegaeis-graph      & 57.741663              & 261887                        & 261887                    \\
-        aegaeis-visibility & 660.650039             & 100305                        & 526932                    \\
-        medi-graph         & 87.245208              & 397788                        & 498239                    \\
-        medi-visibility    & 1346.084703            & 153922                        & 958598                    \\
-        pata-graph         & 246.705331             & 1125935                       & 1393816                   \\
-        pata-visibility    & 977.955177             & 502238                        & 2448780                   \\ \bottomrule
+        {Graph}            & {$\varnothing$ t (ms)} \\ \midrule
+        aegaeis-graph      & 57.741663              \\
+        aegaeis-visibility & 660.650039             \\
+        medi-graph         & 87.245208              \\
+        medi-visibility    & 1346.084703            \\
+        pata-graph         & 246.705331             \\
+        pata-visibility    & 977.955177             \\ \bottomrule
     \end{tabular}
     \caption{Dijkstra one-to-one}
     \label{table:dijkstra_one_to_one}
@@ -57,7 +65,8 @@ Durch den hohen durschnittlichen Grad muss müssen einerseits viel geprüft werd
 
 Für die triangulierten Graphen ist es möglich den klassischen Contraction Hierarchie Algorithmus mit der Knoten-Differenz und Lazy-poping (\cite{geisberger2008contraction}) anzuwenden, wobei auch ein signifikanter Speedup erzielt werden kann. \todo{Tabelle Speedup}
 Darauf aufbauend kann auch ein Hub Labeling erstellt werden, wodurch nochmals ein signifikanter Speedup erzielt werden kann.
-Für die Sichtbarkeitsgraphen gilt dies jedoch nicht, auf den verwendeten Computern konnte für keinen von ihnen innerhalb von drei Tagen eine Erstellung abgeschlossen werden. \todo{Wie weit sind sie gekommen? Was ist der größtmögliche Graph, für den dies möglich ist?}
+Für die Sichtbarkeitsgraphen gilt dies jedoch nicht, auf den verwendeten Computern konnte für keinen von ihnen innerhalb von drei Tagen eine Erstellung abgeschlossen werden.
+\todo{Wie weit sind sie gekommen? Was ist der größtmögliche Graph, für den dies möglich ist?}
 Der Grund hierfür ist naheliegend: Der Algorithmus führt für jeden In-Nachbar eine one-to-many Suche zu allen Out-Nachbarn aus.
 Die Durschnitliche Suchtiefe ist dabei sehr hoch, da Knoten des Sichtbarkeitsgraphen mit einer hohen Wahrscheinlichkeit eine Kanten mit großem Gewicht haben, die zum Beispiel über einen Ozean auf die am weitest entfernte Küste zeigt.
 Das begrenzen der Suche auf wenige Hops ist dabei auch nicht hilfreich, da die Durschnitliche Hop-Länge von kürzesten Pfaden auf Sichtbarkeitsgraph gering ist eine so begrenzte Suche also viele kürzeste Pfade nicht finden würde.
