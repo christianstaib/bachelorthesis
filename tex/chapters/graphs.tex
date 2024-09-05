@@ -1,5 +1,55 @@
 \chapter{Graphen}
 
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        % Nodes
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.60, -2.12)  (a)    {a};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (2.01, -5.64)  (b)    {b};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (4.78, -3.89)  (c)    {c};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (6.03, -6.61)  (d)    {d};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (9.07, -5.65)  (e)    {e};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (12.35, -5.84)  (f)    {f};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (13.44, -1.30)  (g)    {g};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (10.94, -3.81)  (h)    {h};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (10.32, -1.70)  (i)    {i};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (7.88, -3.19)  (j)    {j};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (6.24, -.94)  (k)    {k};
+
+
+        \draw[<->]  (a) edge node[midway, left] {3} (b);
+        \draw[<->]  (a) edge node[midway, above] {5} (c);
+        \draw[<->]  (a) edge node[midway, above] {3}  (k);
+
+        \draw[<->]  (b) edge node[midway, above] {3} (c);
+        \draw[<->]  (b) edge node[midway, below] {5} (d);
+
+        \draw[<->]  (c) edge node[midway, left] {2} (d);
+        \draw[<->]  (c) edge node[midway, above] {2} (j);
+
+        \draw[<->]  (d) edge node[midway, left] {4} (j);
+        \draw[<->]  (d) edge node[midway, below] {7} (e);
+
+        \draw[<->]  (e) edge node[midway, left] {3} (j);
+        \draw[<->]  (e) edge node[midway, below] {6} (f);
+
+        \draw[<->]  (f) edge node[midway, right] {4} (g);
+        \draw[<->]  (f) edge node[midway, left] {2} (h);
+
+        \draw[<->]  (g) edge node[midway, above] {3} (h);
+        \draw[<->]  (g) edge node[midway, above] {5} (i);
+
+        \draw[<->]  (h) edge node[midway, left] {3} (i);
+
+        \draw[<->]  (i) edge node[midway, above] {4} (j);
+        \draw[<->]  (i) edge node[midway, above] {6} (k);
+
+        \draw[<->]  (j) edge node[midway, right] {3} (k);
+        \draw[<->]  (j) edge node[midway, above] {2} (h);
+    \end{tikzpicture}
+    \caption{Beispielgraph}
+\end{figure}
+
 \todo{Graphen auf Kinderniveau erklären und schöne Bilder von Graphen zeigen}.
 
 \section{Definitionen}
@@ -9,6 +59,8 @@ Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es no
     Sofern nicht anders angegeben, wird ein endlicher, gerichteter Graph mit Kantengewichten, ohne Mehrfachkanten und Schleifen, einfach als Graph bezeichnet.
 
     Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß}, $h \in V$ als \emph{Kopf} und $w \in \mathbb{R}$ als \emph{Gewicht} bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, definiert diese Schreibweise auch eindeutig das Kantengewicht.
+
+    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h) \in E \Leftrightarrow (h, t) \in E$.
 \end{definition}
 
 In einem Graphen gibt es oft das Interesse, von einem Knoten zu einem anderen zu gelangen.
@@ -46,58 +98,6 @@ Zusätlich zum finden eines Weges zwischen zwei Knoten ist es häufig notwendig 
 Auch die Umkehrung dieses Problem ist interesannt, also die kürzesten Wege von allen Knoten zu einem zu bestimmen.
 Diese Probleme sind äuivalent, da das Finden alle kürzesten Wege zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Wege auf dem Umkehrgraph $G^T$ entspricht.
 
-
-\section{Datenstrukturen}
-
-\section{Archivierung}
-
-$c$ Kanten costen function
-
-Verschieden Graph Strukturen
-
-Grundlegende Idee:
-Ein Interface Graph welches nur ausgehende Kanten kennt.
-get edge distance, set edge distance
-
-Dieses habe ich für verschiedene Graphen implementiert.
-Wichtigste:
-VecVec: Ein Vec. Jeder Vertex hat hat einen Eintrag vom Typ Vec in dem die kanten sortiert nach Head sind.
-VecHashMap: Ein Vec. Jeder Vertex hat einen Eintrag vom Typ HashMap (Head, Distance).
-Vec: Zwei Vec. Einer für (Head, Distance), zweiter für startindex, stopindex für Vec.
-TODO Indexmap?
-
-Häufig eine Abwägung wie schnell gequeriet werden kann vs wie schnell bearbeitet werden kann.
-
-
-für reverse dijkstra uä muss aber auch Vorgänger bekannt sein.
-Idee: Reversible Graph aus einem Vorwärtsgrapg und Rückwärtgraph
-Beide sind aber grundätzlich gleiche Struktur. Daher ist Vorwärts und Rückwärtssuche gleiche Funktion.
-
-
-Gleiches gilt für Contracted Graph. Zwei Graphen Upward Graph und Downward Graph. Downward Graph ist aber \"umgedreht\" zur Definition aus dem Paper, es wird also beides mal eine Vorwärtssuche gemacht.
-
-
-\section{Graph File Format}
-Beliebig viele Kommentar lines
-leere line
-num Vertices
-num Edges
-Vertices
-Edges
-
-Suche
-Für Dijkstra verscheidene Datenstrukturen getestet.
-Data (predecessor, distance)
-Queue (min heap)
-is\_expanded
-
-jeweils ein Interface.
-
-TODO. Testen verschiedener Kombinationen.
-TODO. Wann ist reuse of allocation sinvoll?
-TODO Decrease key
-
-
 \section{Nicht-Straßen Graphen}
 
 
@@ -127,3 +127,66 @@ b22697934378f6f8af7fb7bf3ae2812d7b0029ec  medi-ref-graph.fmi
 77760c910a13f9dc056f4ef3f3f532b00286c52f  medi-ref-visibility.fmi
 b9727caf46fd3407ce0b5e2b08b941dfb15f95f6  pata-ref-graph.fmi
 89356e6e6411b8340375c3aa0fc949fb4e58ff44  pata-ref-visibility.fmi
+
+
+\section{Dijkstra}
+
+\todo{Dijkstra Algorithmus erklären und Dijkstra Paper zitieren}
+
+Ziel ist nicht Dijktra selbst, sondern folgende Metriken erklären.
+
+\todo{Dijkstra Rank}
+\todo{Queue Pops}
+\todo{Max Queue len}
+
+\section{Datenstrukturen}
+
+Verschieden Graph Strukturen
+
+Grundlegende Idee:
+Ein Interface Graph welches nur ausgehende Kanten kennt.
+get edge distance, set edge distance
+
+Dieses habe ich für verschiedene Graphen implementiert.
+Wichtigste:
+VecVec: Ein Vec. Jeder Vertex hat hat einen Eintrag vom Typ Vec in dem die kanten sortiert nach Head sind.
+VecHashMap: Ein Vec. Jeder Vertex hat einen Eintrag vom Typ HashMap (Head, Distance).
+Vec: Zwei Vec. Einer für (Head, Distance), zweiter für startindex, stopindex für Vec.
+TODO Indexmap?
+
+Häufig eine Abwägung wie schnell gequeriet werden kann vs wie schnell bearbeitet werden kann.
+
+
+für reverse dijkstra uä muss aber auch Vorgänger bekannt sein.
+Idee: Reversible Graph aus einem Vorwärtsgrapg und Rückwärtgraph
+Beide sind aber grundätzlich gleiche Struktur. Daher ist Vorwärts und Rückwärtssuche gleiche Funktion.
+
+
+Gleiches gilt für Contracted Graph. Zwei Graphen Upward Graph und Downward Graph. Downward Graph ist aber \"umgedreht\" zur Definition aus dem Paper, es wird also beides mal eine Vorwärtssuche gemacht.
+
+
+\section{Archivierung}
+
+Zum Speichern von Graphen wird ein Text Based Format benutzt.
+
+
+Beliebig viele Kommentar lines
+leere line
+num Vertices
+num Edges
+Vertices
+Edges
+
+Suche
+Für Dijkstra verscheidene Datenstrukturen getestet.
+Data (predecessor, distance)
+Queue (min heap)
+is\_expanded
+
+jeweils ein Interface.
+
+TODO. Testen verschiedener Kombinationen.
+TODO. Wann ist reuse of allocation sinvoll?
+TODO Decrease key
+
+
