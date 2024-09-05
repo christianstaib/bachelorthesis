@@ -1,16 +1,55 @@
 \chapter{Graphen}
 
-Mathematisch sind die in dieser Arbeit benutzten Graphen definiert als Tuple $(V, E)$ mit $V \subset \mathbb{N}$, $E \subset V \times V \times \mathbb{N}$ und $V$, $E$ endlich. Für die Sichtbarkeitsgraphen und den dazugehörigen triangulierten Graphen gilt, das ein Vertex $v \in \mathbb{N}$ in beiden Graphen vorhanden ist, so handelt es sich dabei um denselben Vertex.
+\todo{Graphen auf Kinderniveau erklären und schöne Bilder von Graphen zeigen}.
 
-${out}(G)$ ist der \emph{Out-Graph} von $G$
+\section{Definitionen}
+Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es notwendig, einige Begriffe zu definieren.
+
+\begin{definition}[Graph]
+    Sofern nicht anders angegeben, wird ein endlicher, gerichteter Graph mit Kantengewichten, ohne Mehrfachkanten und Schleifen, einfach als Graph bezeichnet.
+
+    Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß}, $h \in V$ als \emph{Kopf} und $w \in \mathbb{R}$ als \emph{Gewicht} bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, definiert diese Schreibweise auch eindeutig das Kantengewicht.
+\end{definition}
+
+In einem Graphen gibt es oft das Interesse, von einem Knoten zu einem anderen zu gelangen.
+Diese Verbindungen zwischen Knoten werden durch sogenannte Wege dargestellt.
+
+\begin{definition}[Weg]
+    Ein Weg auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $v_1, \dotsc, v_n$, für die gilt, dass benachbarte Knoten im Weg eine Kante in $E$ bilden.
+
+    \todo{Wie nenne ich die Hoplänge?}
+
+    Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge} des Weges genannt. Der Knoten $v_1$ wird Startknoten, $v_n$ Zielknoten genannt.
+\end{definition}
+
+Zwischen zwei Knoten kann es mehrere unterschiedliche Wege geben.
+Diese Wege können auch unterschiedliche Länge haben.
+
+\begin{definition}[Kürzester Weg]
+    Ein Weg $v_1, \dotsc, v_n$ ist \emph{ein kürzester Weg}, wenn die Länge des Weges unter allen Wegen von $v_1$ nach $v_n$ minimal ist. Die Länge des kürzesten Weges wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet. Die Definition des Graphen lässt es zu, dass es mehrere kürzeste Wege zwischen zwei Knoten gibt.
+
+    Sei $P \subset V \times V$ die Menge der Knoten, zwischen denen ein Weg existiert. Dann sind definiert:
+    \begin{enumerate}
+        \item
+              ${spd} \colon P \to \mathbb{R}$ weist einem Knotenpaar den Abstand zu.
+
+        \item
+              ${sp} \colon P \to V \times V \times \dots \times V$ weist einem Knotenpaar einen kürzesten Weg zu.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[Umkehrgraph]
+    Sei $G = (V, E)$ ein Graph. Dann ist $G^T = (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{Umkehrgraph} von $G$.
+\end{definition}
+
+Zusätlich zum finden eines Weges zwischen zwei Knoten ist es häufig notwendig den kürzesten Weg von einem Knoten zu allen anderen Knoten zu finden.
+Auch die Umkehrung dieses Problem ist interesannt, also die kürzesten Wege von allen Knoten zu einem zu bestimmen.
+Diese Probleme sind äuivalent, da das Finden alle kürzesten Wege zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Wege auf dem Umkehrgraph $G^T$ entspricht.
 
 
-${in}(G)$ ist der \emph{In-Graph} von $G$
+\section{Datenstrukturen}
 
-Funktionen
-${sp}_{G}$ shortest path Funktionen auf $G$
-
-${spd}_{G}$ shortest path distance Funktion. $G$
+\section{Archivierung}
 
 $c$ Kanten costen function
 
@@ -58,3 +97,33 @@ TODO. Testen verschiedener Kombinationen.
 TODO. Wann ist reuse of allocation sinvoll?
 TODO Decrease key
 
+
+\section{Nicht-Straßen Graphen}
+
+
+
+Kürzeste Pfad Queries mit dem klassischen Dijksta Algorithmus sind auf den visibility Graphen deutlich teuerer als auf den triangulierten Graphen.
+
+
+Fokus dieser Arbeit erklären.
+
+Unterschiede zwischen Straßengraphen und NIcht-Straßengraphen erklären.
+TODO Straßengrqaphen sind hierarchisch, aber was heist das genau.
+TODO kann ich mit einer Metrik binär unterteilen ob ein GraPh hierarisch ist?
+
+Die graph erklären, die ich mir speziell anschaue.
+Trianguliereung erklären TODO Daniel?
+
+Graphen zeichen, metriken zeichen.
+Degree Plot
+Hitting Set Plot?
+Sonstige Metriken? TODO Funke
+
+
+shasum graphen
+6c00147bf26a2c37e50db857f4ce4ab565a236dd  aegaeis-ref-graph.fmi
+acdf08813a59534840c605984e9c37875f77f32a  aegaeis-ref-visibility.fmi
+b22697934378f6f8af7fb7bf3ae2812d7b0029ec  medi-ref-graph.fmi
+77760c910a13f9dc056f4ef3f3f532b00286c52f  medi-ref-visibility.fmi
+b9727caf46fd3407ce0b5e2b08b941dfb15f95f6  pata-ref-graph.fmi
+89356e6e6411b8340375c3aa0fc949fb4e58ff44  pata-ref-visibility.fmi

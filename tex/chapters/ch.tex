@@ -2,42 +2,69 @@
 
 \todo{Historie und Zitieren}
 
+\begin{definition}[Upward Graph]
+    Sei $G = (V, E)$ und ${vtl} \coloneq V \to \mathbb{N}$ die injektive \emph{vertex-to-level} Funktion. Dann ist $G_u = (V, E_u)$ ein \emph{upward Graph} zu $G$ wenn gilt:
+    \begin{enumerate}
+        \item\label{ch:definition:legal_edges}
+        $E_u$ enthält nur Kanten $(t, h, w)$ mit $t, h \in V$ und $w \in \mathbb{N}$ für die ${vtl}(t) < {vtl}(h)$ und $w >= {spd}_{G}((t, h))$ gilt.
+
+        \item\label{ch:definition:upward}
+        $E_u$ enthält mindestens alle Kanten $(t, h, {spd}_{G}((t, h)))$ mit $t, h \in V$, für die gilt, dass $h$ das größte und $t$ das zweitgrößte Level auf dem kürzesten Weg auf $G$ von $t$ nach $h$ hat.
+    \end{enumerate}
+\end{definition}
+
+Der Name des upward Graphen ergibt sich daher, dass die Suche in einem upward Graph auf das Level bezogen nur \emph{aufwärts} geht.
+
+\begin{figure}
+    \begin{tikzpicture}
+        % Nodes
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (2.5, 0)  (a)    {a};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1, 1)  (b)    {b};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (4, 1)  (c)    {c};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0, 2)  (d)    {d};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (2, 2)  (e)    {e};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (3, 2)  (f)    {f};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (5, 2)  (g)    {g};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1, 3)  (h)    {h};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (4, 3)  (i)    {i};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (6, 3)  (j)    {j};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (3, 4)  (k)    {k};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (5, 4)  (l)    {l};
+
+
+        \draw[->]  (a) -- (b);
+        \draw[->]  (a) -- (c);
+
+        \draw[->]  (b) -- (d);
+        \draw[->]  (b) -- (e);
+
+        \draw[->]  (c) -- (f);
+        \draw[->]  (c) -- (g);
+
+        \draw[->]  (e) -- (h);
+
+        \draw[->]  (g) -- (i);
+        \draw[->]  (g) -- (j);
+
+        \draw[->]  (i) -- (k);
+        \draw[->]  (i) -- (l);
+    \end{tikzpicture}
+\end{figure}
+
+
+Aus dieser Definition folgt, dass der kürzeste Pfad zwischen zwei Knoten in $G_u$ ist also mindestens genausolang ist wie in $G$.
+% https://cstheory.stackexchange.com/questions/23767/why-is-label-pruning-possible-with-hub-labeling
+
+\todo{Zeiche zwei Suchbäume, jeweils in G und Gu}
+
+\begin{definition}[Downward Graph]
+    Sei $G = (V, E)$ und ${vtl} \coloneq V \to \mathbb{N}$ die injektive \emph{vertex-to-level} Funktion. Dann ist ein upward Graph des Umkehrgraphens $G^T$ ein \emph{downward Graph} zu $G$.
+\end{definition}
+
+
 Ein \emph{Contracted Graph} ist die Datenstruktur, mit deren Hilfe schnell kürzeste Wege gefunden werden können.
 Bevor im Folgenden verschiedene Arten beschrieben werden, wie, ein Contracted Graph erstellt werden kann, wird eine allgemeingültige Definition eingeführt.
 
-\begin{definition}[Contracted Graph]
-    Sei $G = (V, E)$ und ${vtl} \coloneq V \to \mathbb{N}$ die injektive \emph{vertex-to-level} Funktion.
-    ${C} = (G_u, G_d, s)$ ist ein zu $G$ gehörender \emph{Contracted Graph}, wenn gilt:
-    \begin{enumerate}
-        \item
-              $G_u = (V, E_u)$ mit
-              \begin{enumerate}
-                  \item\label{ch:definition:legal_edges}
-                  $E_u$ enthält nur Kanten mit einem Gewicht, welches mindestens dem kürzesten Pfad Abstand in ${out}(G)$ entspricht
-
-                  \item\label{ch:definition:upward}
-                  $E_u$ enthält mindestens alle Kanten $(u, v, {spd}_{{out}(G)}((u, v)))$, $u, v \in V$, für die gilt, dass $v$ das größte Level und $v$ das zweitgrößte Level auf dem kürzesten Weg auf ${out}(G)$ von $u$ nach $v$ hat.
-              \end{enumerate}
-
-        \item
-              $G_d = (V, E_d)$ mit.
-              \begin{enumerate}
-                  \item
-                        $E_d$ enthält nur Kanten mit einem Gewicht, welches mindestens dem kürzesten Pfad Abstand in ${in}(G)$ entspricht
-
-                        \item\label{ch:definition:downward}
-                        $E_d$ enthält mindestens alle Kanten $(u, v, {spd}_{{in}(G)}((u, v)))$, $u, v \in V$, für die gilt, dass $v$ das größte Level und $v$ das zweitgrößte Level auf dem kürzesten Weg auf ${in}(G)$ von $u$ nach $v$ hat.
-              \end{enumerate}
-
-        \item
-              Wenn $s \coloneq A \to V$ mit $A \subset (V \times V)$ wiederholt auf die Kanten eines Pfades aus $G_u$ angewendet wird, so entsteht letztlich ein legaler Pfad auf $G$. Gleiches gilt für einen umgekehrten Pfad auf ${in}(G)$.
-    \end{enumerate}
-
-
-    $G_u$ wird \emph{upward Graph} genannt, da er nach \ref{ch:definition:upward} im out-Graphen Knoten $(u, v)$ verbindet, für die gilt ${vtl}(v) > {vtl}(u)$. Analog dazu heißt $G_d$ \emph{downward Graph}, da er nach \ref{ch:definition:downward} im in-Graphen entsprechend Knoten verbinden.
-
-    Ist $G$ ungerichtet, dann gilt $G_u = G_d$.
-\end{definition}
 
 
 Die Suche eines kürzesten Pfades von $u$ nach $v$ auf einem Contracted Graph gestaltet sich nun wie folgt:
@@ -64,11 +91,16 @@ Da $G_d$ den Pfad von $v$ nach $t$ findet, muss dieser Teil des Pfades invertier
         % draw axis
         \draw[->] (-1, -7 * 0.75) -- (-1, 0) node[above] {Level};
 
-        \draw[->]  (a) -- (d) -- (e);
-        \draw[->]  (h) -- (g) -- (e);
+        \draw[->]  (a) -- (d);
+        \draw[->]  (d) -- (e);
+        \draw[->]  (h) -- (g);
+        \draw[->]  (g) -- (e);
 
-        \draw[->, dotted]  (a) -- (b) -- (c) -- (d);
-        \draw[->, dotted]  (g) -- (f) -- (e);
+        \draw[->, dotted]  (a) -- (b);
+        \draw[->, dotted]  (b) -- (c);
+        \draw[->, dotted]  (c) -- (d);
+        \draw[->, dotted]  (g) -- (f);
+        \draw[->, dotted]  (f) -- (e);
 
     \end{tikzpicture}
     \caption{Beispiel einer Suche in einem Contrated Graph}
