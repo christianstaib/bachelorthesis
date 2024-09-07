@@ -4,6 +4,19 @@ Grundidee von HL ist es, den CH Suchbaum für jeden Vertex zu berechnen und zu s
 Jeder Vertex hat demensprechend ein forward und backward label.
 Wieder, wenn bidirectional, dann forward label == backward label.:wege
 
+\todo{Wie hängen kleinstes und optimales hitting set zusammen?}
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{@{}llllll@{}}
+        \toprule
+        Index           &  & 0 & 1 & 2 & 2 \\ \midrule
+        Vertex          &  &   &   &   &   \\
+        Distanz         &  &   &   &   &   \\
+        Vorgänger Index &  &   &   &   &   \\ \bottomrule
+    \end{tabular}
+\end{table}
+
 Die HL Query ist es dann den overlapp zweier Labels zu finden.
 Damit das leicht möglich ist, werden die Einträge (Vertex, Distanz, Vorgänger Index) im Label nach Vertex sortiert gespeichert.
 Die Abfrage ist dann ein merge sort likes vergleichen beider Label. Ein Weg existiert, wenn es ein Vertex gibt, welches in beiden Labeln vorhanden ist.

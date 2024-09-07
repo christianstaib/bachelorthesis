@@ -1,51 +1,60 @@
 \chapter{Graphen}
 
+In Graphen verbinden Kanten Knoten.
+Anwendung von Graphen.
+
+
+Kürzeste Wege.
+Straßen
+
 \begin{figure}
     \centering
     \begin{tikzpicture}
         % Nodes
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.60, -2.12)  (a)    {a};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (2.01, -5.64)  (b)    {b};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (4.78, -3.89)  (c)    {c};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (6.03, -6.61)  (d)    {d};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (9.07, -5.65)  (e)    {e};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (12.35, -5.84)  (f)    {f};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (13.44, -1.30)  (g)    {g};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (10.94, -3.81)  (h)    {h};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (10.32, -1.70)  (i)    {i};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (7.88, -3.19)  (j)    {j};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (6.24, -.94)  (k)    {k};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 0.0, 0.5* 8.5)  (a)    {a};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 2.1, 0.5* 2.1)  (b)    {b};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 10.0, 0.5* 1.2)  (c)    {c};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 16.6, 0.5* 0.5)  (d)    {d};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 22.0, 0.5* 2.2)  (e)    {e};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 19.7, 0.5* 8.0)  (f)    {f};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 13.5, 0.5* 10.7)  (g)    {g};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 6.5, 0.5* 11.0)  (h)    {h};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 4.0, 0.5* 6.0)  (i)    {i};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 9.0, 0.5* 5.7)  (j)    {j};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 15.5, 0.5* 4.6)  (k)    {k};
 
 
-        \draw[<->]  (a) edge node[midway, left] {3} (b);
-        \draw[<->]  (a) edge node[midway, above] {5} (c);
-        \draw[<->]  (a) edge node[midway, above] {3}  (k);
+        \draw[<->]  (a) edge node[circle, fill=white] {4} (b);
+        \draw[<->]  (a) edge node[circle, fill=white] {3} (h);
+        \draw[<->]  (a) edge node[circle, fill=white] {1} (i);
 
-        \draw[<->]  (b) edge node[midway, above] {3} (c);
-        \draw[<->]  (b) edge node[midway, below] {5} (d);
+        \draw[<->]  (b) edge node[circle, fill=white] {4} (c);
+        \draw[<->]  (b) edge node[circle, fill=white] {2} (i);
+        \draw[<->]  (b) edge node[circle, fill=white] {2} (j);
 
-        \draw[<->]  (c) edge node[midway, left] {2} (d);
-        \draw[<->]  (c) edge node[midway, above] {2} (j);
+        \draw[<->]  (c) edge node[circle, fill=white] {4} (d);
+        \draw[<->]  (c) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (c) edge node[circle, fill=white] {2} (k);
 
-        \draw[<->]  (d) edge node[midway, left] {4} (j);
-        \draw[<->]  (d) edge node[midway, below] {7} (e);
+        \draw[<->]  (d) edge node[circle, fill=white] {3} (e);
+        \draw[<->]  (d) edge node[circle, fill=white] {2} (k);
 
-        \draw[<->]  (e) edge node[midway, left] {3} (j);
-        \draw[<->]  (e) edge node[midway, below] {6} (f);
+        \draw[<->]  (e) edge node[circle, fill=white] {4} (f);
+        \draw[<->]  (e) edge node[circle, fill=white] {2} (k);
 
-        \draw[<->]  (f) edge node[midway, right] {4} (g);
-        \draw[<->]  (f) edge node[midway, left] {2} (h);
+        \draw[<->]  (f) edge node[circle, fill=white] {3} (g);
+        \draw[<->]  (f) edge node[circle, fill=white] {2} (k);
 
-        \draw[<->]  (g) edge node[midway, above] {3} (h);
-        \draw[<->]  (g) edge node[midway, above] {5} (i);
+        \draw[<->]  (g) edge node[circle, fill=white] {3} (h);
+        \draw[<->]  (g) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (g) edge node[circle, fill=white] {2} (k);
 
-        \draw[<->]  (h) edge node[midway, left] {3} (i);
+        \draw[<->]  (h) edge node[circle, fill=white] {1} (i);
+        \draw[<->]  (h) edge node[circle, fill=white] {2} (j);
 
-        \draw[<->]  (i) edge node[midway, above] {4} (j);
-        \draw[<->]  (i) edge node[midway, above] {6} (k);
+        \draw[<->]  (i) edge node[circle, fill=white] {2} (j);
 
-        \draw[<->]  (j) edge node[midway, right] {3} (k);
-        \draw[<->]  (j) edge node[midway, above] {2} (h);
+        \draw[<->]  (j) edge node[circle, fill=white] {1} (k);
     \end{tikzpicture}
     \caption{Beispielgraph}
 \end{figure}
@@ -100,93 +109,152 @@ Diese Probleme sind äuivalent, da das Finden alle kürzesten Wege zu einem Knot
 
 \section{Nicht-Straßen Graphen}
 
+Straßengraphen haben eine Hierarische Struktur.
+Fahren von A nach B führt auf immer schneller Straßen bis zu einem gewissen Punkt, dann immer langsamere Straßen.
+Diese Eigenschaft lässt sich für das Wegfinden ausnutzen.
+Diese Eigenscahft zu benenne ist nicht so leicht.
+Hier vielleicht die Highway Dimension erklären.
 
+Sonstige Metriken interesannt?
+Wie kann ich einen gegebenen Graph klassifizieren, ob er "teuer" zum suchen ist?
+
+Die vis Graphen haben zwar viele Kanten aber es werden selten Knoten mehrfach gepusht.
 
 Kürzeste Pfad Queries mit dem klassischen Dijksta Algorithmus sind auf den visibility Graphen deutlich teuerer als auf den triangulierten Graphen.
 
 
-Fokus dieser Arbeit erklären.
 
-Unterschiede zwischen Straßengraphen und NIcht-Straßengraphen erklären.
-TODO Straßengrqaphen sind hierarchisch, aber was heist das genau.
-TODO kann ich mit einer Metrik binär unterteilen ob ein GraPh hierarisch ist?
+\section{Dijkstra Algorithmus}
 
-Die graph erklären, die ich mir speziell anschaue.
-Trianguliereung erklären TODO Daniel?
+Als Baseline für das suchen verwende ich Dijkstra.
+Später wird der Algorithmus auch benutzt werden.
+Um die Kosten einer Suche nicht nur in Zeit auszudrücken wird noch definiert:
+Die Mächtigkeit der Menge $u$ als Dijkstra Rank
+Die Anzahl der Operationen \ref{graphs:dijkstra:pop} quqe pops.
 
-Graphen zeichen, metriken zeichen.
-Degree Plot
-Hitting Set Plot?
-Sonstige Metriken? TODO Funke
-
-
-shasum graphen
-6c00147bf26a2c37e50db857f4ce4ab565a236dd  aegaeis-ref-graph.fmi
-acdf08813a59534840c605984e9c37875f77f32a  aegaeis-ref-visibility.fmi
-b22697934378f6f8af7fb7bf3ae2812d7b0029ec  medi-ref-graph.fmi
-77760c910a13f9dc056f4ef3f3f532b00286c52f  medi-ref-visibility.fmi
-b9727caf46fd3407ce0b5e2b08b941dfb15f95f6  pata-ref-graph.fmi
-89356e6e6411b8340375c3aa0fc949fb4e58ff44  pata-ref-visibility.fmi
-
-
-\section{Dijkstra}
 
 \todo{Dijkstra Algorithmus erklären und Dijkstra Paper zitieren}
 
-Ziel ist nicht Dijktra selbst, sondern folgende Metriken erklären.
+\begin{algorithm}
+    \caption{Dijkstra Algorithmus}
+    \begin{algorithmic}[1]
+        \Require Graph $G = (V, E)$, Startknoten $s \in V$, Zielknoten $t \in V$
+        \Ensure ${dist}$, ${pre}$
+        \State // Initialisiere Distanz- und Vorgänger-Funktion
+        \ForAll{$v \in V$}
+        \State ${dist}(v) \leftarrow \infty$
+        \State ${pre}(v) \leftarrow {none}$
+        \EndFor
 
-\todo{Dijkstra Rank}
-\todo{Queue Pops}
-\todo{Max Queue len}
+
+        \State
+        \State // Initialisiere Vorrangwarteschlange
+        \State ${dist}(s) \leftarrow 0$
+        \State $Q\leftarrow \{ s \}$
+
+        \State
+        \While{$Q \neq \emptyset$}
+        \State $u \leftarrow{extract\_min}(Q)$\label{graphs:dijkstra:pop}
+
+        \State
+        \State // Beende frühzeitig wenn Zielknoten gefunden wurde
+        \If {$u = t$}
+        \State \textbf{break}
+        \EndIf
+
+        \State
+        \State // Aktualisiere Nachbarn
+        \ForAll{$(u, v, w) \in E$}
+        \If {${dist}(u) + w < {dist}(v)$}
+        \State ${dist}(v) \leftarrow {dist}(u) + w$
+        \State ${pre}(u) \leftarrow v$
+        \State $Q = Q \cup \{ v \}$
+        \EndIf
+        \EndFor
+
+        \EndWhile
+
+        \State
+        \State \Return ${dist}$, ${pre}$
+    \end{algorithmic}
+\end{algorithm}
+
 
 \section{Datenstrukturen}
 
-Verschieden Graph Strukturen
+Vertices sind natürliche Zahlen bzw uint32.
+Ein Graph enthält idealerweise keine isolierten Knoten.
+isolierte Knoten sind doof für dijkstra und co.
+Die Menge der Knoten ist definiert durch Ihre Anzahl.
+Gibt es $n \in \mathbb{N}$ Knoten, so sind es $0, \dotsc, n - 1$.
 
-Grundlegende Idee:
-Ein Interface Graph welches nur ausgehende Kanten kennt.
-get edge distance, set edge distance
+Ein Graph der diese Eigenschaft nicht erfüllt, kann durch eine Mapping der Knoten in die Form gebracht werden
+Hierfür wurde ein python script geschrieben
+\todo{Vergleiche degree histogramme}
 
-Dieses habe ich für verschiedene Graphen implementiert.
-Wichtigste:
-VecVec: Ein Vec. Jeder Vertex hat hat einen Eintrag vom Typ Vec in dem die kanten sortiert nach Head sind.
-VecHashMap: Ein Vec. Jeder Vertex hat einen Eintrag vom Typ HashMap (Head, Distance).
-Vec: Zwei Vec. Einer für (Head, Distance), zweiter für startindex, stopindex für Vec.
-TODO Indexmap?
+Jenachdem was mit dem Graph gemacht werden soll, sind verschiedene Eigenschaften von Vorteil.
+Manchmal ist eine effiziente Nachbar Abfrage wichtig,
+Manchmal das bearbeiten des Graphes, einfügen oder löschen von Knoten
 
-Häufig eine Abwägung wie schnell gequeriet werden kann vs wie schnell bearbeitet werden kann.
+Es wurde ein dyn Trait benutzt, welches eine Overhead hat und kein inlining zulässt.
+Dafür lassen sich verschiedene Methoden vergleichen.
 
+Die Grundlegenden Implementierungen kennen nur ihre Vorgänger.
+Ein Reversibe Graph besteht aus einem Graph und seinem Umkehrgraph.
+Gleiche Datenstruktur.
 
-für reverse dijkstra uä muss aber auch Vorgänger bekannt sein.
-Idee: Reversible Graph aus einem Vorwärtsgrapg und Rückwärtgraph
-Beide sind aber grundätzlich gleiche Struktur. Daher ist Vorwärts und Rückwärtssuche gleiche Funktion.
+\subsection{VecVecGraph}
+Mäßig schnelle Queries
+Einfügen mit suche.
+Bei vielen Knoten teuer.
 
+\subsection{VecHashMap}
+Besser Indexmap???
 
-Gleiches gilt für Contracted Graph. Zwei Graphen Upward Graph und Downward Graph. Downward Graph ist aber \"umgedreht\" zur Definition aus dem Paper, es wird also beides mal eine Vorwärtssuche gemacht.
+Eher langsame Queries.
+Einfügen in O(1).
+
+\subsection{VecGraph}
+Schnelle Querries.
+Einfügen sehr teuer.
 
 
 \section{Archivierung}
 
-Zum Speichern von Graphen wird ein Text Based Format benutzt.
+Zum Speichern von Graphen wird textbasierter Format benutzt, welches die Dateiendung \emph{.fmi} nutzt.
+Es ist wie folgt definiert:
+\begin{definition}[FMI Dateiformat]
+    Eine Datei des Dateiformates FMI besteht aus den folgenden Zeilen (in Ordnung der Auflistung)
+    \begin{enumerate}
+        \item
+              Beliebig viele Kommentarzeilen die mit \# beginnnen
 
+        \item
+              Eine leere Zeilen
 
-Beliebig viele Kommentar lines
-leere line
-num Vertices
-num Edges
-Vertices
-Edges
+        \item
+              Anzahl der Knoten
 
-Suche
-Für Dijkstra verscheidene Datenstrukturen getestet.
-Data (predecessor, distance)
-Queue (min heap)
-is\_expanded
+        \item
+              Anzahl der Kanten
 
-jeweils ein Interface.
+        \item
+              Knoten mit nodeID nodeID2 latitude longitude elevation
 
-TODO. Testen verschiedener Kombinationen.
-TODO. Wann ist reuse of allocation sinvoll?
-TODO Decrease key
+        \item
+              Kanten mit srcIDX trgIDX cost type maxspeed
+    \end{enumerate}
+\end{definition}
 
+Die Bereitgestellten Dateien sind noch zu reinigen.
+Sie enthalten isolierten Knoten.
+Die Kantengewichte der Sichtbarkeitsgraphen sind float.
+Meine Implementation rechnet mit uint32.
 
+Dafür habe ich ein python script geschrieben.
+Es wird jeweils ein vis und graph Paar zusammen bearbeitet.
+Es entfernt isolierte Knoten und rundet die Kantengewichte auf (damit keine 0 Kanten entstehen).
+Die Triangulierten Graphen enthalten jeweils 4 Kanten (2 ungerichtete) mit einem Kantengewicht von 0.
+Diese Kanten wurden beibehalten.
+
+\todo{Plot degree before after}

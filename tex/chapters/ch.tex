@@ -2,54 +2,85 @@
 
 \todo{Historie und Zitieren}
 
+Die follgende Definition versucht unabhängig einer ERstellung zu argumentieren.
+
+\begin{definition}[Level]
+    Sei $G = V, E$ ein Graph.
+    Sei $L \subseteq \mathbb{N}$ mit $\abs{L} = \abs{V}$.
+    Dann wird eine bijketive Funktion ${vtl} \coloneq V \to L$ \emph{vertex-to-level} Funktion genannt.
+    Ihre Umkehrfunktion ${ltv}$ wird \emph{level-to-vertex} Funktion genannt.
+\end{definition}
+
 \begin{definition}[Upward Graph]
-    Sei $G = (V, E)$ und ${vtl} \coloneq V \to \mathbb{N}$ die injektive \emph{vertex-to-level} Funktion. Dann ist $G_u = (V, E_u)$ ein \emph{upward Graph} zu $G$ wenn gilt:
+    Sei $G = (V, E)$ und ${vtl}$ eine \emph{vertex-to-level} Funktion dazu. Dann ist $G_u = (V, E_u)$ ein \emph{upward Graph} zu $G$ wenn gilt:
     \begin{enumerate}
         \item\label{ch:definition:legal_edges}
         $E_u$ enthält nur Kanten $(t, h, w)$ mit $t, h \in V$ und $w \in \mathbb{N}$ für die ${vtl}(t) < {vtl}(h)$ und $w >= {spd}_{G}((t, h))$ gilt.
 
         \item\label{ch:definition:upward}
-        $E_u$ enthält mindestens alle Kanten $(t, h, {spd}_{G}((t, h)))$ mit $t, h \in V$, für die gilt, dass $h$ das größte und $t$ das zweitgrößte Level auf dem kürzesten Weg auf $G$ von $t$ nach $h$ hat.
+        $E_u$ enthält mindestens alle Kanten $(t, h, {spd}_{G}((t, h)))$ mit $t, h \in V$, für die gilt, dass $h$ das größte und $t$ das zweitgrößte Level auf allen kürzesten Wege auf $G$ von $t$ nach $h$ hat.
     \end{enumerate}
 \end{definition}
 
 Der Name des upward Graphen ergibt sich daher, dass die Suche in einem upward Graph auf das Level bezogen nur \emph{aufwärts} geht.
 
+Betrachten wir das ganze an dem bereits definierten Beispielgraph.
+Sei ${vtl}$ definiert durch die Abbildung
+$\bigl(\begin{smallmatrix}
+            a & b & c & d & e & f & g & h & i & j & k & \\
+            4 & 3 & 7 & 2 & 6 & 1 & 5 & 0 & 8 & 10 & 9 &
+        \end{smallmatrix}\bigr)$.
+
 \begin{figure}
+    \centering
     \begin{tikzpicture}
         % Nodes
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (2.5, 0)  (a)    {a};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1, 1)  (b)    {b};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (4, 1)  (c)    {c};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0, 2)  (d)    {d};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (2, 2)  (e)    {e};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (3, 2)  (f)    {f};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (5, 2)  (g)    {g};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1, 3)  (h)    {h};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (4, 3)  (i)    {i};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (6, 3)  (j)    {j};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (3, 4)  (k)    {k};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (5, 4)  (l)    {l};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 0.0, 0.5* 8.5)  (a)    {a};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 2.1, 0.5* 2.1)  (b)    {b};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 10.0, 0.5* 1.2)  (c)    {c};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 16.6, 0.5* 0.5)  (d)    {d};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 22.0, 0.5* 2.2)  (e)    {e};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 19.7, 0.5* 8.0)  (f)    {f};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 13.5, 0.5* 10.7)  (g)    {g};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 6.5, 0.5* 11.0)  (h)    {h};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 4.0, 0.5* 6.0)  (i)    {i};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 9.0, 0.5* 5.7)  (j)    {j};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 15.5, 0.5* 4.6)  (k)    {k};
 
 
-        \draw[->]  (a) -- (b);
-        \draw[->]  (a) -- (c);
+        \draw[->]  (a) edge node[circle, fill=white] {1} (i);
 
-        \draw[->]  (b) -- (d);
-        \draw[->]  (b) -- (e);
+        \draw[->]  (b) edge node[circle, fill=white] {2} (i);
+        \draw[->]  (b) edge node[circle, fill=white] {2} (j);
 
-        \draw[->]  (c) -- (f);
-        \draw[->]  (c) -- (g);
+        \draw[->]  (c) edge node[circle, fill=white] {2} (j);
+        \draw[->]  (c) edge node[circle, fill=white] {2} (k);
 
-        \draw[->]  (e) -- (h);
+        \draw[->]  (d) edge node[circle, fill=white] {3} (e);
+        \draw[->]  (d) edge node[circle, fill=white] {2} (k);
 
-        \draw[->]  (g) -- (i);
-        \draw[->]  (g) -- (j);
+        \draw[->]  (e) edge node[circle, fill=white] {2} (k);
 
-        \draw[->]  (i) -- (k);
-        \draw[->]  (i) -- (l);
+        \draw[->]  (f) edge node[circle, fill=white] {3} (g);
+        \draw[->]  (f) edge node[circle, fill=white] {2} (k);
+
+        \draw[->]  (g) edge node[circle, fill=white] {2} (j);
+        \draw[->]  (g) edge node[circle, fill=white] {2} (k);
+
+        \draw[->]  (h) edge node[circle, fill=white] {3} (g);
+        \draw[->]  (h) edge node[circle, fill=white] {1} (i);
+        \draw[->]  (h) edge node[circle, fill=white] {2} (j);
+
+        \draw[->]  (i) edge node[circle, fill=white] {2} (j);
+
+
+        \draw[->]  (k) edge node[circle, fill=white] {1} (j);
     \end{tikzpicture}
+    \caption{Upward Graph des Beispielgraphs}
 \end{figure}
+
+
+
 
 
 Aus dieser Definition folgt, dass der kürzeste Pfad zwischen zwei Knoten in $G_u$ ist also mindestens genausolang ist wie in $G$.
@@ -58,13 +89,36 @@ Aus dieser Definition folgt, dass der kürzeste Pfad zwischen zwei Knoten in $G_
 \todo{Zeiche zwei Suchbäume, jeweils in G und Gu}
 
 \begin{definition}[Downward Graph]
-    Sei $G = (V, E)$ und ${vtl} \coloneq V \to \mathbb{N}$ die injektive \emph{vertex-to-level} Funktion. Dann ist ein upward Graph des Umkehrgraphens $G^T$ ein \emph{downward Graph} zu $G$.
+    Sei $G = (V, E)$ und ${vtl} \coloneq V \to \mathbb{N}$ eine \emph{vertex-to-level} Funktion. Dann ist ein upward Graph des Umkehrgraphens $G^T$ ein \emph{downward Graph} zu $G$.
 \end{definition}
-
 
 Ein \emph{Contracted Graph} ist die Datenstruktur, mit deren Hilfe schnell kürzeste Wege gefunden werden können.
 Bevor im Folgenden verschiedene Arten beschrieben werden, wie, ein Contracted Graph erstellt werden kann, wird eine allgemeingültige Definition eingeführt.
 
+\begin{algorithm}
+    \caption{Construction Hierachies Query}
+    \begin{algorithmic}[1]
+        \Require Upward-Graph $G_u = (V, E_u)$, Downward-Graph $G_d = (V, E_d)$, Startknoten $s \in V$, Zielknoten $t \in V$
+        \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$, ${pre}_u$, ${dist}_d$, ${pre}_d$
+        \State ${dist}_u$, ${pre}_u$ $\leftarrow$ Dijkstra$(G_u, s)$
+        \State ${dist}_d$, ${pre}_d$ $\leftarrow$ Dijkstra$(G_d, t)$
+
+        \State
+        \State $m \leftarrow {none}$
+        \State $d \leftarrow \infty$
+        \State
+
+        \ForAll {$v \in V$}
+        \If {${dist}_u(v) + {dist}_d(v) < d$}
+        \State $m \leftarrow v$
+        \State $d \leftarrow {dist}_u(v) + {dist}_d(v)$
+        \EndIf
+        \EndFor
+
+        \State
+        \State \Return $m$, ${dist}_u$, ${pre}_u$, ${dist}_d$, ${pre}_d$
+    \end{algorithmic}
+\end{algorithm}
 
 
 Die Suche eines kürzesten Pfades von $u$ nach $v$ auf einem Contracted Graph gestaltet sich nun wie folgt:
@@ -134,6 +188,8 @@ Das Ziel der Contraction Hierarchies ist es aus dem Graph zwei Teilgraphe mit Ab
 Auf diesen Graphen kann mit einer Breitensuche effizient ein Knoten gefunden werden, der auf dem kürzesten Pfad zwischen zwei Knoten liegt.
 
 \subsection{Contraction}
+
+Definition einer Contraction erklären.
 
 
 \subsubsection{Bottom-Up}
@@ -253,6 +309,29 @@ Plot hitting set vs bottom-up order
 
 
 \section{Hitting Set Berechnung}
+
+\begin{algorithm}
+    \caption{Greedy Hitting Set}
+    \begin{algorithmic}[1]
+        \Require Knotenmenge $V$, Pfade $P$ über $V$
+        \Ensure Hitting-Set $H$ als geordnete Menge
+
+        \State $H \gets \emptyset$
+
+        \State
+
+        \While{$P \neq \emptyset$}
+        \State Wähle $v \in V$ mit $\abs{ \{ p \mid p \in P \colon v \in p \}}$ maximal.
+        \State $H \gets \{v\} \cup H$
+        \State $P \gets P \setminus \{p \in P \mid v \in p\}$
+        \EndWhile
+
+        \State
+
+        \State \Return $H$
+    \end{algorithmic}
+\end{algorithm}
+
 Vorraussetzung für das Bruteforcing ist eine Funktion $f \coloneq V \to \mathbb{N}$, welche den Knoten einem \emph{Level}
 
 Level-to-vertex
