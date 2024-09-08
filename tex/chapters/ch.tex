@@ -48,29 +48,30 @@ $\bigl(\begin{smallmatrix}
         \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 15.5, 0.5* 4.6)  (k)    {k};
 
 
-        \draw[->]  (a) edge node[circle, fill=white] {1} (i);
+        \draw[->]  (a) edge[bend left=15] node[circle, fill=white] {3} (j);
 
-        \draw[->]  (b) edge node[circle, fill=white] {2} (i);
+        \draw[->]  (b) edge node[circle, fill=white] {4} (a);
         \draw[->]  (b) edge node[circle, fill=white] {2} (j);
 
         \draw[->]  (c) edge node[circle, fill=white] {2} (j);
         \draw[->]  (c) edge node[circle, fill=white] {2} (k);
 
-        \draw[->]  (d) edge node[circle, fill=white] {3} (e);
         \draw[->]  (d) edge node[circle, fill=white] {2} (k);
 
+        \draw[->]  (e) edge node[circle, fill=white] {3} (d);
         \draw[->]  (e) edge node[circle, fill=white] {2} (k);
 
-        \draw[->]  (f) edge node[circle, fill=white] {3} (g);
         \draw[->]  (f) edge node[circle, fill=white] {2} (k);
 
+        \draw[->]  (g) edge node[circle, fill=white] {3} (f);
         \draw[->]  (g) edge node[circle, fill=white] {2} (j);
         \draw[->]  (g) edge node[circle, fill=white] {2} (k);
 
-        \draw[->]  (h) edge node[circle, fill=white] {3} (g);
-        \draw[->]  (h) edge node[circle, fill=white] {1} (i);
-        \draw[->]  (h) edge node[circle, fill=white] {2} (j);
+        \draw[->]  (h) edge node[circle, fill=white] {3} (a);
+        \draw[->]  (h) edge node[circle, fill=white] {1} (j);
 
+        \draw[->]  (i) edge node[circle, fill=white] {1} (a);
+        \draw[->]  (i) edge node[circle, fill=white] {3} (b);
         \draw[->]  (i) edge node[circle, fill=white] {2} (j);
 
 
@@ -189,13 +190,28 @@ Auf diesen Graphen kann mit einer Breitensuche effizient ein Knoten gefunden wer
 
 \subsection{Contraction}
 
-Definition einer Contraction erklären.
+\begin{definition}[Vertex Contraction]
+    Ein Knoten wird wie folgt konktraktiert.
+
+    Für jeden Vorgänger und jeden Nachfolger:
+    Wenn der Knoten auf dem einzigen kürzesten Pfad zwischen Vorgänger und Nachfolger liegt, füge einen Shortcut Vorgänger Nachfolger ein.
+    Speichere ((Vorgänger, Nachgänger), Knoten) ab.
+
+    Entferne jede Kante zu Vorgänger und Nachfolger.
+\end{definition}
+
+Für die verbleibenden Knoten bleibt der kürzeste Pfad erhalten.
 
 
-\subsubsection{Bottom-Up}
+\subsubsection{Top-Up}
 
+Wenn $ltv$ gegeben ist, einfach alle Knoten von Level 0 aus startend kontraktieren.
+Sammle alle Shortcuts.
 
-\clearpage
+Füge alle Shortcuts in den Graphen ein.
+Erstelle upward Graph/dopward Graph aus Graph wobei upward  nur Level aufwärts.
+downward Graph ist inverser Graph Level downwards.
+
 
 \todo{überhaupt Möglich weil sum degree**2 zu hoch?}
 
@@ -212,44 +228,37 @@ Die naheliegendste Idee ist das direkte Berechnen der CH Edges und HL Labels.
 Dies ist zwar sehr rechenintensiv, es muss für jeden Knoten eine one-to-many bzw. one-to-all Suche durchgeführt werden, dies ist jedoch schneller möglich, also für jeden in-Nachbar eine one-to-many Suche zu berechnen.
 
 
+\subsubsection{Bottom-Up}
 
-Wir erstellen zwei neue Graphen aus einem input Graphen.
+Erstelle $lvt$ Währen dem erstellen.
 
-Upward Graph: (u, v) ist Kante wenn der V des höchsten Leven auf dem kürzstem Pfad von u nach v hat und u den zweithöchsten.
+edge diff.
 
-Downward Graph: (u, v) ist in Kante wenn v den höchsten Level auf dem Kürzsten Pfad von v nach u hat und u den zweithöchsten.
-TODO ist das so richtig?
+Greddy lazy poping vs neighbor update.
 
-Wenn Graph bidirectional ist, dann upward graph == downard graph
+lazy poping für vis graphen nicht sinvoll?
 
-((u, v), s) ist jeweils ein shortcut, wenn der kürzste Pfand länger als 2 Hops ist.
+Neighbor update für vis graphen nicht sinvoll?
+Vielleicht nur updaten, nachdem n nachbarn contracted worden?
 
-Die Auswahl von S ist nicht genau definiert, jedoch muss es am Ende möglich sein die Shortcuts auszupacken.
-Bei single step contraction verstehe ich das, bei brute Force ist mir das aber noch nicht ganz klar. Reicht 1 HashMap dann oder brauche ich jeweils für eine für Up and Downward Graph.
-
-
-Diese Defintion ist ein bisschen anders als vielleicht anders gesehen. Häufig? wird auf dem Downward Graph eine Rückwärtssuche gemacht. Ich möchte aber keine extra Suche und so dafür implementieren, daher ist der Downward graph auch ein Out Graph.
-
-Datenstruktur ähnlich zu Reversible Graph. Da einmal fester Graph nicht mehr verändert wird nutze ich einen VecGraph wobei die Edges nach Level Tail geordnet sind.
-
-\section{Query}
-Auf jedem kürsten Pfad gibt es einen Vertex mit höchstem Level. Die Suchen auf dem upward und downard graph treffen sich in diesem.
-
-Bild Zicksack. Mit Shortcuts
-
-Early stop nicht trivial möglich TODO WARUM (Es gab auf Stackoverflow mal ein Gegenbeispiel aber ich finde es nicht mehr :( Der CH Graph ist garantiert ein Shortest Path Tree (Bei Bruteforce aber schon, daher kein Stall notwendig??? TODO))
-
-Warum schnell? Wir betrachten nur einen Teil der Vertices, die haben dafür aber garantiert? mehr Nachbarn. Trotzdem Tradeofff? Immer?
-
-\subsection{Heuristic}
-
-Ist es möglich, bzw lohnt es sich Heuristic zu verwenden? Lowerbound für Zielfindung oder Upperbound welche nicht verwendet werden müssen?
+Vielleicht nur n mal insgesammt updaten? alle 10\% neu berechnen?
 
 
-\section{Single Step contraction}
-Zuerst normalen Vorgang erklären. Dann sind die Wörter, die später benutzt werden bereits definiert.
 
-Contraction Heuristiken
+Heuristic egde difference (zufall)
+Vis graphen haben sehr hohen degree (TODO Beweis).
+Daher degree x degree viele checks, das gehtn schnell in die Millionen bis Milliarden.
+Idee: betrachte nur ein Subset (tails, heads) und schaue ob und wie genau dieses die Edge difference aproximiert.
+
+Das kann dann wieder für andere Methoden benutzt werden.
+
+Plot hitting set vs bottom-up order
+
+
+\subsubsection{Ideen}
+
+Verwende eine Heuristik für Contractio
+
 
 Wir betrachten Vertex v. tail -> v -> head.
 Füge shortcut tail -> head ein, wenn tail -> v -> head der einzigste kürzste Weg ist.
@@ -277,35 +286,6 @@ TODO Wenn shortcut distance == lowerbound(head) - lowerbound(tail) dann checken 
 
 CH / HL als Heuristic.
 Dann ist lowerbound == upperbound und damit wie dijkstra ohne without. Kann sich unter umständen lohnen.
-
-
-single step contraction?? TODO name
-
-\subsection{Bottum-Up}
-
-Greddy lazy poping vs neighbor update.
-
-lazy poping für vis graphen nicht sinvoll?
-
-Neighbor update für vis graphen nicht sinvoll?
-Vielleicht nur updaten, nachdem n nachbarn contracted worden?
-
-Vielleicht nur n mal insgesammt updaten? alle 10\% neu berechnen?
-
-
-
-Heuristic egde difference (zufall)
-Vis graphen haben sehr hohen degree (TODO Beweis).
-Daher degree x degree viele checks, das gehtn schnell in die Millionen bis Milliarden.
-Idee: betrachte nur ein Subset (tails, heads) und schaue ob und wie genau dieses die Edge difference aproximiert.
-
-Das kann dann wieder für andere Methoden benutzt werden.
-
-Plot hitting set vs bottom-up order
-
-
-\subsection{Top-Down}
-
 
 
 \section{Hitting Set Berechnung}

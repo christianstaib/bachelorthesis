@@ -20,3 +20,4 @@ upward
 downward
 Query
 vertex-to-level
+Hop-Länge

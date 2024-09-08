@@ -1,13 +1,10 @@
 \chapter{Graphen}
 
-In Graphen verbinden Kanten Knoten.
-Anwendung von Graphen.
+Ein Graph ist eine Struktur, die verwendet wird, um Beziehungen zwischen Objekten darzustellen.
+Die Idee, Objekte durch Verbindungen zu verknüpfen, bildet die Grundlage für viele Anwendungen, unter anderem der Routenplanung.
+\autoref{graphs:fig:beispielgraph} zeigt einen Graphen, welcher im folgenden für Beispiele benutzt wird.
 
-
-Kürzeste Wege.
-Straßen
-
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \begin{tikzpicture}
         % Nodes
@@ -29,7 +26,7 @@ Straßen
         \draw[<->]  (a) edge node[circle, fill=white] {1} (i);
 
         \draw[<->]  (b) edge node[circle, fill=white] {4} (c);
-        \draw[<->]  (b) edge node[circle, fill=white] {2} (i);
+        \draw[<->]  (b) edge node[circle, fill=white] {3} (i);
         \draw[<->]  (b) edge node[circle, fill=white] {2} (j);
 
         \draw[<->]  (c) edge node[circle, fill=white] {4} (d);
@@ -49,53 +46,53 @@ Straßen
         \draw[<->]  (g) edge node[circle, fill=white] {2} (j);
         \draw[<->]  (g) edge node[circle, fill=white] {2} (k);
 
-        \draw[<->]  (h) edge node[circle, fill=white] {1} (i);
-        \draw[<->]  (h) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (h) edge node[circle, fill=white] {3} (i);
+        \draw[<->]  (h) edge node[circle, fill=white] {1} (j);
 
         \draw[<->]  (i) edge node[circle, fill=white] {2} (j);
 
         \draw[<->]  (j) edge node[circle, fill=white] {1} (k);
     \end{tikzpicture}
     \caption{Beispielgraph}
+    \label{graphs:fig:beispielgraph}
 \end{figure}
-
-\todo{Graphen auf Kinderniveau erklären und schöne Bilder von Graphen zeigen}.
 
 \section{Definitionen}
 Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es notwendig, einige Begriffe zu definieren.
 
 \begin{definition}[Graph]
-    Sofern nicht anders angegeben, wird ein endlicher, gerichteter Graph mit Kantengewichten, ohne Mehrfachkanten und Schleifen, einfach als Graph bezeichnet.
+    Sofern nicht anders angegeben wird im folgenden Graph als eine Bezeichnung für einen endlichen, gerichteten Graph mit Kantengewichten, ohne Mehrfachkanten und Schleifen, verwendet.
 
-    Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß}, $h \in V$ als \emph{Kopf} und $w \in \mathbb{R}$ als \emph{Gewicht} bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, definiert diese Schreibweise auch eindeutig das Kantengewicht.
+    Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß}, $h \in V$ als \emph{Kopf} und $w \in \mathbb{R}^+$ als \emph{Gewicht} bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, definiert diese Schreibweise auch eindeutig das Kantengewicht.
 
-    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h) \in E \Leftrightarrow (h, t) \in E$.
+    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E$.
+\end{definition}
+
+\begin{definition}[Nachbar]
+    Sei $G = (V, E)$. Ein Knoten $u \in V$ heißte \emph{Vorgänger} eines Knoten $v \in V$ wenn $(u, v) \in V$. $v$ ist in dann ein \emph{Nachfolger} von $u$. Ist $G$ ungerichtet spricht man beides mal von \emph{Nachbarn}.
 \end{definition}
 
 In einem Graphen gibt es oft das Interesse, von einem Knoten zu einem anderen zu gelangen.
-Diese Verbindungen zwischen Knoten werden durch sogenannte Wege dargestellt.
 
-\begin{definition}[Weg]
-    Ein Weg auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $v_1, \dotsc, v_n$, für die gilt, dass benachbarte Knoten im Weg eine Kante in $E$ bilden.
-
-    \todo{Wie nenne ich die Hoplänge?}
-
-    Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge} des Weges genannt. Der Knoten $v_1$ wird Startknoten, $v_n$ Zielknoten genannt.
+\begin{definition}[Pfad]
+    Ein Pfad auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $v_1, \dotsc, v_n$, für die gilt, dass benachbarte Knoten im Pfad durch eine Kante in $G$ verbunden sind.
+    Der Knoten $v_1$ wird Startknoten, $v_n$ Zielknoten genannt.
+    Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge} genannt.
+    Die Anzahl Kantennutzungen $n - 1$ wird \emph{Hop-Länge} genannt.
 \end{definition}
 
-Zwischen zwei Knoten kann es mehrere unterschiedliche Wege geben.
-Diese Wege können auch unterschiedliche Länge haben.
+Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben.
 
-\begin{definition}[Kürzester Weg]
-    Ein Weg $v_1, \dotsc, v_n$ ist \emph{ein kürzester Weg}, wenn die Länge des Weges unter allen Wegen von $v_1$ nach $v_n$ minimal ist. Die Länge des kürzesten Weges wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet. Die Definition des Graphen lässt es zu, dass es mehrere kürzeste Wege zwischen zwei Knoten gibt.
+\begin{definition}[Kürzester Pfad]
+    Ein Pfad $v_1, \dotsc, v_n$ ist \emph{ein kürzester Pfad}, wenn die Länge des Pfades unter allen Pfad von $v_1$ nach $v_n$ minimal ist. Die Länge des kürzesten Pfades wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet. Die Definition des Graphen lässt es zu, dass es mehrere kürzeste Pfade zwischen zwei Knoten gibt.
 
-    Sei $P \subset V \times V$ die Menge der Knoten, zwischen denen ein Weg existiert. Dann sind definiert:
+    Sei $P \subset V \times V$ die Menge der Knoten, zwischen denen ein Pfad existiert. Dann sind definiert:
     \begin{enumerate}
         \item
-              ${spd} \colon P \to \mathbb{R}$ weist einem Knotenpaar den Abstand zu.
+              ${spd} \colon P \to \mathbb{R}^+$ weist einem Knotenpaar den Abstand zu.
 
         \item
-              ${sp} \colon P \to V \times V \times \dots \times V$ weist einem Knotenpaar einen kürzesten Weg zu.
+              ${sp} \colon P \to V \times V \times \dots \times V$ weist einem Knotenpaar einen kürzesten Pfad zu.
     \end{enumerate}
 \end{definition}
 
@@ -103,26 +100,32 @@ Diese Wege können auch unterschiedliche Länge haben.
     Sei $G = (V, E)$ ein Graph. Dann ist $G^T = (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{Umkehrgraph} von $G$.
 \end{definition}
 
-Zusätlich zum finden eines Weges zwischen zwei Knoten ist es häufig notwendig den kürzesten Weg von einem Knoten zu allen anderen Knoten zu finden.
-Auch die Umkehrung dieses Problem ist interesannt, also die kürzesten Wege von allen Knoten zu einem zu bestimmen.
-Diese Probleme sind äuivalent, da das Finden alle kürzesten Wege zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Wege auf dem Umkehrgraph $G^T$ entspricht.
+Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu finden.
+Auch die Umkehrung dieses Problem ist Interessent, also die kürzesten Pfade von allen Knoten zu einem Knoten zu bestimmen.
+Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade auf dem Umkehrgraph $G^T$ entspricht.
 
-\section{Nicht-Straßen Graphen}
+\section{Graphenklassen}
+\subsection{Straßengraphen}
 
-Straßengraphen haben eine Hierarische Struktur.
+Straßengraphen bilden eine besondere Klasse von Graphen und habe einige Eigenschaften, welche nicht alle Graphen haben.
+Unter anderem
+Sie sind nahezu planar (Über- und Unterführungen ausgenommen), haben einen kleinen Durschnittlichen Grad und eine hierarische Struktur:
 Fahren von A nach B führt auf immer schneller Straßen bis zu einem gewissen Punkt, dann immer langsamere Straßen.
+Insbesondere führt ab einer hinreichend großen Distanz der kürzeste Pfad zu einem großen Teil über die Autobahn.
 Diese Eigenschaft lässt sich für das Wegfinden ausnutzen.
-Diese Eigenscahft zu benenne ist nicht so leicht.
-Hier vielleicht die Highway Dimension erklären.
 
-Sonstige Metriken interesannt?
-Wie kann ich einen gegebenen Graph klassifizieren, ob er "teuer" zum suchen ist?
+\subsection{Nicht-Straßen Graphen}
 
-Die vis Graphen haben zwar viele Kanten aber es werden selten Knoten mehrfach gepusht.
+Formale Defintion Sichtbarkeitrgraphen.
 
-Kürzeste Pfad Queries mit dem klassischen Dijksta Algorithmus sind auf den visibility Graphen deutlich teuerer als auf den triangulierten Graphen.
+Euklidische Ebene.
+Polygone in der Ebene.
 
+Gummiband Eigenschaft?
 
+\subsubsection{Die Graphen im Detail}
+
+\todo{Bilder}
 
 \section{Dijkstra Algorithmus}
 
@@ -135,7 +138,7 @@ Die Anzahl der Operationen \ref{graphs:dijkstra:pop} quqe pops.
 
 \todo{Dijkstra Algorithmus erklären und Dijkstra Paper zitieren}
 
-\begin{algorithm}
+\begin{algorithm}[ht]
     \caption{Dijkstra Algorithmus}
     \begin{algorithmic}[1]
         \Require Graph $G = (V, E)$, Startknoten $s \in V$, Zielknoten $t \in V$
@@ -180,6 +183,56 @@ Die Anzahl der Operationen \ref{graphs:dijkstra:pop} quqe pops.
 \end{algorithm}
 
 
+\section{Dateiformat}
+
+Die in dieser Arbeit verwendeten Graphen sind im \emph{.fmi} Dateiformat gespeichert, welches wie folgt definiert ist:
+
+\begin{definition}[FMI Dateiformat]
+    Eine Datei im .fmi Format besteht aus den folgenden Zeilen (in der angegebenen Reihenfolge):
+    \begin{enumerate}
+        \item
+              Beliebig viele Kommentarzeilen, die mit einem \# beginnen.
+
+        \item
+              Eine leere Zeile.
+
+        \item
+              Eine Zeile, die die Anzahl der Knoten enthält.
+
+        \item
+              Eine Zeile, die die Anzahl der Kanten enthält.
+
+        \item
+              Knoten-Zeilen im Format: \texttt{KnotenId1 KnotenId2 Breitengrad Längengrad Höhe}
+
+        \item
+              Kanten-Zeilen im Format: \texttt{FußId1 KopfId2 Gewicht Typ Geschwindigkeit}
+
+    \end{enumerate}
+\end{definition}
+
+Für die in dieser Arbeit verwendeten Graphen sind die Felder für Höhe, Typ und Geschwindigkeit nicht von Bedeutung, sie enthalten jeweils den Wert 0.
+
+Die bereitgestellten Graphen mussten vor ihrer Nutzung gereinigt und an die Implementierung angepasst werden.
+Sie enthielten isolierte Knoten, und die Kantengewichte der Sichtbarkeitsgraphen waren als Gleitkommazahlen gespeichert.
+Für die Anpassung wurde ein Python-Skript benutzt, das folgende Aufgaben durchführt:
+
+\begin{itemize}
+    \item
+          Transformation der Kantengewichte.
+
+    \item
+          Entfernung isolierter Knoten.
+
+    \item
+          Anpassung der Knoten-IDs, sodass die Knoten-IDs im Sichtbarkeitsgraphen den Bereich $0, \dotsc, n$ und im triangulierten Graphen den Bereich $0, \dotsc, n + m$ umfassen.
+\end{itemize}
+
+Während der Untersuchung der triangulierten Graphen wurde festgestellt, dass einige Kanten ein Gewicht von 0 aufwiesen.
+Diese Kanten wurden unverändert beibehalten.
+
+\todo{Plot degree before after}
+
 \section{Datenstrukturen}
 
 Vertices sind natürliche Zahlen bzw uint32.
@@ -218,43 +271,3 @@ Einfügen in O(1).
 Schnelle Querries.
 Einfügen sehr teuer.
 
-
-\section{Archivierung}
-
-Zum Speichern von Graphen wird textbasierter Format benutzt, welches die Dateiendung \emph{.fmi} nutzt.
-Es ist wie folgt definiert:
-\begin{definition}[FMI Dateiformat]
-    Eine Datei des Dateiformates FMI besteht aus den folgenden Zeilen (in Ordnung der Auflistung)
-    \begin{enumerate}
-        \item
-              Beliebig viele Kommentarzeilen die mit \# beginnnen
-
-        \item
-              Eine leere Zeilen
-
-        \item
-              Anzahl der Knoten
-
-        \item
-              Anzahl der Kanten
-
-        \item
-              Knoten mit nodeID nodeID2 latitude longitude elevation
-
-        \item
-              Kanten mit srcIDX trgIDX cost type maxspeed
-    \end{enumerate}
-\end{definition}
-
-Die Bereitgestellten Dateien sind noch zu reinigen.
-Sie enthalten isolierten Knoten.
-Die Kantengewichte der Sichtbarkeitsgraphen sind float.
-Meine Implementation rechnet mit uint32.
-
-Dafür habe ich ein python script geschrieben.
-Es wird jeweils ein vis und graph Paar zusammen bearbeitet.
-Es entfernt isolierte Knoten und rundet die Kantengewichte auf (damit keine 0 Kanten entstehen).
-Die Triangulierten Graphen enthalten jeweils 4 Kanten (2 ungerichtete) mit einem Kantengewicht von 0.
-Diese Kanten wurden beibehalten.
-
-\todo{Plot degree before after}

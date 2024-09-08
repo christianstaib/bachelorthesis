@@ -1,10 +1,40 @@
 \chapter{Hub Labels}\label{chapter:hl}
 
-Grundidee von HL ist es, den CH Suchbaum für jeden Vertex zu berechnen und zu speichern.
+Die CH Query erstellt ohne Stopbedingung jeweils den vollen Suchbaum für den Start und Zielknoten und sucht danach den Knoten mit geringester Summe der Distanzen in beiden Bäumen.
+Die Idee des Hub Label ist es, diese Suche für jeden Knoten zu speichern.
+Daher repräsentiert ein Label ein Graph.
 Jeder Vertex hat demensprechend ein forward und backward label.
-Wieder, wenn bidirectional, dann forward label == backward label.:wege
+Das einzige schwierige ist es dann noch, die beiden Bäume effizient zu vergleichen.
+Dafür einfach die Label nach Vertices sortieren.
+
+
+\begin{definition}[Hub Label]
+    Sei $G = (V, E)$ ein Graph.
+
+    Ein \emph{Label Eintrag} ist ein Tupel $(h, d)$ mit $h \in V$, $d \in \mathbb{R}^+V$.
+
+    Ein \emph{Hub Label} ist ein $n$-Tupel über Hub Einträge, wobei die Tuple nach dem ersten Eintrag sortiert sind.
+\end{definition}
 
 \todo{Wie hängen kleinstes und optimales hitting set zusammen?}
+
+
+
+\begin{algorithm}
+    \caption{Hub Label Query}
+    \begin{algorithmic}[1]
+        \Require Forward Labels $F$, Reverse Labels $R$, Startknoten $s \in V$, Zielknoten $t \in V$
+        \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$
+        \State $f \leftarrow F[s]$
+        \State $r \leftarrow F[t]$
+
+        \State
+        \State $m, d \leftarrow {minimal\_overlapp}((f, r))$
+
+        \State
+        \State \Return $m$, $d$
+    \end{algorithmic}
+\end{algorithm}
 
 \begin{table}[]
     \centering
