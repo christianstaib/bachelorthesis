@@ -104,22 +104,71 @@ Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendi
 Auch die Umkehrung dieses Problem ist Interessent, also die kürzesten Pfade von allen Knoten zu einem Knoten zu bestimmen.
 Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade auf dem Umkehrgraph $G^T$ entspricht.
 
+
+\begin{definition}[Hitting Set]
+    Sei $G = (V, E)$ ein Graph und $P$ eine Menge an Pfaden auf $G$.
+    Ein Hitting Set $H = V \times V \times \dotsc \times V$ ist eine Menge an Knoten, so dass es für alle Pfade $p \in P$ mindestens einen Knoten $v \in P$ gibt, so dass $p \in H$ gilt.
+
+    Die Knoten des Hitting Set sind nach der Anzahl der Elemente ihrer Treffer in $P$ sortiert, wobei der Knoten, der am wenigsten Pfade trifft an Position 0 steht.
+\end{definition}
+
+Ein solches Hitting Set kann durch einen Greedy Algorithmus berechnet werden
+
+\begin{algorithm}
+    \caption{Greedy Hitting Set}
+    \begin{algorithmic}[1]
+        \Require Knotenmenge $V$, Pfade $P$ über $V$
+        \Ensure Hitting-Set $H$ als geordnete Menge
+
+        \State $H \gets \emptyset$
+
+        \State
+
+        \While{$P \neq \emptyset$}
+        \State Wähle $v \in V$ mit $\abs{ \{ p \mid p \in P \colon v \in p \}}$ maximal.
+        \State $H \gets \{v\} \cup H$
+        \State $P \gets P \setminus \{p \in P \mid v \in p\}$
+        \EndWhile
+
+        \State
+
+        \State \Return $H$
+    \end{algorithmic}
+\end{algorithm}
+
+
 \section{Graphenklassen}
-\subsection{Straßengraphen}
+\subsection{Straßengraphen}\label{graphs:strassengraphen}
 
-Straßengraphen bilden eine besondere Klasse von Graphen und habe einige Eigenschaften, welche nicht alle Graphen haben.
-Unter anderem
-Sie sind nahezu planar (Über- und Unterführungen ausgenommen), haben einen kleinen Durschnittlichen Grad und eine hierarische Struktur:
-Fahren von A nach B führt auf immer schneller Straßen bis zu einem gewissen Punkt, dann immer langsamere Straßen.
-Insbesondere führt ab einer hinreichend großen Distanz der kürzeste Pfad zu einem großen Teil über die Autobahn.
-Diese Eigenschaft lässt sich für das Wegfinden ausnutzen.
+Straßengraphen stellen eine spezielle Klasse von Graphen dar, die  Eigenschaften aufweisen, welche sie von allgemeinen Graphen abgrenzen.
+Eine ihrer auffälligsten Merkmale ist, dass sie nahezu planar sind, wobei Ausnahmen in Form von Über- und Unterführungen existieren und dass sie nicht-negative Kantengewichte haben.
+Die Kantengewichte sind meist der Luftlinienabstand oder die Reisezeit zwischen zwei Knoten.
+Letztere kann sich im Verlauf der Zeit ändern, etwa durch Stau oder Bauarbeiten.
+Sie haben einen relativ geringen durchschnittlichen Grad aus, Kreuzungen von mehr als zwei Straßen sind selten.
 
-\subsection{Nicht-Straßen Graphen}
+Zusätzlich besitzen sie eine hierarchische Struktur: Einfach gesagt, je schneller auf einer Straße gefahren werden darf, desto höher ist ihr \emph{Level}.
+Die Level der benutzten Straßen eines kürzesten Pfades steigt im Allgemeinen an, bis etwa eine Autobahn erreicht wird, und nimmt schließlich wieder ab, bis das Ziel erreicht wird.
 
-Formale Defintion Sichtbarkeitrgraphen.
 
-Euklidische Ebene.
-Polygone in der Ebene.
+Ein weitere Eigenschaft dieser hierarchischen Struktur ist, dass sich hinreichend lange Pfade durch eine kleine Anzahl an \emph{Hubs} beschreiben lassen.
+Diese Knoten können etwa Autobahnkreuzen und Anschlussstellen sein.
+Ein Pfad kann etwa dann durch den Startpunkt, die nähste Anschlusstelle, einem Autobahnkreuz, einer Anschlusstelle und dem Zielpunkt beschrieben werden.
+Diese Beobachtung führt zur Definition der sogenannten Highway Dimension, einem Konzept, das von \cite{abraham2010highway} eingeführt wurde.
+
+\subsection{Nicht-Straßen-Graphen}
+
+Alle Graphen, die keine Straßengraphen sind, werden als Nicht-Straßen-Graph bezeichnet.
+Da sie durch den Ausschluss der Straßengraphen definiert werden, haben sie keine gemeinsamen Eingeschaften.
+
+\subsubsection{Sichtbarkeitsgraphen}
+
+\begin{definition}[Sichtbarkeitsgraph]
+    Sei $V$ eine Menge an Punkten in einem euklidische Raum $A$. Sei $P$ eine Menge an Polygonen im selben Raum.
+
+    Der Sichtbarkeitsgraph $G = (V, E)$ enthält alle Kanten $(t, h)$, die kein Polygon schneiden.
+    Ihr Kantengewicht ist durch den euklidischen Abstand defniert.
+\end{definition}
+
 
 Gummiband Eigenschaft?
 
@@ -213,26 +262,6 @@ Die in dieser Arbeit verwendeten Graphen sind im \emph{.fmi} Dateiformat gespeic
 
 Für die in dieser Arbeit verwendeten Graphen sind die Felder für Höhe, Typ und Geschwindigkeit nicht von Bedeutung, sie enthalten jeweils den Wert 0.
 
-Die bereitgestellten Graphen mussten vor ihrer Nutzung gereinigt und an die Implementierung angepasst werden.
-Sie enthielten isolierte Knoten, und die Kantengewichte der Sichtbarkeitsgraphen waren als Gleitkommazahlen gespeichert.
-Für die Anpassung wurde ein Python-Skript benutzt, das folgende Aufgaben durchführt:
-
-\begin{itemize}
-    \item
-          Transformation der Kantengewichte.
-
-    \item
-          Entfernung isolierter Knoten.
-
-    \item
-          Anpassung der Knoten-IDs, sodass die Knoten-IDs im Sichtbarkeitsgraphen den Bereich $0, \dotsc, n$ und im triangulierten Graphen den Bereich $0, \dotsc, n + m$ umfassen.
-\end{itemize}
-
-Während der Untersuchung der triangulierten Graphen wurde festgestellt, dass einige Kanten ein Gewicht von 0 aufwiesen.
-Diese Kanten wurden unverändert beibehalten.
-
-\todo{Plot degree before after}
-
 \section{Datenstrukturen}
 
 Vertices sind natürliche Zahlen bzw uint32.
@@ -257,17 +286,36 @@ Ein Reversibe Graph besteht aus einem Graph und seinem Umkehrgraph.
 Gleiche Datenstruktur.
 
 \subsection{VecVecGraph}
-Mäßig schnelle Queries
-Einfügen mit suche.
-Bei vielen Knoten teuer.
+Ein Vec mit pro Knoten ein Vec.
+Der innere Vec speichert Tuple aus (Vertex, Distanz).
+Der innere Vec ist nach Vertex sortiert.
+
+Ein Knoten kann so mit eine binären Suche gefunden werden.
+Doch ab einem großen Grad wird diese Suche teuer.
+Das einfügen und Löschen ist auch etwas teuere, da die übrigen Elemente geschoben werden müssen
+
+Das finden von Nachbarn geht aber schnell, weil kein unbenutzer Platz dazwischen ist.
 
 \subsection{VecHashMap}
-Besser Indexmap???
+Ein Vec mit pro Knoten eine HashMap
+Die innere HashMap speichert Vertex -> Distanz.
+So kann schnell ein Knoten gefunden werden.
 
-Eher langsame Queries.
-Einfügen in O(1).
+Das finden von Nachbarn ist etwas langsamer, da unbenutzter Platz zwischen den Hash Einträgen.
+
+Das einfügen und löschen ist günstig.
+
+Vielleicht wäre IndexMap noch spannend.
+Schnelles finden von Nachbarn.
+Schnelles Iterieren.
+
+Einfügen und löschen etwas teuerer.
 
 \subsection{VecGraph}
-Schnelle Querries.
-Einfügen sehr teuer.
+Zwei Vecs.
+Ein Index Vec mit pro Knoten ein Eintrag (u32, u32).
+Dieser Eintrag gibt den Startindex und Stopindex des des zweiten Vecs an.
+Dieser ist ein Vec (Vertex, Distanz).
 
+Das bietet den Vorteil, dass man die Kanten zusätzlich sortieren kann, für besser Cache lokalität.
+Kanten häufig benutzter Knoten können so an einem Ende des Vec grupiert werden.

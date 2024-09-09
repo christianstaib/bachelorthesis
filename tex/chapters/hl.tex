@@ -69,8 +69,11 @@ Diese können zum prunnen verwendet werden.
 Das nennt man Boostraping.
 
 \subsection{Brute force}
-Dijksta Suche.
-max level path ist eine HashMap die den bisher größten Level auf dem Pfad zur Wurzel beschreibt.
-Ein Label enthält genau die Knoten für die gilt level(vertesx) == max level path.
 
-Shortcut wieder schwierig.
+Analog zum Bruteforcing der CH Kanten auch das HL LAbel bebruteforced werden.
+Pro Knoten eine Dijsktra Suche.
+Es wird getrackt, was das größte Level auf dem Pfad von der Knoten zu einem ist.
+Ist das größte Level bei einem Knotem selbst, so wird der Knoten in das Label aufgenommen.
+Der Vorgänger ist dabei der erste Knoten auf dem Weg zur Wurzel, auf dem dies ebenfalls zutrifft.
+
+Ein Shortcut ist es, wenn es zwischen diesen beiden noch Knoten gibt.
