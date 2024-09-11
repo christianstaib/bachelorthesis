@@ -1,42 +1,116 @@
 \chapter{Hub Labels}\label{chapter:hl}
 
 Die CH Query erstellt ohne Stopbedingung jeweils den vollen Suchbaum für den Start und Zielknoten und sucht danach den Knoten mit geringester Summe der Distanzen in beiden Bäumen.
-Die Idee des Hub Label ist es, diese Suche für jeden Knoten zu speichern.
-Daher repräsentiert ein Label ein Graph.
-Jeder Vertex hat demensprechend ein forward und backward label.
-Das einzige schwierige ist es dann noch, die beiden Bäume effizient zu vergleichen.
-Dafür einfach die Label nach Vertices sortieren.
+Die Idee des Label ist es, den Suchbaum des upward bzw. downard Graphenz zu speichern.
+In der in \cite{abraham2011hub} vorgestellten Terminioligy wird das Label des upward Graphen \emph{forward Label} und das des downard Graphens \emph{reverse Label} genannt.
+Ein kürzester Pfad wird gefunden, in dem der Knoten mit der geringsten Summe der Distanzen des forwad und reverse Labels gefunden wird.
 
+\begin{definition}[Forward Label, Reverse Label]
+    Sei $G = (V, E)$ und ${vtl}$ eine \emph{vertex-to-level} Funktion dazu. Dann ist die Menge $f_t \subseteq V \times \mathbb{R}$ ein \emph{forward Label} auf $G$ zu $t \in V$ wenn gilt:
 
-\begin{definition}[Hub Label]
-    Sei $G = (V, E)$ ein Graph.
+    \begin{enumerate}
+        \item
+              $f_v$ enthält nur $(h, d)$ mit $t \in V$, $d \in \mathbb{R} \colon d \geq {spd}_G ((v, h))$ für die gilt ${vtl}(h) > {vtl}(t)$
 
-    Ein \emph{Label Eintrag} ist ein Tupel $(h, d)$ mit $h \in V$, $d \in \mathbb{R}^+V$.
+        \item
+              Es gibt kein $v \in V$, welches mit zwei verschiedenen Distanzen in $f_v$ ist.
 
-    Ein \emph{Hub Label} ist ein $n$-Tupel über Hub Einträge, wobei die Tuple nach dem ersten Eintrag sortiert sind.
+        \item
+              $f_v$ enthält alle $(h, d)$ mit $t \in V$ und $d \in \mathbb{R} \colon d = {spd}_G ((v, h))$ für die gilt, dass $h$ das größte Level auf allen kürzesten Wegen auf $G$ zur Wurzel hat.
+    \end{enumerate}
+
+    Analog dazu ist $r_t$ ein \emph{Reverse Label} ein Forward Label auf dem Umkehrgraphen $G^T$. Ist $G$ ungerichtet, so sind Forward Label und Reverse Label äuivalent.
 \end{definition}
 
-\todo{Wie hängen kleinstes und optimales hitting set zusammen?}
+Dass besondere an diesen Labels ist, dass für eine ${vtl}$ Funktion es für jeden Kontenpaar $s, t \in V$, für die es einen kürzesten Pfad zwischen ihen gibt, ein Treffpunkt-Knoten $m \in V$ gibt, der im Forward und Reverse Label mit optimaler Distanz ist.
 
+\subsection{Query}
 
+Sei $G = (V, E)$ ein Graph und ${vtl}$ eine vertex-to-level Funktion.
+Dann ist $F$ die Funktion, welche einem Knoten sein Forward Label zuweist und $R$ die Funktion, die einem Knoten sein Reverse Label zuweist.
+Der \emph{Hub Graph} $H = (F, E)$ ist dann die Datenstruktur, mit der schnell kürzeste Pfade gefunden werden können.
+Algorithmus \ref{hl:alg:query} zeigt wie wenig Schritte dafür notwendig sind, eine kürzeste Pfad Distanz in $H$ zu finden.
 
-\begin{algorithm}
+\begin{algorithm}[ht]
     \caption{Hub Label Query}
     \begin{algorithmic}[1]
         \Require Forward Labels $F$, Reverse Labels $R$, Startknoten $s \in V$, Zielknoten $t \in V$
         \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$
-        \State $f \leftarrow F[s]$
-        \State $r \leftarrow F[t]$
+        \State $f_s \leftarrow F[s]$
+        \State $r_t \leftarrow F[t]$
 
         \State
-        \State $m, d \leftarrow {minimal\_overlapp}((f, r))$
+        \State $m \leftarrow {none}$
+        \State $d \leftarrow \infty$
+
+        \ForAll {$v \in V \colon (v, d_f) \in f_s \land (v, d_r) \in r_t$}
+        \If {$d_f + d_r < d$}
+        \State $d \leftarrow d_f + d_r$
+        \State $m \leftarrow v$
+        \EndIf
+        \EndFor
 
         \State
         \State \Return $m$, $d$
     \end{algorithmic}
+    \label{hl:alg:query}
 \end{algorithm}
 
-\begin{table}[]
+Der Beweis für die Korrektheut folgt dem gleichen Schema wie Beweis \ref{ch:proof:correct}.
+
+\begin{beweis}\label{hl:proof:correct}
+    Der Beweis der Korrektheit folgt in zwei Schritten.
+
+    \begin{enumerate}
+        \item
+              ${spd}_G ((u, v)) = d$ mit $d \neq \infty$ $\Rightarrow$ ${spd}_H((u, v)) = d$.
+
+              Sei ${sp}((u, v))$ der kürzeste Pfad auf $G$ der unter allen kürzesten Pfaden den Knoten $m$ mit dem höchstem Level enthält.
+              Da $m$ auf dem kürzestem Pfad liegt, ist auch der Pfad $(u, \dotsc, m)$ ein kürzester Pfad.
+              Da $m$ das höchste Level auf dem diesem Pfad hat, ist $(m, {spd}((u, m))) \in f_s$.
+
+              Analog dazu ist $m$ der Knoten mit höchstem Level auf dem Pfad $(v, \dotsc, t)$ in $G^T$ und damit $(m, {spd}((m, v))) \in r_v$
+
+              Die kürzeste Pfad Distanz kann dann durch aufsummierung von ${spd}((u, m))$ und ${spd}((m, v))$ erhalten werden.
+
+        \item
+              ${spd}_G ((u, v)) = \infty$ $\Rightarrow$ ${spd}_H((u, v)) = \infty$.
+
+              Angenommen, es würde ein Teffpunkt-Knoten $m$ mit $(m, d_f) \in f_s$ und $(m, d_r) \in r_t$ gefunden werden.
+              Nach der Definition der Labels sind $d_f, d_r \in \mathbb{R}$, also endlich.
+              Da aber ${spd}_G ((u, v)) = \infty$ muss $d_f = \infty$ oder $d_r \infty$ gelten.
+              Daher wäre das Forward oder Reverse Label illegal.
+    \end{enumerate}
+
+    Daher gilt, die Suche der kürzesten Pfad Distanz in $H$ ist äquivalent zu der in $G$
+    \qed
+\end{beweis}
+
+Die eigentliche Suche ist dann nur noch das finden des Treffpunkt-Knotens.
+
+\todo{Wie hängen kleinstes und optimales hitting set zusammen?}
+
+\section{Pfad erstellung}
+
+Um nachdem ein Treffpunkt-Knoten $m$ gefunden wurde einen Pfad erstellen zu können sind noch zusätzliche Information notwendig.
+Wie bereits erwähnt repräsentiert ein Label einen Suchbaum.
+Um den Pfad auf diesen zu erstellen, muss für jeden Knoten in dem Label sein Vorgänger, falls vorhanden, bekannt sein.
+Dafür wird die Label Definition von $V \times \mathbb{R}$ erweitert auf $V \times \mathbb{R} \times V$.
+Der erstellte Pfad kann dann jedoch weiterhin Abkürzungen enthalten.
+Diese sind jedoch gleich Art wie die des Contracted Graph, der dort verwendete Algorithmus zur Erstellung eines gültigen Pfades kann wieder verwendet werden.
+
+
+\section{Datenstruktur}
+
+Die HL Query ist es dann den overlapp zweier Labels zu finden.
+Damit das leicht möglich ist, werden die Einträge (Vertex, Distanz, Vorgänger Index) im Label nach Vertex sortiert gespeichert.
+Die Abfrage ist dann ein merge sort likes vergleichen beider Label.
+
+Der kürzste pfad ist dementsprechend dann der Vertex mit geringster forward = backward distanz.
+Der Vorgänger ist durch den Index des Voränger indtifiziert, dass sofort an die Stelle des Voränger gesprungen werden kann und nicht erst das ganze Label durchsucht werden muss.
+Der Vertex, dem das Label label gehört hat keinen Vorgänger.
+
+\begin{table}[ht]
     \centering
     \begin{tabular}{@{}llllll@{}}
         \toprule
@@ -47,13 +121,7 @@ Dafür einfach die Label nach Vertices sortieren.
     \end{tabular}
 \end{table}
 
-Die HL Query ist es dann den overlapp zweier Labels zu finden.
-Damit das leicht möglich ist, werden die Einträge (Vertex, Distanz, Vorgänger Index) im Label nach Vertex sortiert gespeichert.
-Die Abfrage ist dann ein merge sort likes vergleichen beider Label. Ein Weg existiert, wenn es ein Vertex gibt, welches in beiden Labeln vorhanden ist.
-der kürzste pfad ist dementsprechend dann der Vertex mit geringster forward = backward distanz.
-Der Vorgänger ist jeweils nicht der Vertex im Label der unter Vorgänger Index zu finden ist. Der Vertex, dem das Label label gehört hat keinen Vorgänger.
 
-Shortcut replacement analog zu CH.
 
 \section{Erstellung}
 
@@ -62,18 +130,20 @@ Gibt es bereits eine CH, dann kann diese leicht in eine HL umgewandelt werden.
 Für jeden Vertex wird ein Label erstellt, dass den Vertex enthält.
 Vom Vertex mit dem höchstem Level zum niedrigsten Level werden die Labels der Nachbarn gemerged, wobei für duplikate unter den Vertices die niedrigste Distanz gewähl wird.
 
-Da CH Suchbaum nicht optimal ist, ist das Label viel größer, als es sein müsste. Daher sollte das Label noch geprunt werden.
-Beim Pruning werden die Vertices aus dem Label entfernt, die keine optimale Distanz haben.
+Da CH Suchbaum nicht optimal ist, ist das Label viel größer, als es sein müsste.
+Um den Speicherbedarf zu verkleinern und die Geschwindigkeit zu erhöhen, sollten diese unnötigen Einträge noch entfernt weren, dies wird \emph{pruning} genant.
+
+Werden die Label in der Reihenfolge der Level, startend mit dem höchstem Level erstellt, so können die bereits erstellten Label benutzt werden, um diese unnötigen Einträge zu indentifizieren.
 Da ein Label nur Vertices mit mindestem dem gleichem Level wie sich selbst enhält sind die für diese Vertices die Label bereits erstellt.
-Diese können zum prunnen verwendet werden.
+Um zu Püfen ob ein Eintrag $(t, d_t)$ im Forward LAbel von $s$ optimal ist, wird der minimal overlapp zwischen diesem Label und dem Reverse LAbel von $t$ berechnet.
 Das nennt man Boostraping.
 
 \subsection{Brute force}
 
 Analog zum Bruteforcing der CH Kanten auch das HL LAbel bebruteforced werden.
-Pro Knoten eine Dijsktra Suche.
-Es wird getrackt, was das größte Level auf dem Pfad von der Knoten zu einem ist.
-Ist das größte Level bei einem Knotem selbst, so wird der Knoten in das Label aufgenommen.
-Der Vorgänger ist dabei der erste Knoten auf dem Weg zur Wurzel, auf dem dies ebenfalls zutrifft.
+Der bereits bekannte Algorithmus wird nur wenig verändert, nur die Abbruchbedingung wird entfernt.
+
+\todo{Beispielgraph Suche von $d$}
 
 Ein Shortcut ist es, wenn es zwischen diesen beiden noch Knoten gibt.
+Hierfür müssen wieder rekursiv alle Abkürzungen erstellt werden.

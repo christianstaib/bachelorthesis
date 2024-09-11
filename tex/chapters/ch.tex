@@ -5,8 +5,8 @@ Die von \cite{geisberger2008contraction} vorgestellte Methode nutzt ein änliche
 Die Grundidee der Suche eines kürzesten Pfades ist ein Bidirectionale Suche, welche jeweils nur höhere Level besucht.
 Durch diese Enschränkung des Suchhraums kann, je nach dem Graphentyp, ein Speedup mehrerer größenordnungen erreicht werden.
 
-Wie zu sehen sein wird, lassen sich die klassischen Methoden zur Erstellung der benötigten DAtenstrukturen nur bedingt auf Sichtbarkeitsgraphen anwenden.
-Daher wird im follgenden zuerst unabhängig der Erstellung argumentiert.
+Wie zu sehen sein wird, lässicht sich die klassischen Methode zur Erstellung der benötigten DAtenstrukturen nur bedingt auf Sichtbarkeitsgraphen anwenden.
+Daher wird im follgenden zuerst unabhängig der Erstellung argumentiert um später mehre Methoden hierfür vorzustellen.
 
 Contraction Hierarchies bauen auf der Notation eines \emph{Levels} auf.
 Jedem Knoten wird ein Level zugeorndet.
@@ -34,6 +34,7 @@ Formal ist dieser definiert als:
         \item\label{ch:definition:legal_edges}
         $E_u$ enthält nur Kanten $(t, h, w)$ mit $t, h \in V$ und $w \in \mathbb{N}$ für die ${vtl}(t) < {vtl}(h)$ und $w >= {spd}_{G}((t, h))$ gilt.
         Ist $\abs{{sp}((t, h))} > 2$, so nennen wir die Kante auch eine Abkürzung (\emph{Shortcut}).
+        \todo{Das ist eigenlich eher falsch. die 2 te Bedingung ist Richtig also keine größeren Level auf dem Weg. Darf aber auch Kanten enthalten, die das erfüllen.}
 
         \item\label{ch:definition:upward}
         $E_u$ enthält mindestens alle Kanten $(t, h, {spd}_{G}((t, h)))$ mit $t, h \in V$, für die gilt, dass $h$ das größte und $t$ das zweitgrößte Level auf allen kürzesten Wege auf $G$ von $t$ nach $h$ hat.
@@ -131,9 +132,11 @@ Sie besteht aus einem upwarward und downward Graph, wobei beide es eine ${vtl}$ 
 
 Die Suche eines kürzesten Pfades von $a$ nach $e$ auf dem Beispielgraph gestaltet sich nun wie folgt:
 Auf $G_u$ wird eine Breitensuche von $a$ und auf $G_d$ eine Breitensuche von $e$ durchgeführt.
-Aus den von beiden besuchten Knoten wird derjenige ausgewählt, der die nidrigste Summe beider Distanzen hat.
-Dieser Knoten auch auch das höchste Level auf dem Pfad.
-\autoref{fig:ch:beispiel_suche} zeigt das auf- und absteigen der Level auf dem kürzesten Pfad.
+Aus den von beiden besuchten Knoten wird derjenige ausgewählt, der die niedrigste Summe beider Distanzen hat.
+Dieser Knoten hat das höchste Level auf dem Pfad.
+\autoref{fig:ch:beispiel_suche} zeigt einen auf diese Weise gefunden Pfad auf dem Beispielgraph von $a$ nach $e$.
+Es ist erstichtlich, dass die Level der Knoten auf dem Pfad zum Treffpunkt-Knoten $j$ ansteigt.
+Die Kante $(a, j)$ ist hierbei ein Abkürzung, sie kürzt $i$ ab, was durch die gestrichelten Pfeile angedeuted wird.
 
 \begin{figure}[ht]
     \centering
@@ -145,7 +148,7 @@ Dieser Knoten auch auch das höchste Level auf dem Pfad.
         \node[circle, draw] at (4 * 1.5, -3 * 0.75)  (e)    {e};
 
         % draw axis
-        \draw[->] (-1, -7 * 0.75) -- (-1, 0) node[above] {Level};
+        \draw[->] (-1, -4 * 0.75) -- (-1, 0) node[above] {Level};
 
         \draw[->]  (a) -- (j);
         \draw[->]  (e) -- (k);
@@ -159,9 +162,15 @@ Dieser Knoten auch auch das höchste Level auf dem Pfad.
     \label{fig:ch:beispiel_suche}
 \end{figure}
 
-Diese informalle Beschreibung lässt sich formal definieren:
+Diese informelle Beschreibung ist Algorithmus \ref{ch:query_simple} definiert.
+Wie bei einer Bidirectionalen Dijkstra Suche wird der Pfad, sofern dieser existiert, erstellt, indem die Teilfpade beider Suchen erstellt werden.
+Diese Teipfade haben die Form $(u, \dotsc, t)$ bzw. $(v, \dotsc, t)$.
+Um einen gültigen Pfad zu erstellen, muss $t$ aus dem PFad der Suche, welche vom Ziel aus gestartet ist, entfernt werden und der entandene Pfad umkegehrt werden.
+Anschließend können beide Pfade verkettet werden und es ensteht ein Pfad auf $C$ der Form $(u, dotsc, t, \dotsc, v)$.
+Dieser Pfad muss aber kein Pfad auf $G$ sein, da er noch Abkürzungen enthalten kann.
+In \autoref{ch:subsection:pfad_gewinnung} wird darauf eingegangen, wie diese entfernt werden können.
 
-\begin{algorithm}
+\begin{algorithm}[ht]
     \caption{Construction Hierachies Query}
     \begin{algorithmic}[1]
         \Require Upward-Graph $G_u = (V, E_u)$, Downward-Graph $G_d = (V, E_d)$, Startknoten $s \in V$, Zielknoten $t \in V$
@@ -187,56 +196,116 @@ Diese informalle Beschreibung lässt sich formal definieren:
     \label{ch:query_simple}
 \end{algorithm}
 
-Doch warum ist dies Korrekt?
+Die Korrektheit des Algorithmus ist nicht sofort ersichtlich, da nicht da ein upward Graphen auch Kanten anthalten kann, die nicht optimal sind.
+Der Beweis hierfür betrachten hierbei betrachtet einen kürzesten Pfad auf $G$ und argumentiert, warum dieser gefunden wird:
 
-\begin{beweis}
-    Der Beweis der Korrektheit folgt in zwei Schritte.
+\begin{beweis}\label{ch:proof:correct}
+    Der Beweis der Korrektheit folgt in zwei Schritten.
 
     \begin{enumerate}
         \item
-              Es existiert ein kürzester Pfad von $u$ nach $v$ in $G$ $\Rightarrow$ Er wird in $C$ gefunden.
+              ${spd}_G ((u, v)) = d$ mit $d \neq \infty$ $\Rightarrow$ ${spd}_C((u, v)) = d$.
 
-              Da ${vtl}$ injektiv ist, existiert genau ein Knoten $t$ mit dem höchstem Level. Zerscheide den Pfad $(u, \dotsc, v)$ in zwei Teile:  und $(u, \dotsc, t)$ und $(t, \dotsc, v)$.
+              Sei ${sp}((u, v))$ der kürzeste Pfad auf $G$ der unter allen kürzesten Pfaden den Knoten $t$ mit dem höchstem Level enthält.
+              Erstelle aus diesem Pfad $(u, \dotsc, v)$ zwei Pfade: $(u, \dotsc, t)$ und $(v, \dotsc, t)$.
 
-              Die Tupel benachbarten Knoten in $(u, \dotsc, t)$ sind nach der Definition des upward Graph Kanten von $G_u$. Daher wird $t$ im upward Graph gefunden.
+              Gehe durch $(u, \dotsc, t)$ und entferne alle Knoten, die einen niedrigeren Level als ihr Voränger haben.
+              Die Tupel benachbarten Knoten im neu enstanden Pfad sind nach der Definition des upward Graph Kanten von $G_u$, und zwar solche, die ein optimales Kantengewicht haben.
+              Daher wird $t$ im upward Graph mit optimaler Distanz gefunden.
 
-              Analog dazu wird $t$ in $G_d$ gefunden, die Tupel benachbarter Knoten im Pfad $(v, \dotsc, t)$ sind nach der Definition des downward Graphs Kanten von $G_d$.
+              Analog dazu wird im Pfad $(v, \dotsc, t)$ mit $G_d$ argumentiert.
 
-              Da die Tupel Kanten der Graphen sind, finden die Breitensuchen den Knoten $t$ mit minimalen Kosten ausgehend von $u$ bzw. $v$. Da $t$ auf dem kürzesten Pfad liegt, ist damit auch der kúrzeste Pfad von $u$ nach $v$
+              Der $t$ in beiden Suchen mit optimalen Gewicht gefunden wird und auf dem kürzesten Pfad liegt, ist auch die optimale Distanz des kürzesten Pfades gefunden
 
         \item
-              Es existiert kein kürzester Pfad von $u$ nach $v$ in $G$ $\Rightarrow$ Es wird in $C$ kein Pfad gefunden gefunden.
+              ${spd}_G ((u, v)) = \infty$ $\Rightarrow$ ${spd}_C((u, v)) = \infty$.
 
-              Angenommen, es würde ein Pfad in C gefunden werden. Die Tupel benachbarter Knoten des Pfades müssten dann Kanten in C sein.
-              Mindestens einer diese Kanten hätte dann ein Gewicht welches gegen \autoref{ch:definition:legal_edges} der Definition verstoßt.
+              Angenommen, es würde ein Pfad ${u, \dotsc, v}$ in C gefunden werden.
+              Sei $t$ wieder der Knoten mit den höchstem Level.
+
+              Erstelle aus $(u, \dotsc, v)$ zwei Pfade: $(u, \dotsc, t)$ und $(v, \dotsc, t)$.
+              Die Tuple benachbarter Knoten entsprechen wieder Kanten im upward. bzw. downward Graph.
+              Da es keinen Pfad in $G$ gibt, muss es eine Kante im upward. bzw. downward Graph geben, welche kürzer ist, als der Pfad für den sie in $G$ steht.
+              Dies widerspricht der Definitin des kürzesten Pfades.
     \end{enumerate}
 
     Daher gilt, die Suche der kürzesten Pfad Distanz in $C$ ist äquivalent zu der in $G$
+    \qed
 \end{beweis}
 
-\subsection{Pfad gewinnung}
-Bisher enthält der Pfad Shortcuts.
-Entweder man ersetzt dan Shortcut auf einmal durch alle Knoten, oder iterativ durch jeweils zwei Kanten.
+\subsection{Erstellung des Pfades}\label{ch:subsection:pfad_gewinnung}
+Der in $C$ gefundene Pfad kann bisher noch Abkürzungen enthalten.
+Damit der Pfad auch auf $G$ gültig ist, müssen diese ersetzt werden.
+Hierfür ist eine Funktion notwendig, welche diese ersetzt.
 
-Diese müssen ersetzt werden.
-Das geht, indem einen Stapel hat und shortcuts einfügt.
+\begin{definition}[Abkürzungsfunktion]
+    Sei $G = (V, E)$ ein Graph, und $C = (G_u, G_d)$ ein Contracted Graph von $G$.
+    Betrachte die Abkürzungen $(u, v)$ aus $C$ als Pfade.
+    $S \coloneq V \times V \to V \cup \{ {none} \}$ ist eine \emph{Abkürzungsfunktion} von $C$, wenn eine endliche, rekursive Anwenden von $S$ auf die Abkürzungen einen gültigen Pfad in $G$ erzeugt.
+\end{definition}
+
+Solche eine Abkürzungsfunktion ist also an einen konkreten Contracted Graph gebunden und gilt für Pfade auf dem upward und auf dem Downward Graph \todo{Ist das so? Kann ich das beweisen, oder ein Gegenbepsiel erzeugen?}
+Das rekursive Ersetzten kann durch den Algorithmus \ref{ch:alg:shortcut_replacement} verwirklicht werden.
+
+\begin{algorithm}[ht]
+    \caption{Shortcut replacement}
+    \begin{algorithmic}[1]
+        \Require Pfad $p$ mit Abkürzungen, Abkürzungungsfunktion $S \colon V \times V \to V \cup \{ {none} \}$
+        \Ensure Pfad $p'$ ohne Shortcuts
+
+        \If {$\text{len}(p) == 1$}
+        \State \Return $p$
+        \EndIf
+        \State
+
+        \State $p' \leftarrow ()$
+        \State
+
+        \While {$\text{len}(p) >= 2$}
+        \State $w \leftarrow \text{pop}(p)$
+        \State $u \leftarrow \text{pop}(p)$
+        \State $v \leftarrow S((u, w))$
+        \State
+
+        \If {$v \neq none$}
+        \State $\text{push}(p, u)$
+        \State $\text{push}(p, v)$
+        \State $\text{push}(p, w)$
+        \Else
+        \State $\text{push}(p, u)$
+        \State $\text{push}(p', w)$
+        \EndIf
+        \EndWhile
+
+        \State
+        \State $p' \leftarrow \text{reversed}(p')$
+
+        \State
+        \State \Return $p'$
+    \end{algorithmic}
+    \label{ch:alg:shortcut_replacement}
+\end{algorithm}
 
 \section{Early stop}
 
-Dass beide Suchen vollständig asugeführt werden ist nicht optimal.
-Besser wäre es, frühzeitig stoppen zu können.
-Vielleicht, wenn ein Knoten $t$ mit Distanz $d$ gefunden wurde.
-Dann stoppen wenn top queue forward + top queue reverse >= d?
-Das funktioniert nicht.
-Denn bei der während bei einer normalen bidirectionale Suche sich die Fronten treffen, kann eine CH suche auch hinter die Front der anderen gelangen.
+Bisher werden beiden Suchen vollständig ausgeführt.
+Die Anzahl der besuchten Knoten hierbei ist zwar kleiner als im zugrundeliegenden Graphen, jedoch ist es trotzdem wünschenswert, wenn die Suche frühzeitig gestoppt werden kann.
 
-Daher ist die Abbruchbedingung: top queue >= d.
+Es ist nicht hinreichend die Suchen zu stoppen, wenn die Sume der kleinste Distanzen der Vorwärtwarteschlangen größer ist als des bisher besten Treffpunkt-Knotens.
+Dies ist darin begründet, dass die Suche auf im upward bzw. downard Graph keinen \emph{Ball} in $G$ bildet.
+Anders ausgedrückt, es ist nicht garantiert, dass sich die Suchen an ihrer Front treffen:
+Es ist möglich, dass die Suche im upward Graphen einen Knoten trifft, welcher selbst und alle seiner Nachfolger bereits expandiert worden sind.
+Hinreichend ist es, die Suche zu stoppen, wenn die kleinste Distanz beider Vorwärtswarteschlangen größer oder gleich der des bisher besten Treffpunkt-Knotens ist.
 
-Todo: Abbruch mit Heuristik. Wenn ich upper bound kenne. breche ab top queue >= upper bound.
+Dies stopt die Suche zwar fühzeitig, die Anzahl der expandierten Knoten, nachdem der beste Treffpunkt-Knoten gefunden wurde ist jedoch immernoch hoch.
+\todo{Funke fragen: Kann man hier noch verbessern? Ich habe die Michung CH und ALT noch nicht verstanden}.
 
-\todo{Funke fragen}.
+\section{Stall-on-demand}
 
-\section{Pruning}
+Die im upward und downard Graphen gefunden Distanzen müssen nicht optimal sein.
+Für das finden einen küzesten Pfades sind jedoch nur die Knoten interesannt, deren Distanz optimal ist.
+Es ist möglich den Suchraum durch \emph{stall-on-demand} zu verkleinern.
+\todo{Funke nochmal die Details. Mache ich das gerade richtig?}
 
 
 % https://cstheory.stackexchange.com/questions/23767/why-is-label-pruning-possible-with-hub-labeling
@@ -249,20 +318,19 @@ Für die Suche sind aber nur Knoten interesannt, die tatsächlich kürzesten Pfa
 
 Wie kann man diese Knoten nun leicht rausfiltern?
 Beim expanded eines Knoten prüft man, für die Nachbarn der Gegenrichtung:
-\todo{Funke nochmal die Details}
 
 
 \section{Erstellung}
 
-Das Ziel der Contraction Hierarchies ist es aus dem Graph zwei Teilgraphe mit Abkürzungen (\emph{shortcuts}) zu erstellen.
-Auf diesen Graphen kann mit einer Breitensuche effizient ein Knoten gefunden werden, der auf dem kürzesten Pfad zwischen zwei Knoten liegt.
+Die Erstellung des Contrated Graphens kann auf zwei Wegen geschehen: Durch Kontraktion und Brute-Forcing.
+Inwiefern letzter eine sinnvolle Option ist wird \todo{Results} zu sehen sein.
 
-\subsection{Contraction}
+\subsection{Kontraktion}
 
 Der Name Contraction Hierachies leitet sich aus Konzept der Knoten Kontraktion (contraction) ab.
 Diese funktioniert wie folgt:
 
-\begin{definition}[Vertex Contraction]
+\begin{definition}[Knoten Kontraktion]
     Sei $G = (V, E)$ ein Graph. Sei $v \in V$ der zu kontraktierende Knoten. Er wird kontraktiert indem:
 
     \begin{enumerate}
@@ -276,10 +344,14 @@ Diese funktioniert wie folgt:
     $v$ ist danach isoliert.
 \end{definition}
 
+Um die Abkürzungen zu erzeugen kann von jedem Voränger eine veränderte Dijkstra zu jedem Nachfolger gemacht werden.
+Bei dieser Suche werden keine Kanten von und zu kontraktierten Knoten begangen.
+Ist die dabei gefundene Distanz größer als die Summe beider Kanten, dann wird eine Abkürzung eingefügt.
+
 Diese Operation erhält für die verbleibenden Knoten die kürzesten Pfade.
 Betrachten wir dies wieder am Beispielgraph.
 Sei $i$ der zu kontraktierende Knoten, die Nachbarn sind $a$, $b$, $j$ und $h$.
-Die kürzesten Pfade von $(a, b)$, $(b, j)$, $(h, j)$ und $(a, h)$ fürhren nicht durch $i$.
+Die kürzesten Pfade von $(a, b)$, $(b, j)$, $(h, j)$ und $(a, h)$ führend nicht durch $i$.
 Der von $(a, j)$ jedoch doch, daher wird eine Kante eingefügt.
 \autoref{graphs:fig:example_contraction} zeigt den Graphen nach der Kontraktion.
 
@@ -335,21 +407,23 @@ Der von $(a, j)$ jedoch doch, daher wird eine Kante eingefügt.
 Um einen Contracted Graph zu erstellen, werden alle Knoten kontraktiert, wobei die Kanten, die in jedem Schritt entfernt werden, gesammelt werden.
 Die Kanten, deren Kopf-Level größer ist, bilden die Kanten des upward Graphens.
 Die übrigen Kanten, also die deren Fußlevel größer ist, werden invertiert und bilden die Kanten des downard Graphens.
-
 Diese Art der Erstellung erzugt zulässige upward Graphen, da die eingefügten Shortcuts die die Bedingung aus \autoref{ch:definition:upward} erfüllen.
-Es ist jedoch möglich, dass Kanten eingefügt werden, die nicht notwendig sind.
-Insbesondere hat die Reihenfolge der Kontraktion einen großen Einfluss auf die Qualität der erzeugten Graphen.
-\todo{Wie definiere ich die Qualität}?
 
-Die Suche in der Kontraktion wird häufig wie folgt gestalltet.
-Es wird eine one-to-many Suche gemacht, welche auf zwei Arten limitiert ist:
-Es wird nur der Ball mit Abstand der gößten Distanz out-Kanten + in-Kante abgesucht.
-Die Anzahl der Hops wird begrenzt.
-Dadurch werden im Zweifelsfall mehr Kanten als benötigt eingefügt, dies ist aber schneller.
+Häufig wird Kontraktionsbedingung abgeschwächt, es wird eine Kante eingefügt, wenn es \emph{wahrscheinlich} ist, dass auf dem einzig kürzesten Weg liegt.
+Dazu kann etwa eine normale Dijkstra Suche verwendet werden, es wird ann nur noch geprüft, ob der Knoten auf \emph{einem} kürzesten Pfad liegt.
+Weiter kann die Anzahl der Hops der Suche begrenzt werden, wobei den Knoten die nicht mit der Begrenzung gefunden werden die Distanz unenglich zugewiesen wird. \todo{Besser erklären.}
+Dass hierbei mehr Kanten als notwendig eingefügt werden ist für die Korrektheit unproblematisch.
+Das Einfügen unbenötigter Kanten kann jedoch einerseits den Speed negativ beinfluss, andererseits auch die Geschwindigkeit nachfolgenden Kontraktionen, da bei ihnen durch mehr Vorgänger mehr Dijkstra Suchen gemacht werden müssen.
+
+Um die zu einem Contracted Graph dazugehörige Shortcut-Funktion zu erhalten, muss während der Kontraktion des Graphens eine Liste der Shortcuts erstellt werden.
+Wird die im vorherigen Absatz erwähnte abgeschwächte Befingung verwenden, muss darauf geachtet werden, dass sich der kürzeste Shortcut zweier Knoten während der Kontraktion des Graphens mehrmals ändern kann.
+Für die Shortcut-Funktion darf nur der als letzte gesetzte, beste Shortcut verwendet werden.
+
+Die Reihenfolge, in der die Knoten kontraktiert wird (welcher der level-to-vertex Funktion ${ltv}$ entspricht), hat ebenfalls ein einen großen Einfluss auf den erzielten Speedup.
 
 \subsubsection{Top-Down}
 
-Bei der Top-Down Contraction ist level-to-vertex Funktion ${ltv}$ vorgegeben.
+Bei der Top-Down Kontraktion ist die level-to-vertex Funktion ${ltv}$ vorgegeben.
 Die Knoten werden in Reihenfolge ihres Levels kontrakiert, wobei mit dem niedrigsten Level begonnen wird.
 
 \paragraph{Zufällig sortiert}
@@ -369,67 +443,249 @@ Dies ist potentiell eine der besten Lösungen \todo{Oder? Kann man das beweisen?
 Bei der Bottom-Up contraction wird die vertex-to-level Funktion ${vtl}$ währen der Kontraktion erstellt.
 Dafür wird mit einer Heuristik der jeweils nächst \emph{unwichtigste} Knoten ausgewählt, kontraktiert und dem nächstem Level zugewiesen.
 Ein unwichtiger Knoten hat hierbei einen niedrigen Heuristik-Wert.
-Hier hängt die Qualität der des Ergebnis von der Heuristik ab.
+Die in der Praxis am meist-verwendeten Heurisiken beinhalten die \emph{Kanten-Differenz}.
+Sie gibt an wie sich die Anzal der Kanten im gesammten Graph durch die Kontraktion verändert.
+Sie wird durch die Anzahl der hinzugefügten Kanten subtrahiert durch die Anzalh der entfernten Kanten gebildet.
+Hierfür muss nicht die Kontraktion komplett simuliert werden, es ist hinreichend zu prüfen, ob bereits eine Kante existiert, nicht ob die neue optimal ist.
+Die Kontraktion eines Knoten kann dabei die Heurisitk-Werte anderer Knoten verändern.
+Damit jedes mal der Knoten mit der niedrigsten Heuristik ausgewählt wird, muss nach jeder Kontraktion alle Heuristik-Werte neuberechnet werden.
+Dies ist im Allgemeinen jedoch zu teuer ist, weshalb in der Praxis sich zwei Methoden als effektiv gezeigt haben:
 
-Da das Neuberechnen des Heuristik für alle Knoten im Allgemeinen zu teuer ist, werden zwei Methoden angewendent:
 Beim \emph{Lazy poping} besteht die Annahme, dass ein Knoten nur wichtiger werden kann.
 Aus der Warteschlange wird ein Knoten entnommen und geprüft, ob sein Heuristik-Wert noch gleich ist.
 Wenn er noch gleich ist, wird er kontraktiert, wenn nicht wird er zurück die Warteschlange gepusht.
 Dies wird wiederholt, bis schließlich ein Knoten gefunden wird.
-Beim \emph{Neighbor update} werden nach der Kontraktion eines Knoten die Heuristik Werte der Nachbarn geupdated.
 
-Es sind viele Heurisiken Möglich, die auch kombiniert werden können.
-Die in der Praxis am meist-verwendet Heurisik ist die \emph{Kanten-Differenz}.
-Sie gibt an wie sich die Anzal der Kanten im gesammten GRaph verändert
-Sie wird durch die Anzahl der hinzugefügten Kanten subtrahiert durch die Anzalh der entfernten Kanten gebildet.
-Hierfür wird die Kontraktion eines Knoten simuliert.
+Beim \emph{Neighbor update} werden nach der Kontraktion eines Knoten die Heuristik Werte der Nachbarn geupdated.
+Es lässt sich zeigen, dass es nur in besonderen Konstellationen passieren kann, dass sich die Kanten-Differenz von Nachbarn zweiter Ordnung nur in Ausnahmfällen ändert. \todo{cite}
+Dies hat den Vorteil, dass dies für alle Nachbarn parallisiert passieren kann.
 
 \subsubsection{Ideen}
 
-Die bisher erwähnten Methoden eignen sich nur bedingt für graphen mit großem durchscnittlichen Knotengrad.
-Für die Kontraktion muss jeweils für jeden Vorgänger eine Suche zu jedem Nachfolger gemacht werden.
-Insbesonder für Sichtbarkeitsgraphen ist das sehr teuer.
+Die bisher erwähnten Methoden eignen sich nur bedingt für Graphen mit großem durchscnittlichen Knotengrad.
+Dieser wirkt sich auf die Erstellungzeit der Kanten-Differenz, da für jedes Paar aus Vorgänger und Nachfolger geprüft werden muss, ob bereits eine Kante zwischen ihnen exisitert.
+Auch wenn dies durch eine passende Datenstruktur sehr effizient geschehen kann, kann dies sehr teuer sein:
+Angenommen ein Knoten hat einen Grad von \num{10000}, dann müssen \num{100000000} viele Paare geprüft werden.
+Bei einer angenommen Suchzeit von \num{10}\unit{\ns} pro Paar entspricht dies einer Sekunde.
+Ein hoher Kantengrad wirkt sich auch auf die Kosten der Kontraktion aus, da pro Vorgänger eine Suche gestartet werden muss.
+Er macht die Koten pro Suche auch teurer.
 
-Es gibt zwei Stellen, die beschleunigt werden müssen:
-Ordering Heuristik und Kontraktion
+Daher gibt es zwei Baustellen, die beschleunigt werden müssen:
+Die Heuristik und die Kontraktion.
 
 \paragraph{Kontraktion}
-Anstatt einer Suche, verwende eine Upper Bound Heuristic.
-Es muss ein Shortcut eingefügt werden, wenn die Shortcut Distanz gleich der Wahren Distanz ist.
-Dies ist erfüllt, wenn die Shortcut Distanz kleiner gleich einer Upper Bound ist.
-Zusätzlich gilt, wenn lower bound == shortcut distanz, dann muss Shortcut eingefügt werden.
+Anstatt einer teuren Suche kann auch eine Heuristik verwendet werden, welche eine obere Schranke angibt.
+Dies ist insofern auch nicht abwägig, da die abgeschwächte Dijkstra Suche selbst nur eine obere Schranke angibt.
+Eine Abkürzung wird dann eingefügt, wenn ihre Länge kleiner gleich einer oberen Schranke ist.
+Falls es günstiger ist untere Schranken zu ermitteln, kann auch zuerst geprüft werden, ob die Länge gleich einer unteren Schranke ist, dann muss ebenfalls eine Abkürzung eingefügt werden.
 
-Dafür gibt es zwei Ideen, die kombiniert werden können.
-Landmarks und eine CH/HL des triangulierten Graphes für den Sichtbarkeitsgraph.
-Vielleicht gilt, dass Landmarks für größere Entfernungen / mehr Hops gut ist und CH/HL für kleine?
+\subparagraph{Triviale Heurisik}
+Eine mögliche Idee ist, jede mögliche Abkürzung einzufügen, also die obere Schranke $\infty$ zu wählen.
+Unter der Annahme, dass bei einem sehr hohem Kantengrad fast alle Vorgänger bereits Kanten zu fast allen Nachfolgern haben, ist der Anteil der unötig eingefügenten Kanten zu den notwendig eingefügten Kanten vielleicht vertertbar.
+Die Berechnung der Kanten-Differenz und der Kontraktion sind dabei ebenfalls gleich, was beim Lazy-Popping praktisch ist, da dann die neuberechnung der Heuristik ebenfalls die neuen Kanten liefert.
 
-Alternativ, aber wahrscheinlich super doof:
-Füge jeden Shortcut ein.
+\subparagraph{Vereinfacher Graph}
+Gibt es einen vereinfachten Graphen $G'$, der obere Schranken zu $G$ für alle Knotenpaare liefert, dann kann auf diesem gesucht werden.
+Insbesondere kann eine auf $G'$ angwendet Speedup-Technik verwendet werden, wie etwe Contraction Hierarchies oder Hub Labels.
 
-Heuristic.
-Statt suche kann man auch heursitc benutzten.
+\subparagraph{Dreickunsgleichung}
+Ähnlich zu ALT\cite{goldberg2005computing} kann eine Menge Landmarks berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke angeben können.
+Ein Landmark ist hierbei ein Knoten, für den die Distanz zu und von allen Knoten bekannt ist.
+Hierbei gilt für ein Landmark $l \in V$, dass für alle $u, v \in V$ mittels ${spd}((u, l)) + {spd}((l, u))$ eine obere Schranke bestimmt werden kann.
+Liegt $l$ dabei auf einem kürzesten Pfad von $u$ nach $v$, so entspricht der Wert sogar genau dem der kürzesten Pfad Distanz.
+Damit durch ein möglichst kleine Menge an Landmarks eine möglichst große Menge an Pfaden abgeckt wird, müssen diese ein Hitting Setüber eine möglichst große Menge an Pfaden bilden.
 
-Used heuristics:
-TrivialeHeuristic (all in). Füge jeden shortcut ein.
+Die Methoden der Dreicksungleichung und des Vereinfachten Graphens können auch kombiniert werden, wobei die jeweils kleinere obere Schranke ausgewählt wird.
+Die Hoffnung hierbei ist, dass der Vereinfachte Graph Kanten mit einem niedrigen Hop-Abstand gut abschätzen kann, die Dreiecksungleichung gut Pfade mit einem hohen Hop Abstand, da die Wahrscheinlichkeit dass ein Landmark auf oder nahe einem kürzesten Pfad ist dann steigt.
 
-\paragraph{Ordering Heuristik}
-Wähle $n$ Paara aus Vorgänger Nachgänger aus und erstelle für diese Edge Differnce (wieder mit Heuristik).
-\todo{plot genauigkeit vs Zeit, vielleicht über so 1000 Knoten?}
+\paragraph{Propabalistische Heuristik}
+Wie bereits erwähnt wird bei großen Kantengraden die Berechnung der Kanten-Differenz sehr teuer.
+Eine Idee diese Kosten anzufangen, ist es die Kanten-Differenz heuristisch anzuhnähern.
+Dafür wird eine Teilmenge aller Vorgänger, Nachfolgerpaare gebildet für die die Kanten-Differenz gebildet wird.
+Dieses Ergebnis wird dann auf die tatsächliche Menge an Paaren skaliert.
+Dies kann nicht ohne weiteres mit Lazy Popping zusammen verwendet werden, da sich das die Ergebnisse bei zwei aufraufen hinterinander unterscheiden kann.
+Dies kann dazu führen, dass unötigt oft Lazy gepoppt wird.
+
+\paragraph{Layz Popping}
+Bei normalen Lazy Popping wird ein Knoten zurückgepusht, wenn er nicht mehr den gleichen Heuristik-Wert wie zuvor hat.
+Dies könnte angepasst werden, so dass ein gewisse Abweichung, entweder absolut oder relativ, zulässig ist.
+
+\paragraph{Neighbor update}
+Anstatt jeden Nachbar sofor upzudaten kann für jeden Nachbarn mitgezählt werden, wie oft ein Nachbar kontraktiert wurde.
+Erst wenn dies einen gewissen Schwellwert überschritten hat, wird der Knoten geupdated.
+
+\paragraph{Neubrechnung alle $n$ kontraktionen}
+Die Heuristik-Werte werden all $n$ Kontraktionen für alle Knoten neuberechnet.
 
 \section{Brute force}
 
-Die upward Graphen können auch stumpf berechnet werden.
-Dafür wird pro Knoten eine (zwei, upward, downard) Dijsktrasuche gemacht, bis alle Knoten nach der Bedingung gefunden werden.
-
-
+Die in der Defintion des upward Graphens genannten Kanten könnne auch berechnet werden, indem für jede Graphe eine angepasste Dijkstra Suche durchgeführt wird.
 Dafür wird während der Dijstra Suche notiert, was das größte Level auf dem Weg von der Wurzel bis zu dem Knoten ist.
 Ein Knoten ist der Kopf eine CH Kante, für die gilt, dass das größte Level auf dem Weg zur Wurzel zu ihr sie selber hat und der größte Level des Vorgängers der der Wurzel ist.
 Das Gewicht der Kante kann Dijkstra entommen werden.
-Wenn für Knoten ein max Level auf dem Pfad haben, welches größer als das der Wurzel ist, kann abgebrochen werden.
 
-Die Shortcuts können dabei auch erstellt werden.
-Der zu shortcutende Knoten ist der, mit demm dritthöchstem Level dazwischen.
-Die anderen müssen auch erstellt werden, denn sonst kannes Probleme geben: \todo{Bild}
+Während es für Straßengraphen vermutlich deutlich teuer ist, kann es für ander Graphenklassen durchaus Sinn machen, wenn andere Methoden zur Erstellung eines Contracted Graphen noch teuerer sind.
+Die Berechung ist \emph{embarrassingly parallel}, da jeder Knoten für sich selbst Berechnet werden kann, wobei das Erstellen der Abkürzungen, sofern benötigt, synchronisert werden sollte, um den Speichbedarf zu verkleinern.
 
-Das mit den Shortcuts ist dann nicht so einfach. TODO Bild
+\todo{Ich habe die Vermutung, dass theoretisch die Laufzeit pro Knoten für Bruteforce immer größer gleich all-in ist}
 
+\subsection{Alogrithmus im Detail}
+
+Betrachten wir wieder eine Suche vom Knoten $a$ im Beispielgraphen.
+Ihr Suchbaum ist \autoref{ch:fig:brute_force_suchbaum} gezeigt.
+Die Höhe der Knoten entspricht hierbei dem Zeitpunkt der Expansion, die linke Zahl steht für das dem Knoten zugewiesene Level, die rechte für das höchste Level auf dem Weg zzur Wurzel.
+Die Definition des upward Graphens besagt, dass genau dann eine Kante $(u, v)$ eingefügt werden muss, wenn ${vtl}(v) > {vtl}(v)$ und es auf allen kürzesten Pfaden zwischen $v$ den höchsten und $u$ den zweithöchsten Level hat.
+Für die Berechnung schwächen wir dies ab, und fügen eine Kante ein, wenn es einen kürzesten Pfad gibt, der dies erfüllt.
+Hierfür tracken wir den höchsten Level, welcher auf dem Weg von der Wurzel zum Knoten bisher gesehen wurde.
+Der erste Knoten auf dem jedem Weg von der Wurzel zum Blatt, für den gilt, dass er selbst das größte Level hat, bildet den Kopf einer Kante im upward Graph.
+
+
+Die Suche muss dabei nicht bis zum Ende durchgeführt werden.
+Es reicht so lange zu suchen, bis es keine Knoten mehr gibt, die noch nicht expandiert wurden und für die es auf dem Weg zur Wurzel nicht mindestens eine solche Kante gibt.
+Hierfür wird eine Menge an \emph{lebendigen} Knoten benutzt.
+Zu beginn ist nur der Startknoten lebendig, die Lebendigkeit wird jeweils an die Kinder vererbt.
+Ein Knoten stirbt, nachdem er expandiert wurde oder wenn er den Kopf einer Kante bildet.
+Gibt es keine lebendigen Knoten mehr, so kann die Suche abgebrochen werden.
+In dem verwendeten Beispiel wäre dies etwa nach der Expansion von $b$ der Fall.
+
+
+% \begin{algorithm}[ht]
+%     \caption{Contracted Graph Brute Force Suchalgorithmus}
+%     \begin{algorithmic}[1]
+%         \Require Graph $G = (V, E)$, vertex-to-level Funktion ${vtl}$, Startknoten $s \in V$, Zielknoten $t \in V$
+%         \Ensure $E_s$
+%         \State // Initialisiere Distanz- und Vorgänger-Funktion
+%         \ForAll{$v \in V$}
+%         \State ${dist}(v) \leftarrow \infty$
+%         \State ${pre}(v) \leftarrow {none}$
+%         \EndFor
+% 
+% 
+%         \State
+%         \State // Initialisiere Vorrangwarteschlange
+%         \State ${dist}(s) \leftarrow 0$
+%         \State $Q\leftarrow \{ s \}$
+% 
+% 
+%         \State
+%         \State // Initialisiere max\_level\_path
+%         \State ${mlp}(s) \leftarrow {vtl}(s)$
+%         \State $E_s \leftarrow \{ \}$
+%         \State ${alive} \leftarrow \{ s \}$
+% 
+%         \State
+%         \While{$Q \neq \emptyset \land {alive} \neq \emptyset$}
+%         \State $u \leftarrow{extract\_min}(Q)$\label{graphs:dijkstra:pop}
+% 
+%         \State
+%         \State // Beende frühzeitig wenn Zielknoten gefunden wurde
+%         \If {$u \neq s \land {mlp}(u) = {vtl}(u)$}
+%         \State $E_s \leftarrow E_s \cup \{ (s, u, {dist}(u)) \}$
+%         \State ${alive} \leftarrow {alive} \setminus \{ s \}$
+%         \EndIf
+% 
+%         \State
+%         \State // Aktualisiere Nachbarn
+%         \ForAll{$(u, v, w) \in E$}
+%         \If {${dist}(u) + w < {dist}(v)$}
+%         \State ${dist}(v) \leftarrow {dist}(u) + w$
+%         \State ${pre}(u) \leftarrow v$
+%         \State $Q = Q \cup \{ v \}$
+%         \State
+%         \State // setze max\_level\_path
+%         \State ${mlp}(v) \leftarrow \max({mlp}(v), {vtl}(v))$
+%         \If {$u \in {alive}$}
+%         \State ${alive} \leftarrow {alive} \cup \{ s \}$
+%         \EndIf
+%         \EndIf
+%         \EndFor
+% 
+% 
+%         \State ${alive} \leftarrow {alive} \setminus \{ s \}$
+% 
+%         \EndWhile
+% 
+%         \State
+%         \State \Return $E_s$
+%     \end{algorithmic}
+% \end{algorithm}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        % Nodes
+        % a & b & c & d & e & f & g & h & i & j & k & 
+        % 8 & 7 & 3 & 6 & 2 & 5 & 1 & 4 & 0 & 10 & 9 & 
+
+        \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 0)  (a)    {a\\8 8};
+        \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 0, 4)  (b)    {b\\7 8};
+        \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 6)  (c)    {c\\3 10};
+        \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 8)  (d)    {d\\6 10};
+        \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 9)  (e)    {e\\2 10};
+        \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 3, 10)  (f)    {f\\5 10};
+        \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 3, 7)  (g)    {g\\1 10};
+        \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 2)  (h)    {h\\4 8};
+        \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 1)  (i)    {i\\0 8};
+        \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 3)  (j)    {j\\10 10};
+        \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 5)  (k)    {k\\9 10};
+
+
+        \draw[->]  (a) edge (b);
+        \draw[->]  (a) edge (h);
+        \draw[->]  (a) edge (i);
+        \draw[->]  (j) edge (c);
+        \draw[->]  (i) edge (j);
+        \draw[->]  (k) edge (d);
+        \draw[->]  (j) edge (k);
+        \draw[->]  (k) edge (e);
+        \draw[->]  (k) edge (f);
+        \draw[->]  (j) edge (g);
+
+        \draw[->] (-2, 0) -- (-2, 10) node[above] {Zeitpunkt der Expansion};
+
+    \end{tikzpicture}
+    \caption{Brute-Force Suche}
+    \label{ch:fig:brute_force_suchbaum}
+\end{figure}
+
+\subsection{Abkürzung Problem}
+
+Es liegt nahe als abgekürzten Knoten den Knoten mit dem dritthöchsten Level auszuwählen und sich darauf zu verlassen, dass die Suche von diesem Knoten aus die nächsen Abkürzung findet, und so weiter.
+Dies wäre praktisch, da dann jeder Shortcut nur einmal erstellt werden müsste.
+Zwei Gründe können jedoch dagegen sprechen:
+Wird als Graph eine Datenstruktur verwendet, welche die Nachbarn nicht in einer definierten Ordnung ausgibt (etwa ein Hashset), können zwei Suchen von bzw. zu einem Knoten zwei Unterschiedliche kürzeste Pfad Bäume bilden.
+Eine nicht stabile Prioritätswarteschlange kann ebenfalls den gleichen Effekt herbeiführen.
+
+\autoref{ch:fig:problem_shortcut} zeigt eine Situation, in der so ein Problem auftreten kann.
+Für den Knoten $a$ wird die Kante $(a, e)$ mit dem abekürztem Knoten $d$ gefunden.
+Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit dem Knotem $b$ findet.
+
+Die Lösung hierfür ist, dass die Abkürzungen, welche benötigt werden, um die ursprüngliche Abkürzung vollständiz zu entpacken, ebenfalls erstellt werden.
+Diese werden aber mit einer hohen Wahrscheinlichkeit von den Bruteforcing der jeweils abgekürzten Knoten endeckt.
+Der Speichermehrbedarf hierbei kann ein Problem für die Umsetzbarkeit des Algorithmus werden, weshalb ein Mechanismus verwendet werden sollte, welcher die mehrfache Speicherung verhindet, etwa eine HashMap.
+Dies führt allerdings zu einem Performance-Hit, da dies synchroniesert werden muss.
+Für denn Fall, dass nur die kürzesten Pfad Abstände Interesannt sind, kann und sollte hierauf verzichtet werden.
+
+\begin{figure}[ht]
+    \centering
+
+    \begin{tikzpicture}
+        % Nodes
+        \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*0, 2*0)  (a)    {a\\3};
+        \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*1, 2*0)  (b)    {b\\0};
+        \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*1, 2*-1)  (c)    {c\\2};
+        \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*2, 2*0)  (d)    {d\\1};
+        \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*3, 2*0)  (e)    {e\\4};
+
+
+        \draw[<->]  (a) edge node[circle, fill=white] {1} (b);
+        \draw[<->]  (b) edge node[circle, fill=white] {1} (d);
+        \draw[<->]  (d) edge node[circle, fill=white] {1} (e);
+
+
+        \draw[<->]  (a) edge node[circle, fill=white] {1} (c);
+        \draw[<->]  (c) edge node[circle, fill=white] {1} (d);
+    \end{tikzpicture}
+    \caption{Problem beim Shortcut erstellen}
+    \label{ch:fig:problem_shortcut}
+\end{figure}
