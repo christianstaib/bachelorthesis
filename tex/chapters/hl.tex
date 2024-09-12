@@ -10,13 +10,13 @@ Ein kürzester Pfad wird gefunden, in dem der Knoten mit der geringsten Summe de
 
     \begin{enumerate}
         \item
-              $f_v$ enthält nur $(h, d)$ mit $t \in V$, $d \in \mathbb{R} \colon d \geq {spd}_G ((v, h))$ für die gilt ${vtl}(h) > {vtl}(t)$
+              Es gibt kein Knoten $v \in V$, welcher mit zwei verschiedenen Distanzen in $f_v$ ist.
 
         \item
-              Es gibt kein $v \in V$, welches mit zwei verschiedenen Distanzen in $f_v$ ist.
+              $f_v$ enthält nur $(h, d)$ mit $t \in V$, $d \in \mathbb{R}$ für die ${vtl}(h) > {vtl}(t)$ und $d \geq {spd}_G ((v, h))$ gilt.
 
         \item
-              $f_v$ enthält alle $(h, d)$ mit $t \in V$ und $d \in \mathbb{R} \colon d = {spd}_G ((v, h))$ für die gilt, dass $h$ das größte Level auf allen kürzesten Wegen auf $G$ zur Wurzel hat.
+              $f_v$ enthält alle $(h, d)$ mit $t \in V$, $d \in \mathbb{R}$ für die gilt, dass $d = {spd}_G ((v, h))$ und dass $h$ das größte Level auf allen kürzesten Wegen auf $G$ zur Wurzel hat.
     \end{enumerate}
 
     Analog dazu ist $r_t$ ein \emph{Reverse Label} ein Forward Label auf dem Umkehrgraphen $G^T$. Ist $G$ ungerichtet, so sind Forward Label und Reverse Label äuivalent.
