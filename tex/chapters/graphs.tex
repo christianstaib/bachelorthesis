@@ -1,7 +1,8 @@
 \chapter{Graphen}
 
 Ein Graph ist eine Struktur, die verwendet wird, um Beziehungen zwischen Objekten darzustellen.
-Die Idee, Objekte durch Verbindungen zu verknüpfen, bildet die Grundlage für viele Anwendungen, unter anderem der Routenplanung.
+Die Idee, Objekte durch Verbindungen zu verknüpfen, bildet die Grundlage für viele Anwendungen, unter anderem für die Routenplanung.
+Graphen und (kürzeste) Pfade spielen aber auch jenseits davor eine wichtige Rolle, auf einem Wissengraph kann ein Pfad etwa dafür stehen, dass eine Aussage Wahr ist.
 \autoref{graphs:fig:beispielgraph} zeigt einen Graphen, welcher im folgenden für Beispiele benutzt wird.
 
 \begin{figure}[ht]
@@ -63,70 +64,74 @@ Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es no
 \begin{definition}[Graph]
     Sofern nicht anders angegeben wird im folgenden Graph als eine Bezeichnung für einen endlichen, gerichteten Graph mit Kantengewichten, ohne Mehrfachkanten und Schleifen, verwendet.
 
-    Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß}, $h \in V$ als \emph{Kopf} und $w \in \mathbb{R}^+$ als \emph{Gewicht} bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, definiert diese Schreibweise auch eindeutig das Kantengewicht.
+    Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß} (Tail), $h \in V$ als \emph{Kopf} (Head) und $w \in \mathbb{R}^+$ als \emph{Gewicht} (Weight) bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, verweiste diese Schreibweise auch eindeutig das Kantengewicht.
 
-    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E$.
+    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E$ und $(t, h)$ kann als $\{ t, h \}$geschrieben werden.
 \end{definition}
+
+Das Gewicht der Kanten ist hierbei auf positive Zahlen begrenzt, da das verwenden eines Kantengewichtes $0$ dazu führen kann, dass ein kürzester Pfad mehrfach einen Teilpfad der Länge 0 durchläuft.
+Negative Kantengewichte erschweren die Defintiion und Argumentation, sodass hier auf diese nicht weiter eingegangen wird,
 
 \begin{definition}[Nachbar]
-    Sei $G = (V, E)$. Ein Knoten $u \in V$ heißte \emph{Vorgänger} eines Knoten $v \in V$ wenn $(u, v) \in V$. $v$ ist in dann ein \emph{Nachfolger} von $u$. Ist $G$ ungerichtet spricht man beides mal von \emph{Nachbarn}.
+    Sei $G = (V, E)$. Ein Knoten $u \in V$ heißte \emph{Vorgänger} eines Knoten $v \in V$ wenn $(u, v) \in V$. $v$ ist in dann ein \emph{Nachfolger} von $u$.
+    Ist $G$ ungerichtet, so spricht man beides mal von \emph{Nachbarn}.
 \end{definition}
 
+Die Anzahl der Nachbarn eines Knotens bezeichnet seien \emph{Grad}, wobei bei gerichteten Grahen vom Ein- und Ausgangsgrad gesprochen wird.
+Hat ein Knoten keine Vorgänger oder Nachfolger, so nennt man ihn \emph{isoliert}.
 In einem Graphen gibt es oft das Interesse, von einem Knoten zu einem anderen zu gelangen.
 
 \begin{definition}[Pfad]
-    Ein Pfad auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $v_1, \dotsc, v_n$, für die gilt, dass benachbarte Knoten im Pfad durch eine Kante in $G$ verbunden sind.
+    Ein Pfad auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, für die gilt, dass benachbarte Knoten im Pfad durch eine Kante in $G$ verbunden sind.
     Der Knoten $v_1$ wird Startknoten, $v_n$ Zielknoten genannt.
     Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge} genannt.
     Die Anzahl Kantennutzungen $n - 1$ wird \emph{Hop-Länge} genannt.
 \end{definition}
 
-Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben.
+Häufig wird für den Startknoten der Buchstabe $s$ (Source) und für den Zielknoten $t$ für Target verwendet.
+Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zur Definition des kürzesten Pfades.
 
 \begin{definition}[Kürzester Pfad]
-    Ein Pfad $v_1, \dotsc, v_n$ ist \emph{ein kürzester Pfad}, wenn die Länge des Pfades unter allen Pfad von $v_1$ nach $v_n$ minimal ist. Die Länge des kürzesten Pfades wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet. Die Definition des Graphen lässt es zu, dass es mehrere kürzeste Pfade zwischen zwei Knoten gibt.
+    Ein Pfad $(v_1, \dotsc, v_n)$ ist \emph{ein kürzester Pfad}, wenn die Länge des Pfades unter allen Pfad von $v_1$ nach $v_n$ minimal ist.
+    Die Länge des kürzesten Pfades wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet.
+    Die Definition des Graphen lässt es zu, dass es mehrere kürzeste Pfade zwischen zwei Knoten gibt.
 
-    Sei $P \subset V \times V$ die Menge der Knoten, zwischen denen ein Pfad existiert. Dann sind definiert:
-    \begin{enumerate}
-        \item
-              ${spd} \colon P \to \mathbb{R}^+$ weist einem Knotenpaar den Abstand zu.
-
-        \item
-              ${sp} \colon P \to V \times V \times \dots \times V$ weist einem Knotenpaar einen kürzesten Pfad zu.
-    \end{enumerate}
-\end{definition}
-
-\begin{definition}[Umkehrgraph]
-    Sei $G = (V, E)$ ein Graph. Dann ist $G^T = (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{Umkehrgraph} von $G$.
+    Die kürzeste Pfad Funktion ${spd} \colon V \times V \to \mathbb{R}^+ \cup \{ \infty \} $ weist einem Knotenpaar den Abstand zu, wobei dieser unendlich ist, wenn kein Pfad zwischen ihnen existiert.
+    Sei dann $P \subset V \times V$ die Menge der Knoten, zwischen denen ein Pfad existiert.
+    ${sp} \colon P \to V \times V \times \dots \times V$ weist einem Knotenpaar einen kürzesten Pfad zu.
 \end{definition}
 
 Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu finden.
 Auch die Umkehrung dieses Problem ist Interessent, also die kürzesten Pfade von allen Knoten zu einem Knoten zu bestimmen.
 Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade auf dem Umkehrgraph $G^T$ entspricht.
 
+\begin{definition}[Umkehrgraph]
+    Sei $G = (V, E)$ ein Graph. Dann ist $G^T = (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{Umkehrgraph} von $G$.
+\end{definition}
+
+\todo{Hier sollte was stehen weil schön und so.}
 
 \begin{definition}[Hitting Set]
     Sei $G = (V, E)$ ein Graph und $P$ eine Menge an Pfaden auf $G$.
     Ein Hitting Set $H = V \times V \times \dotsc \times V$ ist eine Menge an Knoten, so dass es für alle Pfade $p \in P$ mindestens einen Knoten $v \in P$ gibt, so dass $p \in H$ gilt.
-
-    Die Knoten des Hitting Set sind nach der Anzahl der Elemente ihrer Treffer in $P$ sortiert, wobei der Knoten, der am wenigsten Pfade trifft an Position 0 steht.
 \end{definition}
 
-Ein solches Hitting Set kann durch einen Greedy Algorithmus berechnet werden
+Ein solches Hitting Set kann durch einen Greedy Algorithmus berechnet werden.
+Man verwendet die Bezeichnung $v$ \emph{trifft} einen Pfad $p$.
 
 \begin{algorithm}
     \caption{Greedy Hitting Set}
     \begin{algorithmic}[1]
         \Require Knotenmenge $V$, Pfade $P$ über $V$
-        \Ensure Hitting-Set $H$ als geordnete Menge
+        \Ensure Hitting-Set $H$
 
         \State $H \gets \emptyset$
 
         \State
 
         \While{$P \neq \emptyset$}
-        \State Wähle $v \in V$ mit $\abs{ \{ p \mid p \in P \colon v \in p \}}$ maximal.
-        \State $H \gets \{v\} \cup H$
+        \State Wähle $v \in V$ mit $\abs{ \{ p \mid p \in P \colon v \in p \}}$ maximal
+        \State $H \gets H \cup \{  v \}]$
         \State $P \gets P \setminus \{p \in P \mid v \in p\}$
         \EndWhile
 
@@ -137,30 +142,29 @@ Ein solches Hitting Set kann durch einen Greedy Algorithmus berechnet werden
 \end{algorithm}
 
 
-\section{Graphenklassen}
+\section{Graphentypen}
 \subsection{Straßengraphen}\label{graphs:strassengraphen}
 
 Straßengraphen stellen eine spezielle Klasse von Graphen dar, die  Eigenschaften aufweisen, welche sie von allgemeinen Graphen abgrenzen.
-Eine ihrer auffälligsten Merkmale ist, dass sie nahezu planar sind, wobei Ausnahmen in Form von Über- und Unterführungen existieren und dass sie nicht-negative Kantengewichte haben.
-Die Kantengewichte sind meist der Luftlinienabstand oder die Reisezeit zwischen zwei Knoten.
-Letztere kann sich im Verlauf der Zeit ändern, etwa durch Stau oder Bauarbeiten.
-Sie haben einen relativ geringen durchschnittlichen Grad aus, Kreuzungen von mehr als zwei Straßen sind selten.
+Eine ihrer auffälligsten Merkmale ist, dass sie nahezu planar sind, sie also fast in der Ebene darstellen lassen, wobei Ausnahmen in Form von Über- und Unterführungen existieren.
+Die Kantengewichte können etwa dem Luftlinienabstand oder der Reisezeit entsprechen, wobei sich letzter im Verlauf der Zeit ändern, etwa durch Stau oder Bauarbeiten.
+Sie haben einen relativ geringen durchschnittlichen Knotengrad, Kreuzungen von mehr als zwei Straßen sind selten.
 
-Zusätzlich besitzen sie eine hierarchische Struktur: Einfach gesagt, je schneller auf einer Straße gefahren werden darf, desto höher ist ihr \emph{Level}.
-Die Level der benutzten Straßen eines kürzesten Pfades steigt im Allgemeinen an, bis etwa eine Autobahn erreicht wird, und nimmt schließlich wieder ab, bis das Ziel erreicht wird.
+Sie besitzen sie eine hierarchische Struktur: Einfach gesagt, je schneller auf einer Straße gefahren werden darf, desto wichtiger is diese für das Finden von kürzesten Pfaden.
+Die Wichtigkeit der benutzten Straßen eines kürzesten Pfades steigt im Allgemeinen an, bis etwa eine Autobahn erreicht wird, und nimmt schließlich wieder ab, bis das Ziel erreicht wird.
 
-
-Ein weitere Eigenschaft dieser hierarchischen Struktur ist, dass sich hinreichend lange Pfade durch eine kleine Anzahl an \emph{Hubs} beschreiben lassen.
+Eine weitere Eigenschaft dieser hierarchischen Struktur ist, dass hinreichend lange Pfade durch ein vergleichbar kleines Hitting Set getroffen werden.
 Diese Knoten können etwa Autobahnkreuzen und Anschlussstellen sein.
-Ein Pfad kann etwa dann durch den Startpunkt, die nähste Anschlusstelle, einem Autobahnkreuz, einer Anschlusstelle und dem Zielpunkt beschrieben werden.
 Diese Beobachtung führt zur Definition der sogenannten Highway Dimension, einem Konzept, das von \cite{abraham2010highway} eingeführt wurde.
 
 \subsection{Nicht-Straßen-Graphen}
 
 Alle Graphen, die keine Straßengraphen sind, werden als Nicht-Straßen-Graph bezeichnet.
-Da sie durch den Ausschluss der Straßengraphen definiert werden, haben sie keine gemeinsamen Eingeschaften.
+Da sie durch den Ausschluss der Straßengraphen definiert werden, haben sie keine gemeinsamen Eigenschaften, jedoch könne weite Teilklassen definiert werden.
 
 \subsubsection{Sichtbarkeitsgraphen}
+
+\todo{Funke. Was soll ich schreiben Stichwörter pls, Gummiband Eigenschaft}
 
 \begin{definition}[Sichtbarkeitsgraph]
     Sei $V$ eine Menge an Punkten in einem euklidische Raum $A$. Sei $P$ eine Menge an Polygonen im selben Raum.
@@ -170,7 +174,6 @@ Da sie durch den Ausschluss der Straßengraphen definiert werden, haben sie kein
 \end{definition}
 
 
-Gummiband Eigenschaft?
 
 \subsubsection{Die Graphen im Detail}
 
@@ -178,15 +181,19 @@ Gummiband Eigenschaft?
 
 \section{Dijkstra Algorithmus}
 
-Als Baseline für das suchen verwende ich Dijkstra.
-Später wird der Algorithmus auch benutzt werden.
-Um die Kosten einer Suche nicht nur in Zeit auszudrücken wird noch definiert:
-Die Mächtigkeit der Menge $u$ als Dijkstra Rank
-Die Anzahl der Operationen \ref{graphs:dijkstra:pop} quqe pops.
+Die Angabe wie aufwändig die Suche eines kürzesten $(s, t)$ Pfades für einen Computer ist, lässt sich schwer in einer Metrik ausdrücken, denn die Zeit, welche für die Suche benötigt wird, ist von der verwendeten Hardware abhängig.
+Ein Möglichkeit diese Aufwändigkeit zu beziffern, ist der \emph{Dijkstra Rank}.
+Dieser gibt an, wieviele Knoten in einer Dijsktra-Suche von $s$ aus expandiert werden müssen, bis man von $t$ erreicht.
+
+\todo{Ich habe gelesen, dass Dijkstra die meiste Zeit in Queue verbringt. Kann ich das wieder finden, oder selber perfen?}
+
+Ebenfalls interesannt sind die Warteschlagen (Queue) Operationen, diese können auch Hinweise darauf geben, was genau die Suche in einem Graph so teuer macht.
+Hierbei sind die \emph{Queue Pops} die Anzahl, wie oft Knoten aus der Warteschlange entommen wurde.
+Wenn eine Warteschlange mit \emph{Decrease-Key} Funktion benutzt wird, unterscheidet sie sich nicht vom Dijsktra Rank.
+Die \emph{Queue Pushs} geben an, wie oft Knoten aus der Warteschlange entommen werden.
 
 
 \todo{Dijkstra Algorithmus erklären und Dijkstra Paper zitieren}
-
 \begin{algorithm}[ht]
     \caption{Dijkstra Algorithmus}
     \begin{algorithmic}[1]
@@ -269,10 +276,7 @@ Ein Graph enthält idealerweise keine isolierten Knoten.
 isolierte Knoten sind doof für dijkstra und co.
 Die Menge der Knoten ist definiert durch Ihre Anzahl.
 Gibt es $n \in \mathbb{N}$ Knoten, so sind es $0, \dotsc, n - 1$.
-
-Ein Graph der diese Eigenschaft nicht erfüllt, kann durch eine Mapping der Knoten in die Form gebracht werden
-Hierfür wurde ein python script geschrieben
-\todo{Vergleiche degree histogramme}
+Ein Graph der diese Eigenschaft nicht erfüllt, kann durch eine Mapping der Knoten in die Form gebracht werden.
 
 Jenachdem was mit dem Graph gemacht werden soll, sind verschiedene Eigenschaften von Vorteil.
 Manchmal ist eine effiziente Nachbar Abfrage wichtig,

@@ -1,20 +1,19 @@
 \chapter{Contraction Hierarchies}\label{chapter:ch}
 
-Eine Methode um in Graphen, inbesondere in Straßengraphen, sehr schnell kürzeste Pfade zu berechen, sind Contraction Hierachies.
-Die von \cite{geisberger2008contraction} vorgestellte Methode nutzt ein änliches Konzept zu dem in \autoref{graphs:strassengraphen} vorgestellten Level auf.
-Die Grundidee der Suche eines kürzesten Pfades ist ein Bidirectionale Suche, welche jeweils nur höhere Level besucht.
-Durch diese Enschränkung des Suchhraums kann, je nach dem Graphentyp, ein Speedup mehrerer größenordnungen erreicht werden.
+Eine Methode um in Graphen sehr schnell kürzeste Pfade zu berechen, sind Contraction Hierachies.
+Die von \cite{geisberger2008contraction} vorgestellte Methode nutzt ein änliches Konzept zu der in \autoref{graphs:strassengraphen} Idee der Wichtigkeit auf und funktioniert deshalb für Straßengraphen sehr gut.
+Die Grundidee der Suche eines kürzesten Pfades ist ein Bidirectionale Suche, welche jeweils nur wichtigere Knoten besucht.
+Durch diese Enschränkung des Suchhraums kann, je nach dem Graphentyp, ein Speedup mehrerer Größenordnungen erreicht werden.
 
-Wie zu sehen sein wird, lässicht sich die klassischen Methode zur Erstellung der benötigten DAtenstrukturen nur bedingt auf Sichtbarkeitsgraphen anwenden.
-Daher wird im follgenden zuerst unabhängig der Erstellung argumentiert um später mehre Methoden hierfür vorzustellen.
+Wie zu sehen sein wird, lässicht sich die klassischen Methode zur Erstellung der benötigten Datenstrukturen nur bedingt auf Sichtbarkeitsgraphen anwenden.
+Daher wird im follgenden zuerst unabhängig von der Erstellung argumentiert um später mehre Methoden hierfür vorzustellen.
 
-Contraction Hierarchies bauen auf der Notation eines \emph{Levels} auf.
-Jedem Knoten wird ein Level zugeorndet.
+Contraction Hierarchies bauen auf der Notation eines \emph{Levels} auf, jedem Knoten wird ein Level zugeorndet.
 Diese kann als ein Grad der Wichtigkeit verstanden werden:
-Je höher ein Level ist, desto wichtiger ist der Knoten im Allgemeinen für das finden von kürzesten Pfaden.
+Je höher ein Level ist, desto wichtiger ist der Knoten im Allgemeinen für das Finden von kürzesten Pfaden.
 
 \begin{definition}[Level]
-    Sei $G = V, E$ ein Graph.
+    Sei $G = (V, E)$ ein Graph.
     Sei $L \subseteq \mathbb{N}$ mit $\abs{L} = \abs{V}$.
     Dann wird eine bijketive Funktion ${vtl} \coloneq V \to L$ \emph{vertex-to-level} Funktion genannt.
     Ihre Umkehrfunktion ${ltv}$ wird \emph{level-to-vertex} Funktion genannt.
@@ -22,7 +21,7 @@ Je höher ein Level ist, desto wichtiger ist der Knoten im Allgemeinen für das 
 
 Die ein Level aus genau einem Knoten besteht, ist keine zwingen Notwendigkeit
 So setzt \cite{vetter2009parallel} etwa mehrere Knoten auf einem Level, um das Preprocessing zu beschleunigen.
-Die in dieser Arbeit verwende Einschränkung vereinfacht allerdings die argumentation.
+Die in dieser Arbeit verwende Einschränkung vereinfacht allerdings die Argumentation.
 
 Bassierend auf dem Level kann der \emph{upward Graph} definiert werden.
 Der Name des upward Graphen ergibt sich daher, dass die Suche in einem upward Graph auf das Level bezogen nur \emph{aufwärts} geht.
@@ -32,9 +31,7 @@ Formal ist dieser definiert als:
     Sei $G = (V, E)$ und ${vtl}$ eine \emph{vertex-to-level} Funktion dazu. Dann ist $G_u = (V, E_u)$ ein \emph{upward Graph} zu $G$ wenn gilt:
     \begin{enumerate}
         \item\label{ch:definition:legal_edges}
-        $E_u$ enthält nur Kanten $(t, h, w)$ mit $t, h \in V$ und $w \in \mathbb{N}$ für die ${vtl}(t) < {vtl}(h)$ und $w >= {spd}_{G}((t, h))$ gilt.
-        Ist $\abs{{sp}((t, h))} > 2$, so nennen wir die Kante auch eine Abkürzung (\emph{Shortcut}).
-        \todo{Das ist eigenlich eher falsch. die 2 te Bedingung ist Richtig also keine größeren Level auf dem Weg. Darf aber auch Kanten enthalten, die das erfüllen.}
+        $E_u$ enthält nur Kanten $(t, h, d)$ mit $t, h \in V$ und $d \in \mathbb{R}^+$, für die gillt, $d \geq {spd}_{G}((t, h))$ und es einen $(t, h)$ Pfad gibt, so dass $h$ das größte und $t$ das zweitgrößte Level auf diesem hat.
 
         \item\label{ch:definition:upward}
         $E_u$ enthält mindestens alle Kanten $(t, h, {spd}_{G}((t, h)))$ mit $t, h \in V$, für die gilt, dass $h$ das größte und $t$ das zweitgrößte Level auf allen kürzesten Wege auf $G$ von $t$ nach $h$ hat.
@@ -43,15 +40,14 @@ Formal ist dieser definiert als:
 
 
 Betrachten wir das ganze an dem bereits definierten Beispielgraph.
-Sei ${vtl}$ definiert durch die Abbildung \autoref{ch::fig::vtl_abbildung} definiert.
+Sei ${vtl}$ definiert durch die Abbildung in \autoref{ch::fig::vtl_abbildung} definiert.
 Durch Anwendung der Regel \ref{ch:definition:upward} ergibt sich der in \autoref{ch::fig::upward_graph} gezeigte upward Graph.
 Es ist hierbei zu erwähnen, dass keine zusätzlichen Kanten nach \autoref{ch:definition:legal_edges} eingefügt wurden.
 
-Der enstande Graph ist azyklisch, der nur Kanten enthält, deren Kopf ein größeres Level als ihr Fuß hat.
+Der enstande Graph ist azyklisch, da er nur Kanten enthält, deren Kopf ein größeres Level als ihr Fuß hat.
 Die Anzahl der in einer Breitensuche gefunden Knoten ist geringer, als im Ursprungsgraph.
 Diese beiden Eingeschaften sorgen dafür, dass eine Suche in einem upward Graph kostengünstiger sei kann.
 Die in einem upward Graph gefunden kürzesten Pfade bilden eine untere Grenze für kürzeste Pfade.
-Wie später \todo{hier} zu sehen sein wird, kann es auch teruere sein.
 
 \begin{table}[ht]
     \centering
@@ -114,16 +110,15 @@ Wie später \todo{hier} zu sehen sein wird, kann es auch teruere sein.
     \label{ch::fig::upward_graph}
 \end{figure}
 
-Die kürzeste Pfad Suche ist eine bidirectionale Suche, wobei die Suchen auf verschiedenen Graphen arbeiten.
-Daher ist muss noch das Gegenstück das upward Graphens definiert werden, der \emph{downard Graph}.
+Die Suche eines kürzesten Pfades ist dann eine bidirectionale Suche, wobei die Suchen auf verschiedenen Graphen arbeiten.
+Daher muss noch das Gegenstück das upward Graphens definiert werden, der \emph{downard Graph}.
 
 \begin{definition}[Downward Graph]
     Sei $G = (V, E)$ und ${vtl} \coloneq V \to \mathbb{N}$ eine \emph{vertex-to-level} Funktion. Dann ist ein upward Graph des Umkehrgraphens $G^T$ ein \emph{downward Graph} zu $G$.
 \end{definition}
 
-Wenn ein Graph ungerichtet ist, dann er äuivalent zu seinem Umkehrgraphen.
-Daher ist in so einem Fall dann auch der upward und downard Graph äuivalent.
-Daher entspricht \autoref{ch::fig::upward_graph} gleichzeitig auch dem downward Graph des Beispielgraphens.
+Wenn ein Graph ungerichtet ist, dann ist er äuivalent zu seinem Umkehrgraphen und dann ist auch der Upward und Downward Graph äuivalent.
+Daher entspricht \autoref{ch::fig::upward_graph} gleichzeitig auch dem Downward Graph des Beispielgraphens.
 
 \section{Query}
 
@@ -131,11 +126,10 @@ Ein \emph{Contracted Graph} $C = (G_u, G_d)$ ist die Datenstruktur, mit deren Hi
 Sie besteht aus einem upwarward und downward Graph, wobei beide es eine ${vtl}$ Funktion geben muss, nach der Beide gültig sind.
 
 Die Suche eines kürzesten Pfades von $a$ nach $e$ auf dem Beispielgraph gestaltet sich nun wie folgt:
-Auf $G_u$ wird eine Breitensuche von $a$ und auf $G_d$ eine Breitensuche von $e$ durchgeführt.
+Auf $G_u$ wird eine Dijkstra Suche von $a$ und auf $G_d$ eine Dijkstra Suche von $e$ durchgeführt.
 Aus den von beiden besuchten Knoten wird derjenige ausgewählt, der die niedrigste Summe beider Distanzen hat.
-Dieser Knoten hat das höchste Level auf dem Pfad.
 \autoref{fig:ch:beispiel_suche} zeigt einen auf diese Weise gefunden Pfad auf dem Beispielgraph von $a$ nach $e$.
-Es ist erstichtlich, dass die Level der Knoten auf dem Pfad zum Treffpunkt-Knoten $j$ ansteigt.
+Es ist ersichtlich, dass die Level der Knoten auf dem Pfad zum Treffpunkt-Knoten $j$ ansteigen, bis schließlich der Knoten auf dem Pfad mit dem höchstem Level gefunden wird.
 Die Kante $(a, j)$ ist hierbei ein Abkürzung, sie kürzt $i$ ab, was durch die gestrichelten Pfeile angedeuted wird.
 
 \begin{figure}[ht]
@@ -162,11 +156,11 @@ Die Kante $(a, j)$ ist hierbei ein Abkürzung, sie kürzt $i$ ab, was durch die 
     \label{fig:ch:beispiel_suche}
 \end{figure}
 
-Diese informelle Beschreibung ist Algorithmus \ref{ch:query_simple} definiert.
-Wie bei einer Bidirectionalen Dijkstra Suche wird der Pfad, sofern dieser existiert, erstellt, indem die Teilfpade beider Suchen erstellt werden.
-Diese Teipfade haben die Form $(u, \dotsc, t)$ bzw. $(v, \dotsc, t)$.
-Um einen gültigen Pfad zu erstellen, muss $t$ aus dem PFad der Suche, welche vom Ziel aus gestartet ist, entfernt werden und der entandene Pfad umkegehrt werden.
-Anschließend können beide Pfade verkettet werden und es ensteht ein Pfad auf $C$ der Form $(u, dotsc, t, \dotsc, v)$.
+Algorithmus \ref{ch:query_simple} definiert den Aglorithmmus formal.
+Wie bei einer Bidirectionalen Dijkstra Suche wird der Pfad, sofern dieser existiert, aus den Teilpgaden beider Suchen erstellt.
+Diese haben die Form $(u, \dotsc, t)$ bzw. $(v, \dotsc, t)$.
+Um einen gültigen Pfad zu erstellen, muss $t$ aus einem dieser Teilpfade entfernt werden und der Pfad des Downward Graphens umkegehrt werden.
+Anschließend können beide Pfade verkettet werden und es ensteht ein Pfad auf $C$ der Form $(u, \dotsc, t, \dotsc, v)$.
 Dieser Pfad muss aber kein Pfad auf $G$ sein, da er noch Abkürzungen enthalten kann.
 In \autoref{ch:subsection:pfad_gewinnung} wird darauf eingegangen, wie diese entfernt werden können.
 
@@ -196,7 +190,7 @@ In \autoref{ch:subsection:pfad_gewinnung} wird darauf eingegangen, wie diese ent
     \label{ch:query_simple}
 \end{algorithm}
 
-Die Korrektheit des Algorithmus ist nicht sofort ersichtlich, da nicht da ein upward Graphen auch Kanten anthalten kann, die nicht optimal sind.
+Die Korrektheit des Algorithmus ist nicht sofort ersichtlich, da nicht alle Kanten optimal sind und nur ein Teil aller Knoten besucht wird.
 Der Beweis hierfür betrachten hierbei betrachtet einen kürzesten Pfad auf $G$ und argumentiert, warum dieser gefunden wird:
 
 \begin{beweis}\label{ch:proof:correct}
@@ -215,18 +209,17 @@ Der Beweis hierfür betrachten hierbei betrachtet einen kürzesten Pfad auf $G$ 
 
               Analog dazu wird im Pfad $(v, \dotsc, t)$ mit $G_d$ argumentiert.
 
-              Der $t$ in beiden Suchen mit optimalen Gewicht gefunden wird und auf dem kürzesten Pfad liegt, ist auch die optimale Distanz des kürzesten Pfades gefunden
+              Da $t$ in beiden Suchen mit optimalen Gewicht gefunden wird und auf dem kürzesten Pfad liegt, ist auch die optimale Distanz des kürzesten Pfades gefunden
 
         \item
               ${spd}_G ((u, v)) = \infty$ $\Rightarrow$ ${spd}_C((u, v)) = \infty$.
 
-              Angenommen, es würde ein Pfad ${u, \dotsc, v}$ in C gefunden werden.
-              Sei $t$ wieder der Knoten mit den höchstem Level.
+              Angenommen, es würde ein Pfad $(u, \dotsc, v)$ in C gefunden werden.
+              Sei $t$ wieder der Knoten mit den höchstem Level auf diesem Pfad.
 
               Erstelle aus $(u, \dotsc, v)$ zwei Pfade: $(u, \dotsc, t)$ und $(v, \dotsc, t)$.
-              Die Tuple benachbarter Knoten entsprechen wieder Kanten im upward. bzw. downward Graph.
-              Da es keinen Pfad in $G$ gibt, muss es eine Kante im upward. bzw. downward Graph geben, welche kürzer ist, als der Pfad für den sie in $G$ steht.
-              Dies widerspricht der Definitin des kürzesten Pfades.
+              Die Tuple benachbarter Knoten entsprechen wieder Kanten im Upward. bzw. Downward Graph.
+              \todo{Gegenbeweis sauber führen}
     \end{enumerate}
 
     Daher gilt, die Suche der kürzesten Pfad Distanz in $C$ ist äquivalent zu der in $G$
@@ -244,7 +237,6 @@ Hierfür ist eine Funktion notwendig, welche diese ersetzt.
     $S \coloneq V \times V \to V \cup \{ {none} \}$ ist eine \emph{Abkürzungsfunktion} von $C$, wenn eine endliche, rekursive Anwenden von $S$ auf die Abkürzungen einen gültigen Pfad in $G$ erzeugt.
 \end{definition}
 
-Solche eine Abkürzungsfunktion ist also an einen konkreten Contracted Graph gebunden und gilt für Pfade auf dem upward und auf dem Downward Graph \todo{Ist das so? Kann ich das beweisen, oder ein Gegenbepsiel erzeugen?}
 Das rekursive Ersetzten kann durch den Algorithmus \ref{ch:alg:shortcut_replacement} verwirklicht werden.
 
 \begin{algorithm}[ht]
@@ -289,16 +281,16 @@ Das rekursive Ersetzten kann durch den Algorithmus \ref{ch:alg:shortcut_replacem
 \section{Early stop}
 
 Bisher werden beiden Suchen vollständig ausgeführt.
-Die Anzahl der besuchten Knoten hierbei ist zwar kleiner als im zugrundeliegenden Graphen, jedoch ist es trotzdem wünschenswert, wenn die Suche frühzeitig gestoppt werden kann.
+Die Anzahl der besuchten Knoten hierbei ist zwar kleiner als im zugrundeliegenden Graphen, jedoch ist es trotzdem wünschenswert, wenn die Suche frühzeitig gestoppt werden könnte.
 
-Es ist nicht hinreichend die Suchen zu stoppen, wenn die Sume der kleinste Distanzen der Vorwärtwarteschlangen größer ist als des bisher besten Treffpunkt-Knotens.
-Dies ist darin begründet, dass die Suche auf im upward bzw. downard Graph keinen \emph{Ball} in $G$ bildet.
+Bei einer bidirectionalen Dijkstra Suche reicht es aus, die Suche zu stoppen, sobald die Summer der kleinsten Abstände der Vorwärtwarteschlange größer als der kleinste gefundene Abstand ist.
+Dies ist hier nicht hinreichend, das die Suche auf im Upward bzw. Downward Graph keinen \emph{Ball} in $G$ bildet.
 Anders ausgedrückt, es ist nicht garantiert, dass sich die Suchen an ihrer Front treffen:
 Es ist möglich, dass die Suche im upward Graphen einen Knoten trifft, welcher selbst und alle seiner Nachfolger bereits expandiert worden sind.
-Hinreichend ist es, die Suche zu stoppen, wenn die kleinste Distanz beider Vorwärtswarteschlangen größer oder gleich der des bisher besten Treffpunkt-Knotens ist.
+Daher kann die Suche erst gestoppt werden, wenn die kleinste Distanz beider Warteschlangen größer oder gleich der des bisher besten Treffpunkt-Knotens ist.
 
 Dies stopt die Suche zwar fühzeitig, die Anzahl der expandierten Knoten, nachdem der beste Treffpunkt-Knoten gefunden wurde ist jedoch immernoch hoch.
-\todo{Funke fragen: Kann man hier noch verbessern? Ich habe die Michung CH und ALT noch nicht verstanden}.
+\todo{Funke fragen: Kann man hier noch verbessern? Ich habe die Mischung CH und ALT noch nicht verstanden}.
 
 \section{Stall-on-demand}
 
@@ -335,24 +327,23 @@ Diese funktioniert wie folgt:
 
     \begin{enumerate}
         \item\label{ch:contraction:when_shortcut}
-        für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ einen Kante $(v, w, {spd}(u, w))$ in $E$ eingefügt wird, wenn $v$ auf dem einzigen kürzesten Pfad zwischen $u$ und $v$ liegt. Diese Kanten sind Shortcuts.
+        für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ einen Kante $(v, w, {spd}(u, w))$ in $E$ eingefügt wird, wenn $v$ auf dem einzigen kürzesten Pfad zwischen $u$ und $v$ liegt.
 
         \item
               alle Kanen von und zu $v$ entfernt werden.
     \end{enumerate}
-
-    $v$ ist danach isoliert.
 \end{definition}
 
+Nach der Kontraktion $v$ ist also isoliert.
 Um die Abkürzungen zu erzeugen kann von jedem Voränger eine veränderte Dijkstra zu jedem Nachfolger gemacht werden.
-Bei dieser Suche werden keine Kanten von und zu kontraktierten Knoten begangen.
-Ist die dabei gefundene Distanz größer als die Summe beider Kanten, dann wird eine Abkürzung eingefügt.
+Bei dieser Suche werden keine Kanten von und zu dem Knoten $v$ begangen.
+Ist Länge eines auf diese Weise gefunden $u-w$ Pfades länger als der Pfad $(u, v, w)$, so wird keine Abkürzung eingefügt.
 
 Diese Operation erhält für die verbleibenden Knoten die kürzesten Pfade.
 Betrachten wir dies wieder am Beispielgraph.
 Sei $i$ der zu kontraktierende Knoten, die Nachbarn sind $a$, $b$, $j$ und $h$.
-Die kürzesten Pfade von $(a, b)$, $(b, j)$, $(h, j)$ und $(a, h)$ führend nicht durch $i$.
-Der von $(a, j)$ jedoch doch, daher wird eine Kante eingefügt.
+Die kürzesten Pfade von $\{a, b\}$, $\{b, j\}$, $\{h, j\}$ und $\{a, h\}$ führend nicht durch $i$.
+Der von $\{a, j\}$ jedoch doch, daher wird eine Kante eingefügt.
 \autoref{graphs:fig:example_contraction} zeigt den Graphen nach der Kontraktion.
 
 \begin{figure}[ht]
@@ -405,13 +396,14 @@ Der von $(a, j)$ jedoch doch, daher wird eine Kante eingefügt.
 \end{figure}
 
 Um einen Contracted Graph zu erstellen, werden alle Knoten kontraktiert, wobei die Kanten, die in jedem Schritt entfernt werden, gesammelt werden.
-Die Kanten, deren Kopf-Level größer ist, bilden die Kanten des upward Graphens.
+Die Kanten, deren Kopf-Level größer ist, bilden die Kanten des Upward Graphens.
 Die übrigen Kanten, also die deren Fußlevel größer ist, werden invertiert und bilden die Kanten des downard Graphens.
-Diese Art der Erstellung erzugt zulässige upward Graphen, da die eingefügten Shortcuts die die Bedingung aus \autoref{ch:definition:upward} erfüllen.
+Diese Art der Erstellung erzugt zulässige Upward Graphen.
+\todo{Beweis}
 
 Häufig wird Kontraktionsbedingung abgeschwächt, es wird eine Kante eingefügt, wenn es \emph{wahrscheinlich} ist, dass auf dem einzig kürzesten Weg liegt.
-Dazu kann etwa eine normale Dijkstra Suche verwendet werden, es wird ann nur noch geprüft, ob der Knoten auf \emph{einem} kürzesten Pfad liegt.
-Weiter kann die Anzahl der Hops der Suche begrenzt werden, wobei den Knoten die nicht mit der Begrenzung gefunden werden die Distanz unenglich zugewiesen wird. \todo{Besser erklären.}
+Dazu kann eine normale Dijkstra Suche verwendet werden, es wird dann nur noch geprüft, ob der Knoten auf \emph{einem} kürzesten Pfad liegt.
+Weiter kann die Anzahl der Hops der Suche begrenzt werden.
 Dass hierbei mehr Kanten als notwendig eingefügt werden ist für die Korrektheit unproblematisch.
 Das Einfügen unbenötigter Kanten kann jedoch einerseits den Speed negativ beinfluss, andererseits auch die Geschwindigkeit nachfolgenden Kontraktionen, da bei ihnen durch mehr Vorgänger mehr Dijkstra Suchen gemacht werden müssen.
 
@@ -427,7 +419,7 @@ Bei der Top-Down Kontraktion ist die level-to-vertex Funktion ${ltv}$ vorgegeben
 Die Knoten werden in Reihenfolge ihres Levels kontrakiert, wobei mit dem niedrigsten Level begonnen wird.
 
 \paragraph{Zufällig sortiert}
-Die Knoten werden zufällig auf die Level verteilt
+Die Knoten werden zufällig auf die Level verteilt. \todo{Funke fragen}
 
 \paragraph{Sortiert nach Grad}
 Die Knoten werden nach ihrem Grad sortiert, wobei die kleinsten Grade zuerst kontraktiert werden.
@@ -444,11 +436,10 @@ Bei der Bottom-Up contraction wird die vertex-to-level Funktion ${vtl}$ währen 
 Dafür wird mit einer Heuristik der jeweils nächst \emph{unwichtigste} Knoten ausgewählt, kontraktiert und dem nächstem Level zugewiesen.
 Ein unwichtiger Knoten hat hierbei einen niedrigen Heuristik-Wert.
 Die in der Praxis am meist-verwendeten Heurisiken beinhalten die \emph{Kanten-Differenz}.
-Sie gibt an wie sich die Anzal der Kanten im gesammten Graph durch die Kontraktion verändert.
-Sie wird durch die Anzahl der hinzugefügten Kanten subtrahiert durch die Anzalh der entfernten Kanten gebildet.
-Hierfür muss nicht die Kontraktion komplett simuliert werden, es ist hinreichend zu prüfen, ob bereits eine Kante existiert, nicht ob die neue optimal ist.
+Sie gibt an wie sich die Anzahl der Kanten im gesammten Graph durch die Kontraktion verändert.
+Sie wird durch die Anzahl der neu hinzugefügten Kanten subtrahiert durch die Anzahl der entfernten Kanten gebildet.
 Die Kontraktion eines Knoten kann dabei die Heurisitk-Werte anderer Knoten verändern.
-Damit jedes mal der Knoten mit der niedrigsten Heuristik ausgewählt wird, muss nach jeder Kontraktion alle Heuristik-Werte neuberechnet werden.
+Damit jedes mal der Knoten mit der niedrigsten Heuristik ausgewählt wird, müssen nach jeder Kontraktion alle Heuristik-Werte neuberechnet werden.
 Dies ist im Allgemeinen jedoch zu teuer ist, weshalb in der Praxis sich zwei Methoden als effektiv gezeigt haben:
 
 Beim \emph{Lazy poping} besteht die Annahme, dass ein Knoten nur wichtiger werden kann.
@@ -457,7 +448,7 @@ Wenn er noch gleich ist, wird er kontraktiert, wenn nicht wird er zurück die Wa
 Dies wird wiederholt, bis schließlich ein Knoten gefunden wird.
 
 Beim \emph{Neighbor update} werden nach der Kontraktion eines Knoten die Heuristik Werte der Nachbarn geupdated.
-Es lässt sich zeigen, dass es nur in besonderen Konstellationen passieren kann, dass sich die Kanten-Differenz von Nachbarn zweiter Ordnung nur in Ausnahmfällen ändert. \todo{cite}
+Es lässt sich zeigen, dass sich die Kanten-Differenz von Nachbarn zweiter Ordnung nur in Ausnahmfällen ändert. \todo{cite}
 Dies hat den Vorteil, dass dies für alle Nachbarn parallisiert passieren kann.
 
 \subsubsection{Ideen}
@@ -467,8 +458,7 @@ Dieser wirkt sich auf die Erstellungzeit der Kanten-Differenz, da für jedes Paa
 Auch wenn dies durch eine passende Datenstruktur sehr effizient geschehen kann, kann dies sehr teuer sein:
 Angenommen ein Knoten hat einen Grad von \num{10000}, dann müssen \num{100000000} viele Paare geprüft werden.
 Bei einer angenommen Suchzeit von \num{10}\unit{\ns} pro Paar entspricht dies einer Sekunde.
-Ein hoher Kantengrad wirkt sich auch auf die Kosten der Kontraktion aus, da pro Vorgänger eine Suche gestartet werden muss.
-Er macht die Koten pro Suche auch teurer.
+
 
 Daher gibt es zwei Baustellen, die beschleunigt werden müssen:
 Die Heuristik und die Kontraktion.

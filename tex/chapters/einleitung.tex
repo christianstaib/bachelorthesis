@@ -1,15 +1,15 @@
 \chapter{Einleitung}
 
 \section{Problemstellung}
-Sichtbarkeitsgraphen sind Graphen, die alle Knotenpaare miteinander verbinden, die sich \emph{sehen} können, auf deren Luftlinie sich also keine \emph{Hindernisse befinden}.
-Aus einer Küstenlinie kann ein Sichtbarkeitsgraph erstellt werden, indem die Knoten mit allen Knoten verbunden werden, deren Luftlinie keine Küste kreuzt.
+Sichtbarkeitsgraphen sind Graphen, die alle Knotenpaare miteinander verbinden, die sich \emph{sehen} können, auf deren \emph{Luftlinie} sich also keine \emph{Hindernisse} befinden.
+Aus einer Küstenlinie kann ein Sichtbarkeitsgraph erstellt werden, indem die Knoten auf der Küstenlinie mit allen Knoten verbunden werden, deren Luftlinie keine Küste kreuzt.
 \autoref{fig:thessaloniki-visibility} zeigt einen Ausschnitt eines solchen Sichtbarkeitsgraphen.
 Zu sehen ist der Hafen der griechischen Stadt Thessaloniki.
 
-Das Finden von kürzesten Pfaden ist auf solchen Graphen deutlich rechenintensiver als etwa auf Straßengraphen mit vergleichbarer Knotenanzahl, da sie unter anderem einen hohen durchschnittlichen Knotengrad und keine inhärente hierarchische Struktur besitzen.
-Zwar gibt es Möglichkeiten den Graphen zu verändern und schneller Wege zwischen Knoten zu berechnen, etwa durch Triangulierung oder Rasterisierung, jedoch sind diese Wege nicht mehr garantiert optimal.
+Das Finden von kürzesten Pfaden ist in solchen Graphen rechenintensiver als etwa auf Straßengraphen mit vergleichbarer Knotenanzahl, da sie unter anderem einen höheren durchschnittlichen Knotengrad und keine inhärente hierarchische Struktur besitzen.
+Zwar gibt es Möglichkeiten, den Graphen zu verändern und schneller Pfade zwischen Knoten zu berechnen, etwa durch Triangulierung oder Rasterisierung, jedoch sind diese Pfade nicht mehr garantiert optimal.
 
-Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden von kürzesten Pfaden und kürzesten Pfad Distanzen (\emph{Contraction Hierarchies} und \emph{Hierarchical Hub Labeling}), auf diese Graphen anwenden lassen.
+Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden von kürzesten Pfaden und kürzesten Pfad-Distanzen (\emph{Contraction Hierarchies} und \emph{Hierarchical Hub Labeling}) auf diese Graphen anwenden lassen.
 
 \begin{figure}[ht]%
     \centering
@@ -18,16 +18,16 @@ Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden
     \label{fig:thessaloniki-visibility}%
 \end{figure}
 
-\section{Bearbeite Graphen}
+\section{Bearbeitete Graphen}
 
-Der Fokus dieser Arbeit liegt auf drei Sichtbarketisgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
-Für jeden dieser 3 Graphen existiert zusätzlich eine Triangulation.
+Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
+Für jeden dieser 3 Graphen existiert zusätzlich eine Triangulierung, deren kürzeste Pfade eine untere Schranke zu Sichtbarkeitgraphen darstellt
 \autoref{table:input_graphs} listet die Graphen auf.
 Die Graphen mit dem Präfix \emph{aegaeis} beinhalten das Ägäische Meer, mit \emph{medi} das Mittelmeer und mit \emph{pata} die Chilenische Fjorde.
-Graphen mit dem Postfix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulationen.
+Graphen mit dem Postfix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulierungen.
 Die bearbeiteten Graphen sind ungerichtet, werden im folgenden jedoch als gerichtet betrachtet.
-Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kanten als gerichteter Graph zu interpretieren.
-Die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(b, a)$.
+Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kanten gerichtetet zu interpretieren,
+die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(b, a)$.
 
 \begin{table}[ht]
     \centering
@@ -50,16 +50,17 @@ Die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(
     \label{table:input_graphs}
 \end{table}
 
-\subsection{Triangulation}
+\subsection{Triangulierung}
 
 Die Triangulierung wird on \cite{funkescalable} erklärt.
+Ein Beispiel solch einer Triangulierung ist in \autoref{fig:thessaloniki_comparison} gegeben.
 
 \todo{Daniel nach Details fragen, wie die Triangulation zustande gekommen ist.}
 
 Erst Triangulierung. Wenn Dreiecke sehr schmal sind, dann ersetzen durch Subdreiecke.
 
 Die Knoten eines triangulierten Graphen $G_g$ bilden eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
-Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, darf sie aber vergrößern.
+Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.
 
 
 \begin{figure}[ht]%
@@ -68,21 +69,13 @@ Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht ve
     %\qquad
     \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
     \caption{Hafen von Thessaloniki}%
-    \label{fig:thessaloniki}%
+    \label{fig:thessaloniki_comparison}%
 \end{figure}
 
 \section{Speedup-Techniken}
 
-Die betrachteten Speedup-Techniken zum Finden kürzester Pfade benötigen eine Phase der Vorbehandlung. (\emph{preprocessing}), damit danach kürzeste Pfad Anfragen (\emph{queries}) schneller beantwortet werden können.
+Die betrachteten Speedup-Techniken zum Finden kürzester Pfade benötigen eine Phase der Vorbehandlung (\emph{preprocessing}), damit danach kürzeste Pfad Anfragen (\emph{queries}) schneller beantwortet werden können.
 Die für das Preprocessing benutzte Rechenzeit und der Memory-Overhead sollte dabei in einem sinnvollen Verhältnis zum Speedup und der Anzahl der Queries stehen.
 Ist der Speedup besonders hoch, so lohnt es sich mehr in das Preprocessing zu investieren.
 
-
-Beim Hierarchical Hub Labeling werden für jeden Knoten zwei \emph{Label} erstellt, welche den Suchbaum der Breitensuche repräsentieren.
-Ein Vergleich beider Label liefert damit einen Knoten, welcher wieder auf dem kürzesten Pfad zwischen zwei Knoten liegt.
-Eine genaue Beschreibung beider Techniken erfolgt in \autoref{chapter:ch} und \autoref{chapter:hl}.
-
-
-
-
-
+\todo{Speedup Techniken auflisten}
