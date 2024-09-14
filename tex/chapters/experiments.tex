@@ -1,5 +1,66 @@
 \chapter{Experimente}
 
+\section{Datenstrukturen}
+
+Im Allgemeinen haben wir zwei Anforderungen an die verwendeten Datenstrukturen, welche zur Repräsentation der Graphen verwendet werden: Es muss möglich sein für einen Knoten seine Vorgänger und Nachfolger zu finden und es muss möglich sein Kanten zu verändern oder zu entfernen.
+Diese beiden Ansprüche stehen sich mitunter gegenüber.
+
+Sollange nicht anders erwähnt, wurden für
+
+Vertices sind natürliche Zahlen bzw uint32.
+Ein Graph enthält idealerweise keine isolierten Knoten.
+isolierte Knoten sind doof für dijkstra und co.
+Die Menge der Knoten ist definiert durch Ihre Anzahl.
+Gibt es $n \in \mathbb{N}$ Knoten, so sind es $0, \dotsc, n - 1$.
+Ein Graph der diese Eigenschaft nicht erfüllt, kann durch eine Mapping der Knoten in die Form gebracht werden.
+
+Jenachdem was mit dem Graph gemacht werden soll, sind verschiedene Eigenschaften von Vorteil.
+Manchmal ist eine effiziente Nachbar Abfrage wichtig,
+Manchmal das bearbeiten des Graphes, einfügen oder löschen von Knoten
+
+Es wurde ein dyn Trait benutzt, welches eine Overhead hat und kein inlining zulässt.
+Dafür lassen sich verschiedene Methoden vergleichen.
+
+Die Grundlegenden Implementierungen kennen nur ihre Vorgänger.
+Ein Reversibe Graph besteht aus einem Graph und seinem Umkehrgraph.
+Gleiche Datenstruktur.
+
+\subsection{VecVecGraph}
+Ein Vec mit pro Knoten ein Vec.
+Der innere Vec speichert Tuple aus (Vertex, Distanz).
+Der innere Vec ist nach Vertex sortiert.
+
+Ein Knoten kann so mit eine binären Suche gefunden werden.
+Doch ab einem großen Grad wird diese Suche teuer.
+Das einfügen und Löschen ist auch etwas teuere, da die übrigen Elemente geschoben werden müssen
+
+Das finden von Nachbarn geht aber schnell, weil kein unbenutzer Platz dazwischen ist.
+
+\subsection{VecHashMap}
+Ein Vec mit pro Knoten eine HashMap
+Die innere HashMap speichert Vertex -> Distanz.
+So kann schnell ein Knoten gefunden werden.
+
+Das finden von Nachbarn ist etwas langsamer, da unbenutzter Platz zwischen den Hash Einträgen.
+
+Das einfügen und löschen ist günstig.
+
+Vielleicht wäre IndexMap noch spannend.
+Schnelles finden von Nachbarn.
+Schnelles Iterieren.
+
+Einfügen und löschen etwas teuerer.
+
+\subsection{VecGraph}
+Zwei Vecs.
+Ein Index Vec mit pro Knoten ein Eintrag (u32, u32).
+Dieser Eintrag gibt den Startindex und Stopindex des des zweiten Vecs an.
+Dieser ist ein Vec (Vertex, Distanz).
+
+Das bietet den Vorteil, dass man die Kanten zusätzlich sortieren kann, für besser Cache lokalität.
+Kanten häufig benutzter Knoten können so an einem Ende des Vec grupiert werden.
+
+\section{Stuff}
 
 Normales Edge-diffenrce CH mit Neighbor update.
 tut nur auf triangulierten graphen.
