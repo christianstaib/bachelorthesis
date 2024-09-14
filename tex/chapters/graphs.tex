@@ -2,7 +2,7 @@
 
 Ein Graph ist eine Struktur, die verwendet wird, um Beziehungen zwischen Objekten darzustellen.
 Die Idee, Objekte durch Verbindungen zu verknüpfen, bildet die Grundlage für viele Anwendungen, unter anderem für die Routenplanung.
-Graphen und (kürzeste) Pfade spielen aber auch jenseits davor eine wichtige Rolle, auf einem Wissengraph kann ein Pfad etwa dafür stehen, dass eine Aussage Wahr ist.
+Graphen und (kürzeste) Pfade spielen auch darüber hinaus eine wichtige Rolle; in einem Wissensgraphen kann ein Pfad beispielsweise dafür stehen, dass eine Aussage wahr ist.
 \autoref{graphs:fig:beispielgraph} zeigt einen Graphen, welcher im folgenden für Beispiele benutzt wird.
 
 \begin{figure}[ht]
@@ -62,7 +62,7 @@ Graphen und (kürzeste) Pfade spielen aber auch jenseits davor eine wichtige Rol
 Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es notwendig, einige Begriffe zu definieren.
 
 \begin{definition}[Graph]
-    Sofern nicht anders angegeben wird im folgenden Graph als eine Bezeichnung für einen endlichen, gerichteten Graph mit Kantengewichten, ohne Mehrfachkanten und Schleifen, verwendet.
+    Sofern nicht anders angegeben, wird im Folgenden Graph als Bezeichnung für einen endlichen, gerichteten Graphen mit Kantengewichten ohne Mehrfachkanten und Schleifen verwendet.
 
     Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß} (Tail), $h \in V$ als \emph{Kopf} (Head) und $w \in \mathbb{R}^+$ als \emph{Gewicht} (Weight) bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, verweiste diese Schreibweise auch eindeutig das Kantengewicht.
 
@@ -70,14 +70,14 @@ Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es no
 \end{definition}
 
 Das Gewicht der Kanten ist hierbei auf positive reelle Zahlen begrenzt, da das Verwenden eines Kantengewichtes $0$ dazu führen kann, dass ein kürzester Pfad mehrfach einen Teilpfad der Länge 0 durchläuft.
-Negative Kantengewichte erschweren die Definition und Argumentation, sodass hier auf diese nicht weiter eingegangen wird,
+Negative Kantengewichte erschweren die Definition und Argumentation, sodass hier auf diese nicht weiter eingegangen wird.
 
 \begin{definition}[Nachbar]
-    Sei $G = (V, E)$. Ein Knoten $u \in V$ heißte \emph{Vorgänger} eines Knoten $v \in V$ wenn $(u, v) \in V$. $v$ ist in dann ein \emph{Nachfolger} von $u$.
+    Sei $G = (V, E)$. Ein Knoten $u \in V$ heißt \emph{Vorgänger} eines Knoten $v \in V$ wenn $(u, v) \in E$. $v$ ist dann ein \emph{Nachfolger} von $u$.
     Ist $G$ ungerichtet, so spricht man beides mal von \emph{Nachbarn}.
 \end{definition}
 
-Die Anzahl der Nachbarn eines Knotens bezeichnet seien \emph{Grad}, wobei bei gerichteten Graphen vom \emph(Ein-) und \emph{Ausgangsgrad} gesprochen wird.
+Die Anzahl der Nachbarn eines Knotens wird als sein \emph{Grad} bezeichnet, wobei bei gerichteten Graphen vom \emph{Eingangsgrad} und \emph{Ausgangsgrad} gesprochen wird.
 Hat ein Knoten keine Vorgänger oder Nachfolger, so nennt man ihn \emph{isoliert}.
 
 \begin{definition}[Pfad]
@@ -102,15 +102,15 @@ Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendi
 Auch die Umkehrung dieses Problem ist Interessent, also die kürzesten Pfade von allen Knoten zu einem Knoten zu bestimmen.
 Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade auf dem Umkehrgraph $G^T$ entspricht.
 
-\begin{definition}[Umkehrgraph]
-    Sei $G = (V, E)$ ein Graph. Dann ist $G^T = (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{Umkehrgraph} von $G$.
+\begin{definition}[Transponierter Graph]
+    Sei $G = (V, E)$ ein Graph. Dann ist $G^T = (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{transponierte Graph} von $G$.
 \end{definition}
 
-Ein ungerichteter Graph ist hier bei selbst ein Umkehrgraph.
+Ein ungerichteter Graph ist hier bei selbst ein transponierter Graph.
 
 \begin{definition}[Hitting-Set]
     Sei $G = (V, E)$ ein Graph und $P$ eine Menge an Pfaden auf $G$.
-    Ein Hitting-Set $H = \subset V$ ist eine Menge an Knoten, so dass jeder Pfad $p \in P$ mindestens einen Knoten aus $H$ enthält
+    Ein Hitting-Set $H \subset V$ ist eine Menge an Knoten, so dass jeder Pfad $p \in P$ mindestens einen Knoten aus $H$ enthält
 \end{definition}
 
 Ein triviales Beispiel für ein Hitting-Set ist $V$ selbst, im Weiteren sind jedoch möglichst kleine Hitting-Sets nützlich.
@@ -129,7 +129,7 @@ Der Greedy-Algorithmus \ref{graphs:alg:greedy-hitting-set} bietet jedoch eine Ap
 
         \While{$P \neq \emptyset$}
         \State Wähle $v \in V$ mit $\abs{ \{ p \mid p \in P \colon v \in p \}}$ maximal
-        \State $H \gets H \cup \{  v \}]$
+        \State $H \gets H \cup \{  v \}$
         \State $P \gets P \setminus \{p \in P \mid v \in p\}$
         \EndWhile
 
@@ -269,6 +269,8 @@ Die in dieser Arbeit verwendeten Graphen sind im \emph{.fmi} Dateiformat gespeic
 Für die in dieser Arbeit verwendeten Graphen sind die Felder für Höhe, Typ und Geschwindigkeit nicht von Bedeutung, sie enthalten jeweils den Wert 0.
 
 \section{Datenstrukturen}
+
+Die Wahl der Datenstruktur, welche ein
 
 Vertices sind natürliche Zahlen bzw uint32.
 Ein Graph enthält idealerweise keine isolierten Knoten.
