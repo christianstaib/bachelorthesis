@@ -66,39 +66,36 @@ Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es no
 
     Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß} (Tail), $h \in V$ als \emph{Kopf} (Head) und $w \in \mathbb{R}^+$ als \emph{Gewicht} (Weight) bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, verweiste diese Schreibweise auch eindeutig das Kantengewicht.
 
-    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E$ und $(t, h)$ kann als $\{ t, h \}$geschrieben werden.
+    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E$ und $(t, h)$ kann als $\{ t, h \}$ geschrieben werden.
 \end{definition}
 
-Das Gewicht der Kanten ist hierbei auf positive Zahlen begrenzt, da das verwenden eines Kantengewichtes $0$ dazu führen kann, dass ein kürzester Pfad mehrfach einen Teilpfad der Länge 0 durchläuft.
-Negative Kantengewichte erschweren die Defintiion und Argumentation, sodass hier auf diese nicht weiter eingegangen wird,
+Das Gewicht der Kanten ist hierbei auf positive reelle Zahlen begrenzt, da das Verwenden eines Kantengewichtes $0$ dazu führen kann, dass ein kürzester Pfad mehrfach einen Teilpfad der Länge 0 durchläuft.
+Negative Kantengewichte erschweren die Definition und Argumentation, sodass hier auf diese nicht weiter eingegangen wird,
 
 \begin{definition}[Nachbar]
     Sei $G = (V, E)$. Ein Knoten $u \in V$ heißte \emph{Vorgänger} eines Knoten $v \in V$ wenn $(u, v) \in V$. $v$ ist in dann ein \emph{Nachfolger} von $u$.
     Ist $G$ ungerichtet, so spricht man beides mal von \emph{Nachbarn}.
 \end{definition}
 
-Die Anzahl der Nachbarn eines Knotens bezeichnet seien \emph{Grad}, wobei bei gerichteten Grahen vom Ein- und Ausgangsgrad gesprochen wird.
+Die Anzahl der Nachbarn eines Knotens bezeichnet seien \emph{Grad}, wobei bei gerichteten Graphen vom \emph(Ein-) und \emph{Ausgangsgrad} gesprochen wird.
 Hat ein Knoten keine Vorgänger oder Nachfolger, so nennt man ihn \emph{isoliert}.
-In einem Graphen gibt es oft das Interesse, von einem Knoten zu einem anderen zu gelangen.
 
 \begin{definition}[Pfad]
-    Ein Pfad auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, für die gilt, dass benachbarte Knoten im Pfad durch eine Kante in $G$ verbunden sind.
+    Ein Pfad $p$ auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, für die gilt, dass benachbarte Knoten im Pfad durch eine Kante in $G$ verbunden sind.
     Der Knoten $v_1$ wird Startknoten, $v_n$ Zielknoten genannt.
-    Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge} genannt.
-    Die Anzahl Kantennutzungen $n - 1$ wird \emph{Hop-Länge} genannt.
+    Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge}, die Anzahl der Kantennutzungen ($n - 1$) \emph{Hop-Länge} genannt.
 \end{definition}
 
 Häufig wird für den Startknoten der Buchstabe $s$ (Source) und für den Zielknoten $t$ für Target verwendet.
 Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zur Definition des kürzesten Pfades.
 
 \begin{definition}[Kürzester Pfad]
-    Ein Pfad $(v_1, \dotsc, v_n)$ ist \emph{ein kürzester Pfad}, wenn die Länge des Pfades unter allen Pfad von $v_1$ nach $v_n$ minimal ist.
+    Ein Pfad $p$ ist \emph{ein kürzester Pfad}, wenn die Länge von $p$ unter allen Pfaden von $v_1$ nach $v_n$ minimal ist.
     Die Länge des kürzesten Pfades wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet.
-    Die Definition des Graphen lässt es zu, dass es mehrere kürzeste Pfade zwischen zwei Knoten gibt.
 
-    Die kürzeste Pfad Funktion ${spd} \colon V \times V \to \mathbb{R}^+ \cup \{ \infty \} $ weist einem Knotenpaar den Abstand zu, wobei dieser unendlich ist, wenn kein Pfad zwischen ihnen existiert.
+    Die Funktion ${spd} \colon V \times V \to \mathbb{R}^+ \cup \{ \infty \} $ (shortest path distance) weist einem Knotenpaar den Abstand zu, wobei dieser unendlich ist, wenn kein Pfad zwischen ihnen existiert.
     Sei dann $P \subset V \times V$ die Menge der Knoten, zwischen denen ein Pfad existiert.
-    ${sp} \colon P \to V \times V \times \dots \times V$ weist einem Knotenpaar einen kürzesten Pfad zu.
+    Dann weist ${sp} \colon P \to V \times V \times \dots \times V$ (shortest path) einem Knotenpaar einen kürzesten Pfad zu.
 \end{definition}
 
 Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu finden.
@@ -109,18 +106,19 @@ Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem K
     Sei $G = (V, E)$ ein Graph. Dann ist $G^T = (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{Umkehrgraph} von $G$.
 \end{definition}
 
-\todo{Hier sollte was stehen weil schön und so.}
+Ein ungerichteter Graph ist hier bei selbst ein Umkehrgraph.
 
-\begin{definition}[Hitting Set]
+\begin{definition}[Hitting-Set]
     Sei $G = (V, E)$ ein Graph und $P$ eine Menge an Pfaden auf $G$.
-    Ein Hitting Set $H = V \times V \times \dotsc \times V$ ist eine Menge an Knoten, so dass es für alle Pfade $p \in P$ mindestens einen Knoten $v \in P$ gibt, so dass $p \in H$ gilt.
+    Ein Hitting-Set $H = \subset V$ ist eine Menge an Knoten, so dass jeder Pfad $p \in P$ mindestens einen Knoten aus $H$ enthält
 \end{definition}
 
-Ein solches Hitting Set kann durch einen Greedy Algorithmus berechnet werden.
-Man verwendet die Bezeichnung $v$ \emph{trifft} einen Pfad $p$.
+Ein triviales Beispiel für ein Hitting-Set ist $V$ selbst, im Weiteren sind jedoch möglichst kleine Hitting-Sets nützlich.
+Das Finden kleinst möglicher Hitting-Sets ist NP-vollständig \cite{Kar72}.
+Der Greedy-Algorithmus \ref{graphs:alg:greedy-hitting-set} bietet jedoch eine Approximation in polynomieller Zeit an.
 
 \begin{algorithm}
-    \caption{Greedy Hitting Set}
+    \caption{Greedy Hitting-Set}
     \begin{algorithmic}[1]
         \Require Knotenmenge $V$, Pfade $P$ über $V$
         \Ensure Hitting-Set $H$
@@ -139,6 +137,7 @@ Man verwendet die Bezeichnung $v$ \emph{trifft} einen Pfad $p$.
 
         \State \Return $H$
     \end{algorithmic}
+    \label{graphs:alg:greedy-hitting-set}
 \end{algorithm}
 
 
