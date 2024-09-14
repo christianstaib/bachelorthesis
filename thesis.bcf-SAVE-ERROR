@@ -2361,3 +2361,8 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">refs.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
+    <bcf:citekey order="1" intorder="1">funkescalable</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">Kar72</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">abraham2010highway</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">geisberger2008contraction</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">abraham2011hub</bcf:citekey>

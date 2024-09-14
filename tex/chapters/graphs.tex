@@ -66,7 +66,7 @@ Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es no
 
     Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß} (Tail), $h \in V$ als \emph{Kopf} (Head) und $w \in \mathbb{R}^+$ als \emph{Gewicht} (Weight) bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, verweiste diese Schreibweise auch eindeutig das Kantengewicht.
 
-    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E$ und $(t, h)$ kann als $\{ t, h \}$ geschrieben werden.
+    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h, w) \in E \Leftrightarrow (t, h, w)^T = (h, t, w) \in E$ und $(t, h)$ kann als $\{ t, h \}$ geschrieben werden.
 \end{definition}
 
 Das Gewicht der Kanten ist hierbei auf positive reelle Zahlen begrenzt, da das Verwenden eines Kantengewichtes $0$ dazu führen kann, dass ein kürzester Pfad mehrfach einen Teilpfad der Länge 0 durchläuft.
