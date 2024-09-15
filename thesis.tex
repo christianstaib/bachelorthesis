@@ -1,6 +1,16 @@
 \documentclass[oneside, parskip, 12]{scrbook}
 \usepackage{mystyle}
 
+% faster tikz. Needs to be here because of overleaf
+\usepgfplotslibrary{external}
+\tikzexternalize[prefix=tikzexternalize/]
+
+\makeatletter
+\renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
+\makeatother
+
+
+
 \title{Anwendung von Contraction Hierarchies und Hierarchical Hub Labeling auf nicht-Straßengraphen}
 \author{Christian Staib}
 \date{\today}

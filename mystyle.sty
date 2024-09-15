@@ -71,11 +71,3 @@
 % \newcommand{\Break}{\STATE \algorithmicbreak}
 % \usepackage{thmbox}
 % \usepackage{listings, listings-rust}
-
-% faster tikz
-\usepgfplotslibrary{external}
-\tikzexternalize
-
-\makeatletter
-\renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
-\makeatother
