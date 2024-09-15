@@ -356,6 +356,20 @@ Die Idee des Label ist es, den Suchbaum des upward bzw. downard Graphenz zu spei
 In der in \cite{abraham2011hub} vorgestellten Terminioligy wird das Label des upward Graphen \emph{forward Label} und das des downard Graphens \emph{reverse Label} genannt.
 Ein kürzester Pfad wird gefunden, in dem der Knoten mit der geringsten Summe der Distanzen des forwad und reverse Labels gefunden wird.
 
+\begin{definition}[Hub Graph]
+    Sei $G = (V, E)$. $H = (L_f, L_b)$ ist dann ein \emph{Hub Graph} und es gilt:
+    Die Forward-Label Funktion $L_f \colon V \to V \times \mathbb{R}^+_0$ weist jedem Knoten ein Forward Label zu.
+    Sei $L_f (u)$ das Forward Label des Knotens $u \in V$, dann gibt es für jeden Knoten $v \in V$ höchstens ein $(v, d) \in L_f (u)$ und es gilt $d \geq {spd}_G((u, v))$.
+    Ein Backward Label ist ein Forward Label des Umkehrgraphens $G^T$.
+
+    Zusammen erfüllen die Forward Label und die Backward Label die Abdeckungseigenschaft:
+    Für jedes Knotenpaar $s, t \in V$ für die es einen kürzesten $s-t$ Pfad gibt, gibt es einen Knoten $m \in V$ mit $(m, d_f) \in L_f (s)$, $(m, d_r) \in L_r$ und $d_f + d_r = {spd}_G ((s, t))$.
+\end{definition}
+
+Die Definition der Label erinnert bereits stark an den Beweis der Korrektheit der Contracted Graph Query.
+Aus einem Contracted Graphen lässt sich ein Hub Graph bauen, indem der Suchbaum des Upward Graphens als Forward Label und der des Downard Graphens als Backward LAbel betrachtet wird, denn die Suchbäume treffen sich im Knote mit dem Höchstem Level mit optimalem Abstand.
+Diese so erstelten Labels sind hierarisch: Es gibt eine Ordnung der Knoten (die vertex-to-level Funktion), so dass das Forward und das Backward Label eines Knotens $u$ nur Knoten $h$ mit höherer Ordnung enthält.
+
 
 \subsubsection{Query}
 
@@ -367,10 +381,10 @@ Algorithmus \ref{hl:alg:query} zeigt wie wenig Schritte dafür notwendig sind, e
 \begin{algorithm}[ht]
     \caption{Hub Label Query}
     \begin{algorithmic}[1]
-        \Require Forward Labels $F$, Reverse Labels $R$, Startknoten $s \in V$, Zielknoten $t \in V$
+        \Require Forward Label Funktion $L_f$, Backward Label Funktion $L_r$, Startknoten $s \in V$, Zielknoten $t \in V$
         \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$
-        \State $f_s \leftarrow F[s]$
-        \State $r_t \leftarrow F[t]$
+        \State $f_s \leftarrow L_f (s)$
+        \State $r_t \leftarrow L_f (t)$
 
         \State
         \State $m \leftarrow {none}$
@@ -388,36 +402,6 @@ Algorithmus \ref{hl:alg:query} zeigt wie wenig Schritte dafür notwendig sind, e
     \end{algorithmic}
     \label{hl:alg:query}
 \end{algorithm}
-
-Der Beweis für die Korrektheut folgt dem gleichen Schema wie Beweis \ref{ch:proof:correct}.
-
-\begin{beweis}\label{hl:proof:correct}
-    Der Beweis der Korrektheit folgt in zwei Schritten.
-
-    \begin{enumerate}
-        \item
-              ${spd}_G ((u, v)) = d$ mit $d \neq \infty$ $\Rightarrow$ ${spd}_H((u, v)) = d$.
-
-              Sei ${sp}((u, v))$ der kürzeste Pfad auf $G$ der unter allen kürzesten Pfaden den Knoten $m$ mit dem höchstem Level enthält.
-              Da $m$ auf dem kürzestem Pfad liegt, ist auch der Pfad $(u, \dotsc, m)$ ein kürzester Pfad.
-              Da $m$ das höchste Level auf dem diesem Pfad hat, ist $(m, {spd}((u, m))) \in f_s$.
-
-              Analog dazu ist $m$ der Knoten mit höchstem Level auf dem Pfad $(v, \dotsc, t)$ in $G^T$ und damit $(m, {spd}((m, v))) \in r_v$
-
-              Die kürzeste Pfad Distanz kann dann durch aufsummierung von ${spd}((u, m))$ und ${spd}((m, v))$ erhalten werden.
-
-        \item
-              ${spd}_G ((u, v)) = \infty$ $\Rightarrow$ ${spd}_H((u, v)) = \infty$.
-
-              Angenommen, es würde ein Teffpunkt-Knoten $m$ mit $(m, d_f) \in f_s$ und $(m, d_r) \in r_t$ gefunden werden.
-              Nach der Definition der Labels sind $d_f, d_r \in \mathbb{R}$, also endlich.
-              Da aber ${spd}_G ((u, v)) = \infty$ muss $d_f = \infty$ oder $d_r \infty$ gelten.
-              Daher wäre das Forward oder Reverse Label illegal.
-    \end{enumerate}
-
-    Daher gilt, die Suche der kürzesten Pfad Distanz in $H$ ist äquivalent zu der in $G$
-    \qed
-\end{beweis}
 
 Die eigentliche Suche ist dann nur noch das finden des Treffpunkt-Knotens.
 
