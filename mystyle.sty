@@ -1,44 +1,20 @@
-\usepackage{amssymb}
-
-
-\usepackage{todonotes}
-
+% Encoding and language
+\usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
-
-\usepackage{physics}
-\usepackage{mathtools}
-\usepackage{todonotes}
-\usepackage{booktabs}
-\usepackage{hyperref}
-% \usepackage{subfig}
-
 \usepackage{csquotes}
+
+% Typography
 \usepackage{microtype}
 
-\usepackage{tikz}
-
+% Math packages
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{physics}
+\usepackage{amsthm}
 \DeclareMathOperator{\avg}{\diameter}
 
-\usepackage{biblatex} %Imports biblatex package
-\addbibresource{refs.bib} %Import the bibliography file
-
-\usepackage{siunitx}
-\sisetup{locale = DE}
-
-\sisetup{
-    table-auto-round = true % Round numbers in S-columns
-}
-
-\usepackage{algorithm}
-\usepackage{algpseudocode}
-\renewcommand{\algorithmicrequire}{\textbf{Eingabe:}}
-\renewcommand{\algorithmicensure}{\textbf{Ausgabe:}}
-\renewcommand{\ALG@beginalgorithmic}{\footnotesize}
-% \newcommand{\Break}{\STATE \algorithmicbreak}
-
-% \usepackage{thmbox}
-\usepackage{amsthm}
+% Theorem styles
 \makeatletter
 \newtheoremstyle{break}
 {3pt}% space before
@@ -53,25 +29,53 @@
 {}% header specification (empty for default)
 \makeatother
 \theoremstyle{break}
-
-\newtheorem{definition}{Defintion}
+\newtheorem{definition}{Definition}
 \newtheorem{beweis}{Beweis}
 
-
-% \usepackage{listings, listings-rust}
-
-
-
-
-
-\usepackage[utf8]{inputenc}
+% Graphics packages
+\usepackage{tikz}
 \usepackage{pgfplots}
-\DeclareUnicodeCharacter{2212}{−}
-\usepgfplotslibrary{groupplots,dateplot}
 \usetikzlibrary{patterns,shapes.arrows}
+\usepgfplotslibrary{groupplots,dateplot}
 \pgfplotsset{compat=newest}
+\DeclareUnicodeCharacter{2212}{−}
 
+% Algorithm packages
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Eingabe:}}
+\renewcommand{\algorithmicensure}{\textbf{Ausgabe:}}
+\makeatletter
+\renewcommand{\ALG@beginalgorithmic}{\footnotesize}
+\makeatother
+
+% Other packages
+\usepackage{booktabs}
 \usepackage{caption}
 \usepackage{subcaption}
-
 \usepackage{parskip}
+\usepackage{siunitx}
+\sisetup{locale = DE}
+\sisetup{table-auto-round = true}
+\usepackage{todonotes}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Bibliography
+\usepackage{biblatex}
+\addbibresource{refs.bib}
+
+% Optional packages (commented out)
+% \usepackage{subfig}
+% \newcommand{\Break}{\STATE \algorithmicbreak}
+% \usepackage{thmbox}
+% \usepackage{listings, listings-rust}
+
+% faster tikz
+\usepgfplotslibrary{external}
+\tikzexternalize
+
+\makeatletter
+\renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
+\makeatother
