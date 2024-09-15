@@ -307,16 +307,13 @@ Beim expanded eines Knoten prüft man, für die Nachbarn der Gegenrichtung:
 
 \subsection{Erstellung}
 
-Die Erstellung des Contrated Graphens kann auf zwei Wegen geschehen: Durch Kontraktion und Brute-Forcing.
-Inwiefern letzter eine sinnvolle Option ist wird \todo{Results} zu sehen sein.
-
 \paragraph{Top-Down}
 
 Bei der Top-Down Kontraktion ist die level-to-vertex Funktion ${ltv}$ vorgegeben.
 Die Knoten werden in Reihenfolge ihres Levels kontrakiert, wobei mit dem niedrigsten Level begonnen wird.
 
 \subparagraph{Zufällig sortiert}
-Die Knoten werden zufällig auf die Level verteilt. \todo{Funke fragen}
+Die Knoten werden zufällig auf die Level verteilt. \todo{MACHEN!}
 
 \subparagraph{Sortiert nach Grad}
 Die Knoten werden nach ihrem Grad sortiert, wobei die kleinsten Grade zuerst kontraktiert werden.
@@ -404,8 +401,6 @@ Algorithmus \ref{hl:alg:query} zeigt wie wenig Schritte dafür notwendig sind, e
 \end{algorithm}
 
 Die eigentliche Suche ist dann nur noch das finden des Treffpunkt-Knotens.
-
-\todo{Wie hängen kleinstes und optimales hitting set zusammen?}
 
 \subsection{Pfad erstellung}
 

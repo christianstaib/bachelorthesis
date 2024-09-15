@@ -26,9 +26,18 @@ Diese Kanten wurden unverändert beibehalten.
 medi und pata Sichtbarkeitsgraphen fehlten jeweils einige Kanten, damit sie ungerichtet sind.
 Diese wurden von Hand ergänzt.
 
-\todo{Plot degree before after}
-
 \section{Untersuchung der Graphen}
+
+% \begin{tikzpicture}
+%     \begin{axis}[ybar]
+% 
+%         \addplot table [
+%                 x expr=\coordindex,
+%                 y index=0,
+%             ] {data/degree/aegaeis-ref-graph.csv};
+% 
+%     \end{axis}
+% \end{tikzpicture}
 
 plot edge degree
 
@@ -52,12 +61,11 @@ Plot hitting set vs bottom-up order
 
 \section{Dijkstra}
 
-Als Baseline wurden für jeden Graphen 1000 one-to-one Dijsktra-Suchen squentiell asugeführt. \todo{Darf ich auch parallel}?
-Zur Speicherung der Distanzen und Vorgänger wurde ein Vec, als Warteschlange ein BinaryHeap und zum speichern, ob ein Knoten bereits expanded wurde ein BitSet verwendet.
-\autoref{ergebnisse::table:dijkstra_one_to_one} zeigt die erzielten Zeiten.
-Soweit nicht anders angegeben beziehen sich die Zeit immer auf das finden und erstellen des kürzesten Pfades.
+Für die Berechnung des Speedups der in dieser Arbeit angewandeten Methoden wurden für jeden Graph \num{1000} sequentielle $s-t$ Dijkstra-Suchen asugeführt und die durschnittliche Laufzeit ermittelt.
+Die durschnittliche Laufzeiten für das Finden und erstellen des kürzesten Pfad sind in Tabelle \ref{ergebnisse::table:dijkstra_one_to_one} dargestellt.
+Es ist ersichtlich, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten haben.
 
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \begin{tabular}{
             l % Graph
@@ -72,13 +80,16 @@ Soweit nicht anders angegeben beziehen sich die Zeit immer auf das finden und er
         pata-graph         & 265.825771             \\
         pata-visibility    & 1017.695977            \\ \bottomrule
     \end{tabular}
-    \caption{Dijkstra one-to-one, averaged over 1000 sequential searches}
+    \caption{Durchschnitliche Laufzeit einer Dijkstra Suche (über \num{1000} sequentielle Suchen)}
     \label{ergebnisse::table:dijkstra_one_to_one}
 \end{table}
 
-Zusätzlich wurde die Durschnitliche Hop-Länge, Dijsktra Rank und Queue Pops untersucht.
+Zusätzlich zur durschnitlichen Laufzeit wurde die die Durschnitswerte der Hop-Länge, des Dijsktra-Rank und der Queue pops ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
+Es zeigte sich, dass die durschnittliche Hop-Länge der Sichtbarkeitsgraphen deutlich signifikant kürzer ist, als die der Triangulierungen.
+Obwohl die Sichtbarkeitsgraphen eine niedriger Anzahl an Knoten haben, ist die durschnitliche Anzahl der Queue pops größer.
+Dies legt Nahe, dass die verwendung einer Warteschlange, welche eine \emph{Drecrease-Key} Funktion anbietet, die Geschwindigkeit der Dijkstra Suche erhöhen würde.
 
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \begin{tabular}{
             l % Graph
@@ -95,11 +106,8 @@ Zusätzlich wurde die Durschnitliche Hop-Länge, Dijsktra Rank und Queue Pops un
         pata-graph         & 883.979     & 1120841.9 & 1387047.8    \\
         pata-visibility    & 63.817      & 498570.2  & 2429689.8    \\ \bottomrule
     \end{tabular}
-    \caption{Dijkstra one-to-one, averaged over 1000 sequential searches}
+    \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
 \end{table}
-
-
-Es wurde untersucht, ob es sinvoll ist, andere Datenstrukturen zu verwenden, insbesondere eine Warteschlange, die eine \emph{Drecrease-Key} Funktion anbietet.
 
 \section{CH mit Witness}
 
@@ -107,20 +115,20 @@ Es wurde versucht die CH mit Witness, Edge Difference, Lacy Popping zu erstellen
 Dies hat für die Sichtbarkeitsgraphen nicht funktioniert, da 3 Tage nicht ausreichten die Graphen zu erzeugen.
 Die Suche ist einfach zu teuer.
 Pro Vorgänger muss eine Suche zu allen Nachfolgern gemacht werden.
-\todo{Wie teuer ist das in der Ausgangslage?}
 
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \begin{tabular}{
             l % Graph
             S[table-format = 1.2] % creation zeit
             S[table-format = 4.1] % average time
+            S[table-format = 4.1] % speedup
         }
         \toprule
-        {Graph}       & {creation time (min)} & {$\varnothing$ t (µs)} \\ \midrule
-        aegaeis-graph & 2.1336                & 514.069                \\
-        medi-graph    & 3.08033333333         & 543.803                \\
-        pata-graph    & 9.84055               & 730.317                \\\bottomrule
+        {Graph}       & {creation time (min)} & {$\varnothing$ t (µs)} & {speedup} \\ \midrule
+        aegaeis-graph & 2.1336                & 514.069                & 117.263   \\
+        medi-graph    & 3.08033333333         & 543.803                & 160.138   \\
+        pata-graph    & 9.84055               & 730.317                & 363.987   \\\bottomrule
     \end{tabular}
     \caption{ch one-to-one, averaged over 1000 sequential searches}
 \end{table}
@@ -201,7 +209,3 @@ Das Merging war deutlicht teruer als erwartet, da ch Kantengrad x HL Label Size
     \end{tabular}
     \caption{hl one-to-one, averaged over 1000 sequential searches}
 \end{table}
-
-\section{Großes Hitting set}
-
-\section{}
