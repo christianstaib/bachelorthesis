@@ -7,7 +7,7 @@ Aus einer Küstenlinie kann ein Sichtbarkeitsgraph erstellt werden, indem die Kn
 Zu sehen ist der Hafen der griechischen Stadt Thessaloniki.
 
 Das Finden von kürzesten Pfaden ist in solchen Graphen rechenintensiver als etwa auf Straßengraphen mit vergleichbarer Knotenanzahl, da sie unter anderem einen höheren durchschnittlichen Knotengrad und keine inhärente hierarchische Struktur besitzen.
-Zwar gibt es Möglichkeiten, den Graphen zu verändern und schneller Pfade zwischen Knoten zu berechnen, etwa durch Triangulierung oder Rasterisierung, jedoch sind diese Pfade nicht mehr garantiert optimal.
+Zwar gibt es Möglichkeiten, den Graphen zu verändern, und schneller Pfade zwischen Knoten zu berechnen, etwa durch Triangulierung oder Rasterisierung, jedoch sind diese Pfade nicht mehr garantiert optimal.
 
 Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden von kürzesten Pfaden und kürzesten Pfad-Distanzen (\emph{Contraction Hierarchies} und \emph{Hierarchical Hub Labeling}) auf diese Graphen anwenden lassen.
 
@@ -21,7 +21,7 @@ Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden
 \section{Bearbeitete Graphen}
 
 Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
-Für jeden dieser 3 Graphen existiert zusätzlich eine Triangulierung, deren kürzeste Pfade eine untere Schranke zu Sichtbarkeitgraphen darstellt
+Für jeden dieser drei Graphen existiert zusätzlich eine Triangulierung, deren kürzeste Pfade eine untere Schranke zu Sichtbarkeitgraphen darstellt
 \autoref{table:input_graphs} listet die Graphen auf.
 Die Graphen mit dem Präfix \emph{aegaeis} beinhalten das Ägäische Meer, mit \emph{medi} das Mittelmeer und mit \emph{pata} die Chilenische Fjorde.
 Graphen mit dem Postfix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulierungen.

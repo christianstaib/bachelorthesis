@@ -1,4 +1,4 @@
-\chapter{PEOPLE: Predetermined Order, Prunded Label}
+\chapter{PEOPLE: Predetermined Order, Prunded Label}\label{chapter:peopel}
 
 Das erstellen von Abkürzungen während der Kontraktion eines Knotes $v$ erfordert mindestens $\abs{\text{Vorgänger}} \cdot \abs{\text{Nachfolger}}$ viele Vergleiche, ob eine Kante einzufügen ist.
 Wird eine Warteschlange mit Kanten-Differenz benutzt, so sind alleine für die Initalsierung deren Initialsierung $\sum_{v \in V} \abs{\text{Vorgänger}(v)} \cdot \abs{\text{Nachfolger}(v)}$ Vergleiche notwendig.
@@ -276,4 +276,10 @@ Für denn Fall, dass nur die kürzesten Pfad Abstände Interesannt sind, kann un
 \section{Hub Labels Algorithmus}
 
 Der gleiche Idee zur Erstellung eins Contracted Graphens lässt sich auch auf die Erstellung eines Hub Graphens anwenden.
-Hierfür wird die Abbruchbedingung durch die Lebendigkeit entfernt:
+Hierfür wird die Abbruchbedingung durch die Lebendigkeit entfernt.
+
+Der Aglorithmus kann auch dafür benutzt werden, die Qualität (durschnitliche Label Size) einer vertex-to-level Funktion anzugeben, ohne den kompletten Hub Graphen zu berechnen.
+Hierfür würd für $n$ Knoten das Label berechnet und die größte des Labels angegeben.
+Das ist vielleicht interesannt, um gute Top-Down Orderings zu finden (unter der Annahme, dass dieser Orderings auch effizientes Kontraktieren zulassen).
+
+Analog dazu kann für einen Knoten $v$ auch der CH Suchbaum berechnet werden, indem iterative für jeden gefunden Knoten wieder die CH Kanten berechnet werden. Das ist potentiell aber etwas teurer.

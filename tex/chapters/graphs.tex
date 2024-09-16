@@ -2,7 +2,7 @@
 
 Ein Graph ist eine Struktur, die verwendet wird, um Beziehungen zwischen Objekten darzustellen.
 Die Idee, Objekte durch Verbindungen zu verknüpfen, bildet die Grundlage für viele Anwendungen, unter anderem für die Routenplanung.
-Graphen und (kürzeste) Pfade spielen auch darüber hinaus eine wichtige Rolle; in einem Wissensgraphen kann ein Pfad beispielsweise dafür stehen, dass eine Aussage wahr ist.
+Graphen und (kürzeste) Pfade spielen darüber hinaus eine wichtige Rolle; in einem Wissensgraphen kann ein Pfad beispielsweise dafür stehen, dass eine Aussage wahr ist.
 \autoref{graphs:fig:beispielgraph} zeigt einen Graphen, welcher im folgenden für Beispiele benutzt wird.
 
 \begin{figure}[ht]
@@ -59,14 +59,14 @@ Graphen und (kürzeste) Pfade spielen auch darüber hinaus eine wichtige Rolle; 
 \end{figure}
 
 \section{Definitionen}
-Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, ist es notwendig, einige Begriffe zu definieren.
+Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, führen wir ein paar Grundlegende Begriffe ein.
 
 \begin{definition}[Graph]
-    Sofern nicht anders angegeben, wird im Folgenden Graph als Bezeichnung für einen endlichen, gerichteten Graphen mit Kantengewichten ohne Mehrfachkanten und Schleifen verwendet.
+    Sofern nicht anders angegeben, bezeichnet Graph im Folgenden einen endlichen, gerichteten Graphen mit Kantengewichten ohne Mehrfachkanten und Schleifen.
 
-    Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist ein Tupel $(t, h, w)$. $t \in V$ wird als \emph{Fuß} (Tail), $h \in V$ als \emph{Kopf} (Head) und $w \in \mathbb{R}^+$ als \emph{Gewicht} (Weight) bezeichnet. Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind. Da ein Graph keine Mehrfachkanten zulässt, verweiste diese Schreibweise auch eindeutig das Kantengewicht.
+    Als Schreibweise wird $G = (V, E)$ verwendet, wobei $V$ die Knotenmenge und $E$ die Kantenmenge ist. Eine Kante ist hierbei ein Tupel $(t, h, w)$. Man bezeichnet $t \in V$ als \emph{Fuß} (Tail), $h \in V$ als \emph{Kopf} (Head) und $w \in \mathbb{R}^+$ als \emph{Gewicht} (Weight). Gelegentlich wird auch nur $(t, h)$ geschrieben, um auszudrücken, dass zwei Knoten verbunden sind.
 
-    Wird $G$ als ungerichtet bezeichnet, dann gilt $(t, h, w) \in E \Leftrightarrow (t, h, w)^T = (h, t, w) \in E$ und $(t, h)$ kann als $\{ t, h \}$ geschrieben werden.
+    Wird $G$ als ungerichtet bezeichnet, so gilt $(t, h, w) \in E \Leftrightarrow (t, h, w)^T \coloneq (h, t, w) \in E$ und $(t, h)$ kann als $\{ t, h \}$ geschrieben werden.
 \end{definition}
 
 Das Gewicht der Kanten ist hierbei auf positive reelle Zahlen begrenzt, da das Verwenden eines Kantengewichtes $0$ dazu führen kann, dass ein kürzester Pfad mehrfach einen Teilpfad der Länge 0 durchläuft.
@@ -74,19 +74,19 @@ Negative Kantengewichte erschweren die Definition und Argumentation, sodass hier
 
 \begin{definition}[Nachbar]
     Sei $G = (V, E)$. Ein Knoten $u \in V$ heißt \emph{Vorgänger} eines Knoten $v \in V$ wenn $(u, v) \in E$. $v$ ist dann ein \emph{Nachfolger} von $u$.
-    Ist $G$ ungerichtet, so spricht man beides mal von \emph{Nachbarn}.
+    Ist $G$ ungerichtet, so spricht man in beiden Fällen von \emph{Nachbarn}.
 \end{definition}
 
 Die Anzahl der Nachbarn eines Knotens wird als sein \emph{Grad} bezeichnet, wobei bei gerichteten Graphen vom \emph{Eingangsgrad} und \emph{Ausgangsgrad} gesprochen wird.
 Hat ein Knoten keine Vorgänger oder Nachfolger, so nennt man ihn \emph{isoliert}.
 
 \begin{definition}[Pfad]
-    Ein Pfad $p$ auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, für die gilt, dass benachbarte Knoten im Pfad durch eine Kante in $G$ verbunden sind.
+    Ein Pfad $p$ auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, für die gilt, die benachbarte Knoten $v_i$ und $v_{u+1}$ im Pfad durch eine Kante in $G$ verbunden sind.
     Der Knoten $v_1$ wird Startknoten, $v_n$ Zielknoten genannt.
-    Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge}, die Anzahl der Kantennutzungen ($n - 1$) \emph{Hop-Länge} genannt.
+    Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge}, die Anzahl der Kantennutzungen ($n - 1$) \emph{Hop-Länge}, genannt.
 \end{definition}
 
-Häufig wird für den Startknoten der Buchstabe $s$ (Source) und für den Zielknoten $t$ für Target verwendet.
+Häufig wird für den Startknoten der Buchstabe $s$ (Source) und für den Zielknoten der Buchstabe $t$ (Target) verwendet.
 Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zur Definition des kürzesten Pfades.
 
 \begin{definition}[Kürzester Pfad]
@@ -94,23 +94,24 @@ Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zu
     Die Länge des kürzesten Pfades wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet.
 
     Die Funktion ${spd} \colon V \times V \to \mathbb{R}^+ \cup \{ \infty \} $ (shortest path distance) weist einem Knotenpaar den Abstand zu, wobei dieser unendlich ist, wenn kein Pfad zwischen ihnen existiert.
-    Sei dann $P \subset V \times V$ die Menge der Knoten, zwischen denen ein Pfad existiert.
+    Sei nun $P \subset V \times V$ die Menge der Knoten, zwischen denen ein Pfad existiert.
     Dann weist ${sp} \colon P \to V \times V \times \dots \times V$ (shortest path) einem Knotenpaar einen kürzesten Pfad zu.
 \end{definition}
 
+Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und was der Abstande der Knoten ist, bezeichnet man auch als $s-t$ Query und einen gefunden Pfad asl $s-t$ Pfad.
 Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu finden.
-Auch die Umkehrung dieses Problem ist Interessent, also die kürzesten Pfade von allen Knoten zu einem Knoten zu bestimmen.
+Auch die Umkehrung dieses Problem ist Interessant, also die kürzesten Pfade von allen Knoten zu einem Anderen zu bestimmen.
 Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade auf dem Umkehrgraph $G^T$ entspricht.
 
 \begin{definition}[Transponierter Graph]
-    Sei $G = (V, E)$ ein Graph. Dann ist $G^T = (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{transponierte Graph} von $G$.
+    Sei $G = (V, E)$ ein Graph. Dann ist $G^T \coloneq (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{transponierte Graph} von $G$.
 \end{definition}
 
-Ein ungerichteter Graph ist hier bei selbst ein transponierter Graph.
+Ein ungerichteter Graph ist hierbei selbst sein transponierter Graph.
 
 \begin{definition}[Hitting-Set]
     Sei $G = (V, E)$ ein Graph und $P$ eine Menge an Pfaden auf $G$.
-    Ein Hitting-Set $H \subset V$ ist eine Menge an Knoten, so dass jeder Pfad $p \in P$ mindestens einen Knoten aus $H$ enthält
+    Ein Hitting-Set $H \subset V$ ist eine Menge an Knoten, in der jeder Pfad $p \in P$ mindestens einen Knoten aus $H$ enthält.
 \end{definition}
 
 Ein triviales Beispiel für ein Hitting-Set ist $V$ selbst, im Weiteren sind jedoch möglichst kleine Hitting-Sets nützlich.

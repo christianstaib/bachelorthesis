@@ -2,6 +2,7 @@
 
 Die zuvor beschriebenen klassische Kontraktion stößt bei Graphen mit hohen Knotengraden an ihre Grenzen:
 Bei der Kontraktion muss für jeden Vorgängerknoten eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger- und Nachfolger ist zu prüfen, ob eine Abkürzung eingefügt werden muss.
+Bei der Bottom-Up Kontraktion wird die Kontraktion hierbei potentiell mehrfach ausgeführt, wobei beim Lazy Popping sich die Kantendifferenz häufig ändern wird (bei vielen Nachbarn ist es wahrscheinlich, dass einer dieser Kontraktiert wurde) und bei Neighbor Update sind viele Nachbarn zu Updaten.
 Um Graphen mit hohen Knotengraden effizent zu kontrakieren ist es daher entscheidend, sowohl die Kontraktion einzelner Knoten als auch die des gesamten Graphen zu beschleunigen.
 
 \section{Kontraktion mit oberer Schranke}
@@ -13,7 +14,7 @@ Im Follgenden werden verschiedene Heuristiken diskutiert.
 
 \section{Triviale Heurisik}
 Die \emph{Triviale Heuristik} setzt die obere Schranke für jedes Knotenpaar auf $\infty$.
-Dies bedeutet, dass für jedes Paar aus Vorgänger- und Nachfolgerknoten eine Abkürzung eingefügt wird, unabhängig von der tatsächlichen Distanz zwischen den Knoten.
+Dies bedeutet, dass für jedes Paar aus Vorgänger- und Nachfolgerknoten eine Abkürzung eingefügt wird, unabhängig von der tatsächlichen kürzesten Pfad Distanz zwischen den Knoten.
 Unter der Annahme, dass in Graphen mit sehr hohem Knotengrad fast alle Nachbarn bereits mit einer Kante verbunden sind, könnte der Anteil der unnötig eingefügten Abkürzungen im Verhältnis zu den notwendig eingefügten Abkürzungen vernachlässigbar sein.
 
 \section{Vereinfacher Graph}
@@ -39,8 +40,7 @@ Durch mehr Hubs steigt allerdings auch der Zeitbedarf der Berechnung der oberen 
 
 \section{Kombination mehrer oberer Schranken}
 Sind für eine Graph mehrere Heuristiken bekannt, so so kann für eine potentielle Abkürzungen aus allen oberen Schranken die kleinste ausgewählt werden.
-Dies ist besonders dann sinvoll, wenn die Heuristiken andere Stärken und Schwächen haben.
-
+Dies ist besonders dann sinvoll, wenn die Heuristiken jeweils eine Teilmenge alle Knotenpaare gut abdecken.
 Insbesondere die Kombination von Dreicksungleichung und vereinfachtem Graph ist hierbei erfeolgsversprechen unter der Annahme, dass die erste für große und zweitere für kleine Hop-Abstände gute obere Schranken liefert.
 
 % TODO das drinnne lassen?
