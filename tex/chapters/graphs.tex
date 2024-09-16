@@ -144,21 +144,24 @@ Der Greedy-Algorithmus \ref{graphs:alg:greedy-hitting-set} bietet jedoch eine Ap
 
 \section{Sichtbarkeitsgraphen}
 
-Sichtbarkeitsgraphen sind Graphen, die Punkte in der euklidischen Ebene miteinander verbinden, die sich sehen können, zwischen denen also keine Hindernisse liegen.
-Solche Graphen können dafür benutzt werden den optimalen Pfad eines Roboters zu bestimmen oder Mobilfunkmasten so zu platzieren, dass sie eine möglichst große Fläche sehen und damit abdecken.
-Solche Graphen sind in im euklidischen $\mathbb{R}^n$ mit $n \geq 2$ erstellbar, für diese Arbeit wird jedoch nur die euklidische Ebene $\mathbb{R}^2$ untersucht.
+Sichtbarkeitsgraphen sind Graphen, die Punkte in der euklidischen Ebene miteinander verbinden, die sich direkt \emph{sehen} können, das heißt, zwischen denen keine Hindernisse liegen.
+Sie können zum Beispiel dazu verwendet werden, um den optimalen Pfad eines Roboters durch eine Umgebung mit Hindernissen zu bestimmen oder um die Platzierung von Mobilfunkmasten zu optimieren, sodass sie eine möglichst große Fläche abdecken.
+Sichtbarkeitsgraphen können in höheren Dimensionen $\mathbb{R}^n$ mit $n \geq 2$ konstruiert werden, diese Arbeit konzentriert sich jedoch auf die euklidische Ebene $\mathbb{R}^2$.
 
 \begin{definition}[Sichtbarkeitsgraph]
-    Sei $V$ eine Menge von Punkten in der euklidischen Ebene $\mathbb{R}^2$, $P$ eine Menge von Polygonen in ihr und $d \colon V \times V \to \mathbb{R}^+$ die euklidische Abstandsfunktion.
+    Sei $V$ eine Menge von Punkten in der euklidischen Ebene $\mathbb{R}^2$, $P$ eine Menge von Polygonen (Hindernissen) in ihr, und $d \colon V \times V \to \mathbb{R}^+$ die euklidische Abstandsfunktion.
 
-    Der Sichtbarkeitsgraph $G = (V, E)$ enthält alle Kanten $(t, h, d((t, h)))$, für die gilt, dass die offene Strecke $(t h)$ kein Polygon schneidet.
-    \todo{offene Strecke richtig?}
+    Der \emph{Sichtbarkeitsgraph} $G = (V, E)$ ist ein Graph, in dem zwei Knoten $t, h \in V$ genau dann durch eine Kante verbunden sind, wenn die offene Strecke $(th)$ kein Hindernis aus $P$ schneidet.%
+    \footnote{
+        Die Verwendung der offenen Strecke $(th)$ stellt sicher, dass die Endpunkte auch auf den Seiten der Polygone liegen können.
+        Bei Bedarf kann auch die geschlossene Strecke $[th]$ betrachtet werden.
+    }
+    Die Kante $(t, h)$ erhält als Gewicht den euklidischen Abstand $d((t, h))$.
 \end{definition}
 
-Je nach der Anzahl, Form und Platzierung der Polygone kann solch ein Graph sehr viele Kanten haben, wie etwa das Beispiel aus \autoref{fig:thessaloniki-visibility} zeigt.
-Das Finden von kürzesten Pfaden in solchen Graphen kann daher mitunter sehr rechenintensiv werden.
-\autoref{graph:fig:vis_example} zeigt wie aus einer Menge von Polgonen und den dazugehörigen Sichtbarkeitsgraph.
-\todo{Noch mehr?}
+Je nach Anzahl, Form und Platzierung der Polygone kann ein Sichtbarkeitsgraph sehr viele Kanten aufweisen, was die Berechnung von kürzesten Pfaden erschwert.
+Insbesondere in Umgebungen mit vielen Hindernissen kann die Komplexität des Graphen erheblich zunehmen.
+Abbildung \ref{graph:fig:vis_example} illustriert, wie aus einer Menge von Polygonen der entsprechende Sichtbarkeitsgraph konstruiert wird.
 
 \begin{figure}[ht]
     \centering
@@ -177,6 +180,18 @@ Das Finden von kürzesten Pfaden in solchen Graphen kann daher mitunter sehr rec
     \caption{Upward Graph des Beispielgraphs}
     \label{graph:fig:vis_example}
 \end{figure}
+
+\subsection{Eigenschaften von Sichtbarkeitsgraphen}
+
+Sichtbarkeitsgraphen sind im Allgemeinen \emph{nicht planar}, da Kanten sich überschneiden können, wenn sie unterschiedliche Hindernisse umgehen.
+Dies bedeutet, dass sie nicht ohne Kantenkreuzungen in der Ebene dargestellt werden können.
+
+Wenn die Hindernisse Polygone sind und die Sichtbarkeit nicht durch weitere Faktoren eingeschränkt wird, ist der Sichtbarkeitsgraph \emph{ungerichtet}, da die Sichtbarkeit zwischen zwei Punkten in beide Richtungen gilt.
+
+Die Gewichte der Kanten entsprechen in dem \emph{euklidischen Abstand} zwischen den verbundenen Punkten.
+Dabei stellt dieser für jedes Knotenpaar eine untere Schranke auf, da ein kürzester Pfad durch Umwege zwar länger, nicht aber kürzer werden kann.
+
+
 
 
 \subsection{Abgrenzung zu Straßengraphen}\label{graphs:strassengraphen}
