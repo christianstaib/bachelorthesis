@@ -1,9 +1,9 @@
 \chapter{Graphen}
 
-Ein Graph ist eine Struktur, die verwendet wird, um Beziehungen zwischen Objekten darzustellen.
-Die Idee, Objekte durch Verbindungen zu verknüpfen, bildet die Grundlage für viele Anwendungen, unter anderem für die Routenplanung.
-Graphen und (kürzeste) Pfade spielen darüber hinaus eine wichtige Rolle; in einem Wissensgraphen kann ein Pfad beispielsweise dafür stehen, dass eine Aussage wahr ist.
-\autoref{graphs:fig:beispielgraph} zeigt einen Graphen, welcher im folgenden für Beispiele benutzt wird.
+Ein Graph ist eine mathematische Struktur zur Darstellung von Beziehungen zwischen Objekten.
+Die Idee, Objekte durch Verknüpfungen zu verbinden, bildet die Grundlage für zahlreiche Anwendungen, unter anderem in der Routenplanung.
+Graphen und insbesondere kürzeste Pfade spielen darüber hinaus eine wichtige Rolle; in einem Wissensgraphen kann ein Pfad beispielsweise die Gültigkeit einer Aussage repräsentieren.
+\autoref{graphs:fig:beispielgraph} zeigt einen Graphen, der im Folgenden für Beispiele verwendet wird.
 
 \begin{figure}[ht]
     \centering
@@ -59,7 +59,7 @@ Graphen und (kürzeste) Pfade spielen darüber hinaus eine wichtige Rolle; in ei
 \end{figure}
 
 \section{Definitionen}
-Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, führen wir ein paar Grundlegende Begriffe ein.
+Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, führen wir ein paar grundlegende Begriffe ein.
 
 \begin{definition}[Graph]
     Sofern nicht anders angegeben, bezeichnet Graph im Folgenden einen endlichen, gerichteten Graphen mit Kantengewichten ohne Mehrfachkanten und Schleifen.
@@ -73,7 +73,7 @@ Das Gewicht der Kanten ist hierbei auf positive reelle Zahlen begrenzt, da das V
 Negative Kantengewichte erschweren die Definition und Argumentation, sodass hier auf diese nicht weiter eingegangen wird.
 
 \begin{definition}[Nachbar]
-    Sei $G = (V, E)$. Ein Knoten $u \in V$ heißt \emph{Vorgänger} eines Knoten $v \in V$ wenn $(u, v) \in E$. $v$ ist dann ein \emph{Nachfolger} von $u$.
+    Sei $G = (V, E)$. Ein Knoten $u \in V$ heißt \emph{Vorgänger} eines Knotens $v \in V$ wenn $(u, v) \in E$. $v$ ist dann ein \emph{Nachfolger} von $u$.
     Ist $G$ ungerichtet, so spricht man in beiden Fällen von \emph{Nachbarn}.
 \end{definition}
 
@@ -81,7 +81,7 @@ Die Anzahl der Nachbarn eines Knotens wird als sein \emph{Grad} bezeichnet, wobe
 Hat ein Knoten keine Vorgänger oder Nachfolger, so nennt man ihn \emph{isoliert}.
 
 \begin{definition}[Pfad]
-    Ein Pfad $p$ auf einem Graph $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, für die gilt, die benachbarte Knoten $v_i$ und $v_{u+1}$ im Pfad durch eine Kante in $G$ verbunden sind.
+    Ein Pfad $p$ in einem Graphen $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, wobei für alle $i \in {1, \dotsc, n-1}$ gilt, dass $(v_i, v_{i+1}) \in E$
     Der Knoten $v_1$ wird Startknoten, $v_n$ Zielknoten genannt.
     Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird \emph{Länge}, die Anzahl der Kantennutzungen ($n - 1$) \emph{Hop-Länge}, genannt.
 \end{definition}
@@ -98,10 +98,10 @@ Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zu
     Dann weist ${sp} \colon P \to V \times V \times \dots \times V$ (shortest path) einem Knotenpaar einen kürzesten Pfad zu.
 \end{definition}
 
-Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und was der Abstande der Knoten ist, bezeichnet man auch als $s-t$ Query und einen gefunden Pfad asl $s-t$ Pfad.
-Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu finden.
+Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und was der Abstand der Knoten ist, bezeichnet man auch als $s$-$t$-Anfrage (Query) und einen gefundenen Pfad als $s$-$t$-Pfad.
+Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig, die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu bestimmen.
 Auch die Umkehrung dieses Problem ist Interessant, also die kürzesten Pfade von allen Knoten zu einem Anderen zu bestimmen.
-Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade auf dem Umkehrgraph $G^T$ entspricht.
+Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade auf dem Transponierten $G^T$ entspricht.
 
 \begin{definition}[Transponierter Graph]
     Sei $G = (V, E)$ ein Graph. Dann ist $G^T \coloneq (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{transponierte Graph} von $G$.
