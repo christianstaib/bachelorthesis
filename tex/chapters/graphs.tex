@@ -153,15 +153,15 @@ Sichtbarkeitsgraphen können in höheren Dimensionen $\mathbb{R}^n$ mit $n \geq 
 
     Der \emph{Sichtbarkeitsgraph} $G = (V, E)$ ist ein Graph, in dem zwei Knoten $t, h \in V$ genau dann durch eine Kante verbunden sind, wenn die offene Strecke $(th)$ kein Hindernis aus $P$ schneidet.%
     \footnote{
-        Die Verwendung der offenen Strecke $(th)$ stellt sicher, dass die Endpunkte auch auf den Seiten der Polygone liegen können.
-        Bei Bedarf kann auch die geschlossene Strecke $[th]$ betrachtet werden.
+        Die Verwendung der offenen Strecke $(th)$ stellt sicher, dass die Endpunkte auf den Seiten der Polygone liegen können, da nur die Strecke zwischen den Punkten überprüft wird.
     }
-    Die Kante $(t, h)$ erhält als Gewicht den euklidischen Abstand $d((t, h))$.
+    Die Kante $(t, h)$ erhält als Gewicht den euklidischen Abstand $d(t, h)$.
 \end{definition}
 
+Die in dieser Arbeit betrachteten Sichtbarkeitsgraphen sind von einer besonderen Form:
+Die Menge der Punkte entspricht dabei den Eckpunkten der Polygone.
 Je nach Anzahl, Form und Platzierung der Polygone kann ein Sichtbarkeitsgraph sehr viele Kanten aufweisen, was die Berechnung von kürzesten Pfaden erschwert.
-Insbesondere in Umgebungen mit vielen Hindernissen kann die Komplexität des Graphen erheblich zunehmen.
-Abbildung \ref{graph:fig:vis_example} illustriert, wie aus einer Menge von Polygonen der entsprechende Sichtbarkeitsgraph konstruiert wird.
+Abbildung \ref{graph:fig:vis_example} illustriert den zu einer Menge von Polygonen gehörenden Sichtbarkeitsgraphen.
 
 \begin{figure}[ht]
     \centering
@@ -177,33 +177,30 @@ Abbildung \ref{graph:fig:vis_example} illustriert, wie aus einer Menge von Polyg
 
 
     \end{tikzpicture}
-    \caption{Upward Graph des Beispielgraphs}
+    \caption{Beispiel eines Sichtbarkeitsgraphens}
     \label{graph:fig:vis_example}
 \end{figure}
 
-\subsection{Eigenschaften von Sichtbarkeitsgraphen}
+\subsection{Eigenschaften}
 
 Sichtbarkeitsgraphen sind im Allgemeinen \emph{nicht planar}, da Kanten sich überschneiden können, wenn sie unterschiedliche Hindernisse umgehen.
-Dies bedeutet, dass sie nicht ohne Kantenkreuzungen in der Ebene dargestellt werden können.
-
-Wenn die Hindernisse Polygone sind und die Sichtbarkeit nicht durch weitere Faktoren eingeschränkt wird, ist der Sichtbarkeitsgraph \emph{ungerichtet}, da die Sichtbarkeit zwischen zwei Punkten in beide Richtungen gilt.
-
-Die Gewichte der Kanten entsprechen in dem \emph{euklidischen Abstand} zwischen den verbundenen Punkten.
-Dabei stellt dieser für jedes Knotenpaar eine untere Schranke auf, da ein kürzester Pfad durch Umwege zwar länger, nicht aber kürzer werden kann.
-
-
-
+Sie sind \emph{ungerichtet}, da die Sichtbarkeit zwischen zwei Punkten in beide Richtungen gilt.
+Da die Gewichte der Kanten dem euklidischen Abstand zwischen den verbundenen Punkten entsprechen, bildet dies eine untere Schranke für alle Knotenpaare, da ein kürzester Pfad durch das Umgehen von Hindernissen nur länger werden kann.
 
 \subsection{Abgrenzung zu Straßengraphen}\label{graphs:strassengraphen}
 
 Straßengraphen stellen eine spezielle Klasse von Graphen dar, die Eigenschaften aufweisen, welche sie von allgemeinen Graphen abgrenzen.
-Eines ihrer auffälligsten Merkmale ist, dass sie nahezu planar sind; sie lassen sich also in der Ebene darstellen, wobei Ausnahmen in Form von Brücken und Tunneln existieren.
+Eines ihrer auffälligsten Merkmale ist, dass sie nahezu planar sind, wobei Ausnahmen in Form von Brücken und Tunneln existieren.
 Die Kantengewichte können etwa dem Luftlinienabstand oder der Reisezeit entsprechen, wobei sich letztere im Verlauf der Zeit ändert, etwa durch Stau oder Bauarbeiten.
 Sie haben einen relativ geringen durchschnittlichen Knotengrad, denn Kreuzungen von mehr als zwei Straßen sind selten.
 
-Sie besitzen eine hierarchische Struktur: Einfach gesagt, je schneller auf einer Straße gefahren werden darf, desto wichtiger ist diese für das Finden von kürzesten Pfaden. Die Wichtigkeit der benutzten Straßen eines kürzesten Pfades steigt im Allgemeinen an, bis etwa eine Autobahn erreicht wird, und nimmt schließlich wieder ab, bis das Ziel erreicht wird.
+Sie besitzen eine hierarchische Struktur: Einfach gesagt, je schneller auf einer Straße gefahren werden darf, desto wichtiger ist diese für das Finden von kürzesten Pfaden.
+Die Wichtigkeit der benutzten Straßen eines kürzesten Pfades steigt im Allgemeinen an, bis etwa eine Autobahn erreicht wird, und nimmt schließlich wieder ab, bis das Ziel erreicht wird.
 
-Eine weitere Eigenschaft dieser hierarchischen Struktur ist, dass hinreichend lange Pfade durch ein vergleichsweise kleines Hitting-Set abgedeckt werden können. Diese Knoten können etwa Autobahnkreuzen und Anschlussstellen sein. Diese Beobachtung führt zur Definition der sogenannten Highway Dimension, einem Konzept, das von \cite{abraham2010highway} eingeführt wurde.
+Eine weitere Eigenschaft dieser hierarchischen Struktur ist, dass hinreichend lange Pfade durch ein vergleichsweise kleines Hitting-Set abgedeckt werden können, etwa durch alle Autobahnkreuze und Anschlussstellen.
+Diese Beobachtung führt zur Definition der \emph{Highway Dimension}, einem Konzept, das von \cite{abraham2010highway} eingeführt wurde.
+
+Da Sichtbarkeitsgraphen eine andere Struktur als Straßengraphen aufweisen, lassen sich Algorithmen, die für Straßengraphen gut geeignet sind, nur bedingt auf Sichtbarkeitsgraphen übertragen.
 
 % TODO rauswerfen?
 % \section{Dijkstra Algorithmus}

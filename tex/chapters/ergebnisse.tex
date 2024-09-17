@@ -130,6 +130,9 @@ Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten eine
 \end{figure}
 
 Für die Laufzeit der Kontraktion die Summe der quadratischen Knotengrade bedeutsam.
+Diese sind in \autoref{table:sum_quad_degree} sichtbar.
+Obwohl pata die meisten Knoten hat, ist die summe der Quadrate am kleinsten.
+Vielleicht geht ch witness doch?
 
 \begin{table}[ht]
     \centering
@@ -144,6 +147,7 @@ Für die Laufzeit der Kontraktion die Summe der quadratischen Knotengrade bedeut
         pata-visibility    & 426189267238                          \\ \bottomrule
     \end{tabular}
     \caption{Summe quadratische Knotengrade}
+    \label{table:sum_quad_degree}
 \end{table}
 
 vergleich der Abstände im vis und graph, sortiert nach hops in vis.
@@ -261,7 +265,7 @@ Wenn das auch auch so funktioniert, dann kann mit den Speedup Techniken viel sch
         pata-graph         & 12.35              \\
         pata-visibility    & 62.81666666666667  \\  \bottomrule
     \end{tabular}
-    \caption{CH PEOPLE Erstellung}
+    \caption{Erstellung eines Hitting-Set über \num{100000} Pfade, welche mit Dijkstra-Suchen erzeugt wurden}
     \label{table:ergebnisse:100k_hitting_set_time}
 \end{table}
 
@@ -377,7 +381,7 @@ Das Anwenden des des Algorithmus zur Berechnung des Hub GRaphens hat gut funktio
         pata-graph         & 82.48333333333333  & 451.71017734369667          \\
         pata-visibility    & 847.2833333333333  & 1822.0561604813242          \\  \bottomrule
     \end{tabular}
-    \caption{HL DIREKT}
+    \caption{Erstellung von Hub Graphen durch Merging der mit PEOPLE erzeugen Contracted Graphen}
 \end{table}
 
 \subsubsection{Vergleich}

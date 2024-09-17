@@ -43,6 +43,11 @@ Sind für eine Graph mehrere Heuristiken bekannt, so so kann für eine potentiel
 Dies ist besonders dann sinvoll, wenn die Heuristiken jeweils eine Teilmenge alle Knotenpaare gut abdecken.
 Insbesondere die Kombination von Dreicksungleichung und vereinfachtem Graph ist hierbei erfeolgsversprechen unter der Annahme, dass die erste für große und zweitere für kleine Hop-Abstände gute obere Schranken liefert.
 
+\section{Bottom-Up Heurisik}
+
+Damit die Nachfolgenden Kontraktion einfacher werden ist nicht die Kanten Differenz interesannt, sondern $\sum_{n \in \text{Nachbarschaft}(v)} (\text{Grad\_neu}(n))^2 - (\text{Grad\_alt}(n))^2$.
+Der Kantendifferenz ist es egal, dass alle neue Kanten zu einem einzigen Knoten gehen. Dieser Heuristik nicht.
+
 % TODO das drinnne lassen?
 % \section{Datenstrukturen}
 % 

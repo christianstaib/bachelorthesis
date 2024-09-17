@@ -125,7 +125,7 @@ Betrachten wir dies am Knoten $a$ im Beispielgraphen:
 
 \begin{figure}[ht]
     \centering
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.8]
         % Nodes
         % a & b & c & d & e & f & g & h & i & j & k & 
         % 8 & 7 & 3 & 6 & 2 & 5 & 1 & 4 & 0 & 10 & 9 & 
@@ -155,6 +155,8 @@ Betrachten wir dies am Knoten $a$ im Beispielgraphen:
         \draw[->]  (j) edge (g);
 
         \draw[->] (-2, 0) -- (-2, 10) node[above] {Zeitpunkt der Expansion};
+
+        \draw (-2.5, 4.5) -- (-1.5, 4.5) node[left=1cm] {Abbruch Möglich};
 
     \end{tikzpicture}
     \caption{Brute-Force Suche}
@@ -281,5 +283,6 @@ Hierfür wird die Abbruchbedingung durch die Lebendigkeit entfernt.
 Der Aglorithmus kann auch dafür benutzt werden, die Qualität (durschnitliche Label Size) einer vertex-to-level Funktion anzugeben, ohne den kompletten Hub Graphen zu berechnen.
 Hierfür würd für $n$ Knoten das Label berechnet und die größte des Labels angegeben.
 Das ist vielleicht interesannt, um gute Top-Down Orderings zu finden (unter der Annahme, dass dieser Orderings auch effizientes Kontraktieren zulassen).
+Da sich das recht schnell berechnen lässt kann man vielleicht einen Solver dafür einsetzen?
 
 Analog dazu kann für einen Knoten $v$ auch der CH Suchbaum berechnet werden, indem iterative für jeden gefunden Knoten wieder die CH Kanten berechnet werden. Das ist potentiell aber etwas teurer.
