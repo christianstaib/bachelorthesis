@@ -151,53 +151,121 @@ Vielleicht geht ch witness doch?
     \label{table:sum_quad_degree}
 \end{table}
 
-\begin{tikzpicture}
-    \begin{axis}[
-            ymax=6,
-            xlabel={Hop-Länge},
-            ylabel={Fehler (\%)},
-            legend style={at={(1,0.4)},anchor=east}
-        ]
-        \addplot+ table [x=hops, y=simple_graph_upper_bound, col sep=comma, mark phase=1, mark repeat=6] {data/bounds/aegaeis.csv};
-        \addlegendentry{$\triangle$};
+\begin{figure}[!ht]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
+    \begin{subfigure}[b]{0.5\textwidth}
+        \resizebox{\textwidth}{!}{%
+            \begin{tikzpicture}
+                \begin{axis}[
+                        ymax=6,
+                        xlabel={Hop-Länge},
+                        ylabel={Fehler (\%)},
+                        legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+                    ]
+                    \addplot+[mark repeat=7] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/aegaeis.csv};
+                    \addlegendentry{$\triangle$};
 
-        \addplot+ table [x=hops, y=10, col sep=comma, mark phase=2, mark repeat=6] {data/bounds/aegaeis.csv};
-        \addlegendentry{10 Hubs};
+                    \addplot+[mark repeat=7] table [x=hops, y=10, col sep=comma] {data/bounds/aegaeis.csv};
+                    \addlegendentry{10 Hubs};
 
-        \addplot+ table [x=hops, y=20, col sep=comma, mark phase=3, mark repeat=6] {data/bounds/aegaeis.csv};
-        \addlegendentry{20 Hubs};
+                    \addplot+[mark repeat=7] table [x=hops, y=20, col sep=comma] {data/bounds/aegaeis.csv};
+                    \addlegendentry{20 Hubs};
 
-        \addplot+ table [x=hops, y=40, col sep=comma, mark phase=4, mark repeat=6] {data/bounds/aegaeis.csv};
-        \addlegendentry{40 Hubs};
+                    \addplot+[mark repeat=7] table [x=hops, y=40, col sep=comma] {data/bounds/aegaeis.csv};
+                    \addlegendentry{40 Hubs};
 
-        \addplot+ table [x=hops, y=80, col sep=comma, mark phase=5, mark repeat=6] {data/bounds/aegaeis.csv};
-        \addlegendentry{80 Hubs};
-    \end{axis}
-\end{tikzpicture}
+                    \addplot+[mark repeat=7] table [x=hops, y=80, col sep=comma] {data/bounds/aegaeis.csv};
+                    \addlegendentry{80 Hubs};
 
-\begin{tikzpicture}
-    \begin{axis}[
-            ymax=6,
-            xlabel={Hop-Länge},
-            ylabel={Fehler (\%)},
-            legend style={at={(1,0.4)},anchor=east}
-        ]
-        \addplot+ table [x=hops, y=simple_graph_upper_bound, col sep=comma, mark phase=1, mark repeat=6] {data/bounds/medi.csv};
-        \addlegendentry{$\triangle$};
+                    \addplot+[mark repeat=7] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/aegaeis.csv};
+                    \addlegendentry{$\triangle$, 80 Hubs};
+                \end{axis}
+            \end{tikzpicture}
+        }
+        \caption{aegaeis-vis}
+    \end{subfigure}%
+    \begin{subfigure}[b]{0.5\textwidth}
+        \resizebox{\textwidth}{!}{%
+            \begin{tikzpicture}
+                \begin{axis}[
+                        ymax=6,
+                        xlabel={Hop-Länge},
+                        ylabel={Fehler (\%)},
+                        legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+                    ]
+                    \addplot+[mark repeat=7] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/medi.csv};
+                    \addlegendentry{$\triangle$};
 
-        \addplot+ table [x=hops, y=10, col sep=comma, mark phase=2, mark repeat=6] {data/bounds/medi.csv};
-        \addlegendentry{10 Hubs};
+                    \addplot+[mark repeat=7] table [x=hops, y=10, col sep=comma] {data/bounds/medi.csv};
+                    \addlegendentry{10 Hubs};
 
-        \addplot+ table [x=hops, y=20, col sep=comma, mark phase=3, mark repeat=6] {data/bounds/medi.csv};
-        \addlegendentry{20 Hubs};
+                    \addplot+[mark repeat=7] table [x=hops, y=20, col sep=comma] {data/bounds/medi.csv};
+                    \addlegendentry{20 Hubs};
 
-        \addplot+ table [x=hops, y=40, col sep=comma, mark phase=4, mark repeat=6] {data/bounds/medi.csv};
-        \addlegendentry{40 Hubs};
+                    \addplot+[mark repeat=7] table [x=hops, y=40, col sep=comma] {data/bounds/medi.csv};
+                    \addlegendentry{40 Hubs};
 
-        \addplot+ table [x=hops, y=80, col sep=comma, mark phase=5, mark repeat=6] {data/bounds/medi.csv};
-        \addlegendentry{80 Hubs};
-    \end{axis}
-\end{tikzpicture}
+                    \addplot+[mark repeat=7] table [x=hops, y=80, col sep=comma] {data/bounds/medi.csv};
+                    \addlegendentry{80 Hubs};
+
+                    \addplot+[mark repeat=7] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/medi.csv};
+                    \addlegendentry{$\triangle$, 80 Hubs};
+                \end{axis}
+            \end{tikzpicture}
+        }
+        \caption{medi-vis}
+    \end{subfigure}
+    \par\bigskip
+    \begin{subfigure}[b]{0.5\textwidth}
+        \resizebox{\textwidth}{!}{%
+            \begin{tikzpicture}
+                \begin{axis}[
+                        ymax=6,
+                        xlabel={Hop-Länge},
+                        ylabel={Fehler (\%)},
+                        legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+                    ]
+                    \addplot+[mark repeat=7] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/pata.csv};
+                    \addlegendentry{$\triangle$};
+
+                    \addplot+[mark repeat=7] table [x=hops, y=10, col sep=comma] {data/bounds/pata.csv};
+                    \addlegendentry{10 Hubs};
+
+                    \addplot+[mark repeat=7] table [x=hops, y=20, col sep=comma] {data/bounds/pata.csv};
+                    \addlegendentry{20 Hubs};
+
+                    \addplot+[mark repeat=7] table [x=hops, y=40, col sep=comma] {data/bounds/pata.csv};
+                    \addlegendentry{40 Hubs};
+
+                    \addplot+[mark repeat=7] table [x=hops, y=80, col sep=comma] {data/bounds/pata.csv};
+                    \addlegendentry{80 Hubs};
+
+                    \addplot+[mark repeat=7] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/pata.csv};
+                    \addlegendentry{$\triangle$, 80 Hubs};
+                \end{axis}
+            \end{tikzpicture}
+        }
+        \caption{pata}
+    \end{subfigure}
+    \caption{Fehler der oberen Schranken}
+\end{figure}
+
+aegaeis
+75.6658\% korrekt
+0.40990444596118253 average
+
+%WARUM MEDI, PATA nicht so korrekt?
+\todo{STIMMEN ZAHLEN?}
+
+medi
+0.39110000000000006\% korrekt
+0.9727677753480117 average
+
+pata
+0.068\% korrekt
+0.6179520250326755 average
+
+
+
 
 vergleich der Abstände im vis und graph, sortiert nach hops in vis.
 
@@ -484,6 +552,44 @@ Es wurde überschlagen, wieviele Pfade 1TB an Speicher ergeben.
     \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
 \end{table}
 
+\subsection{Vertex-to-level Vergeleich}
 
-11904761880
-24246149
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{
+            l % Graph
+            S[table-format = 6.0] % random
+            S[table-format = 6.0] % degree large to small
+            S[table-format = 6.0] % queue pops
+        }
+        \toprule
+        {Graph}            & {random} & {degree (small to large)} & {degree (large to small)} \\ \midrule
+        aegaeis-graph      & 3674.8   & 1313.9                    & 22471.6                   \\
+        aegaeis-visibility & 17143.0  & 7533.1                    & 57248.0                   \\
+        medi-graph         & 3804.2   & 1577.5                    & 32058.1                   \\
+        medi-visibility    & 24135.1  & 12791.3                   & 76832.9                   \\
+        pata-graph         & 4708.9   & 1639.1                    & 61296.9                   \\
+        pata-visibility    & 23282.4  & 10094.1                   & 112915.8                  \\ \bottomrule
+    \end{tabular}
+    \caption{Predicted HL Label Size, 1000}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{
+            l % Graph
+            S[table-format = 6.0] % random
+            S[table-format = 6.0] % degree large to small
+            S[table-format = 6.0] % queue pops
+        }
+        \toprule
+        {Graph}            & {random} & {degree (small to large)} & {degree (large to small)} \\ \midrule
+        aegaeis-graph      & 52.5     & 11.2                      & 941.6                     \\
+        aegaeis-visibility & 3110.7   & 905.0                     & 13061.7                   \\
+        medi-graph         & 46.8     & 15.0                      & 1299.2                    \\
+        medi-visibility    & 4203.9   & 1322.7                    & 16855.0                   \\
+        pata-graph         & 31.4     & 9.7                       & 1064.8                    \\
+        pata-visibility    & 1305.7   & 264.3                     & 9341.4                    \\ \bottomrule
+    \end{tabular}
+    \caption{Predicted CH Degree, 1000}
+\end{table}

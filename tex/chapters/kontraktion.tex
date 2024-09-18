@@ -40,13 +40,13 @@ Diese Methode lässtich besonders gut auf die in dieser Arbeit bearbeiteten Sich
 
 \subsection{Dreiecksungleichung}
 Ähnlich zu ALT\cite{goldberg2005computing} kann eine Menge \emph{Hubs} berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke angeben können.
-Ein Hub ist hierbei ein Knoten $l \in V$, für den die Distanz zu und von allen Knoten bekannt ist, die obere Schranke des Abstandes zweier Knoten $s, t \in V$ kann dann durch ${spd}_G ((u, l)) + {spd}((l, u))$ berechnet werden
+Ein Hub ist hierbei ein Knoten $l \in V$, für den die Distanz zu und von allen Knoten bekannt ist, die obere Schranke des Abstandes zweier Knoten $s, t \in V$ kann dann durch ${spd}_G ((u, l)) + {spd}_G ((l, u))$ berechnet werden.
 Liegt $l$ dabei auf einem kürzesten Pfad von $u$ nach $v$, so entspricht der Wert sogar genau dem der kürzesten Pfad Distanz.
-Die obere Schranke über mehrere Hubs wird dabei durch die Wahl der kleinsten oberen Schranke bestimmt.
-In der Implementation hierfür reicht es sogar, eine obere Schranke zu finden, die kürzer als die potenzielle Abkürzung ist, diese kann dann keine otpimale Abkürzung sein.
+Die obere Schranke über mehrere Hubs wird durch die Wahl der kleinsten oberen Schranken bestimmt.
+In der Implementation hierfür reicht es sogar, eine obere Schranke zu finden, die kleiner als die potenzielle Abkürzung ist, diese kann dann keine optimale Abkürzung sein.
 
 Die Hubs können dabei über die Berechnung eines Hitting-Sets bestimmt werden.
-Durch die Auswahl von Hubs auf die Art steigt Genauigkeit der oberen Schranken mit der Hop-Länge der kürzesten Pfade, da die Wahrscheinlichkeit, dass diese durch einen Hub getroffen wird, steigt.
+Durch die Auswahl von Hubs auf diese Art steigt die Genauigkeit der oberen Schranken mit der Hop-Länge der kürzesten Pfade, da die Wahrscheinlichkeit, dass diese durch einen Hub getroffen wird, steigt.
 Durch mehr Hubs steigt allerdings auch der Zeitbedarf der Berechnung der oberen Schranke.
 
 \subsection{Kombination mehrer oberer Schranken}
