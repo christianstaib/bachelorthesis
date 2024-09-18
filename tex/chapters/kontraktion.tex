@@ -1,4 +1,4 @@
-\chapter{Kontraktion in Graphen mit hohen Knotengraden}
+\chapter{Kontraktion in Graphen mit hohen Knotengraden}\label{chapter:kontraktion}
 
 Die zuvor beschriebenen klassische Kontraktion stößt bei Graphen mit hohen Knotengraden an ihre Grenzen:
 Bei der Kontraktion muss für jeden Vorgängerknoten eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger- und Nachfolger ist zu prüfen, ob eine Abkürzung eingefügt werden muss.
@@ -12,12 +12,12 @@ Damit dies für die Kontraktion eines einzelnen Knotens effizienter ist, muss di
 Damit die Kontraktion des gesamten Graphen effizienter ist, müssen die Folgekosten unnötigerweise eingefügter Kanten kleiner sein als die Summe des Zeitgewinns durch die Verwendung der Heuristik.
 Im Follgenden werden verschiedene Heuristiken diskutiert.
 
-\section{Triviale Heurisik}
+\subsection{Triviale Heurisik}
 Die \emph{Triviale Heuristik} setzt die obere Schranke für jedes Knotenpaar auf $\infty$.
 Dies bedeutet, dass für jedes Paar aus Vorgänger- und Nachfolgerknoten eine Abkürzung eingefügt wird, unabhängig von der tatsächlichen kürzesten Pfad Distanz zwischen den Knoten.
 Unter der Annahme, dass in Graphen mit sehr hohem Knotengrad fast alle Nachbarn bereits mit einer Kante verbunden sind, könnte der Anteil der unnötig eingefügten Abkürzungen im Verhältnis zu den notwendig eingefügten Abkürzungen vernachlässigbar sein.
 
-\section{Vereinfacher Graph}
+\subsection{Vereinfacher Graph}
 Sei $G = (V, E)$ der zu Kontraktierende Graph.
 Lässt sich zu $G$ effizient ein vereinfachter Graph $G' = (V, E')$ mit $\forall s, t \in V \colon {spd}_{G'} ((s, t)) \geq {spd}_{G} ((s, t))$ konstruieren, so kann dieser zur Berechnung der oberen Schranke verwendet werden, etwa indem die Dijkstra Suchen auf ihm ausgeführt werden.
 Alternativ kann $G'$ auch in Contracted oder Hub Graph umgewandelt werden, womit die obere Schranke dann für jedes Vorgänger Nachfolger Paar einzelnen berechnet wird.
@@ -27,7 +27,7 @@ Weiter sind solche vereinfachten Graphen im Allgemeinen schwer zu konstruieren.
 
 Jedoch lässt sich diese Methode besonders gut auf die in dieser Arbeit bearbeiteten Sichtbarkeitsgraphen und ihre Triangulierungen anwenden, da zweitere eine obere Schranke für erste liefern und Berechnungen auf Ihnen im Vergleich sehr effizent sind.
 
-\section{Dreickunsgleichung}
+\subsection{Dreickunsgleichung}
 Ähnlich zu ALT\cite{goldberg2005computing} kann eine Menge \emph{Hubs} berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke angeben können.
 Ein Hub ist hierbei ein Knoten $l \in V$, für den die Distanz zu und von allen Knoten bekannt ist, die obere Schranke des Abstandes zweier Knoten $s, t \in V$ kann dann durch ${spd}_G ((u, l)) + {spd}((l, u))$ berechnet werden
 Liegt $l$ dabei auf einem kürzesten Pfad von $u$ nach $v$, so entspricht der Wert sogar genau dem der kürzesten Pfad Distanz.
@@ -38,14 +38,14 @@ Die Hubs können dabei über die Berechnung eines Hitting-Sets bestimmt werden.
 Durch die Auswahl von Hubs auf die Art steigt Genauigkeit der oberen Schranken mit der Hop-Länge der kürzesten Pfade, da die Wahrscheinlichkeit, dass diese durch einen Hub getroffen wird, steigt.
 Durch mehr Hubs steigt allerdings auch der Zeitbedarf der Berechnung der oberen Schranke.
 
-\section{Kombination mehrer oberer Schranken}
+\subsection{Kombination mehrer oberer Schranken}
 Sind für eine Graph mehrere Heuristiken bekannt, so so kann für eine potentielle Abkürzungen aus allen oberen Schranken die kleinste ausgewählt werden.
 Dies ist besonders dann sinvoll, wenn die Heuristiken jeweils eine Teilmenge alle Knotenpaare gut abdecken.
 Insbesondere die Kombination von Dreicksungleichung und vereinfachtem Graph ist hierbei erfeolgsversprechen unter der Annahme, dass die erste für große und zweitere für kleine Hop-Abstände gute obere Schranken liefert.
 
 \section{Bottom-Up Heurisik}
 
-Damit die Nachfolgenden Kontraktion einfacher werden ist nicht die Kanten Differenz interesannt, sondern $\sum_{n \in \text{Nachbarschaft}(v)} (\text{Grad\_neu}(n))^2 - (\text{Grad\_alt}(n))^2$.
+Damit die Nachfolgenden Kontraktion einfacher werden ist nicht die Kanten Differenz interesannt, sondern $\sum_{n \in \text{Nachbarschaft}(v)} (\text{Grad}_\text{neu}(n))^2 - (\text{Grad}_\text{alt}(n))^2$.
 Der Kantendifferenz ist es egal, dass alle neue Kanten zu einem einzigen Knoten gehen. Dieser Heuristik nicht.
 
 % TODO das drinnne lassen?
