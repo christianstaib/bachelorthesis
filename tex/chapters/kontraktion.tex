@@ -1,49 +1,60 @@
-\chapter{Kontraktion in Graphen mit hohen Knotengraden}\label{chapter:kontraktion}
+\chapter{Kontraktion in Sichtbarkeitsgraphen}\label{chapter:kontraktion}
 
-Die zuvor beschriebenen klassische Kontraktion stößt bei Graphen mit hohen Knotengraden an ihre Grenzen:
-Bei der Kontraktion muss für jeden Vorgängerknoten eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger- und Nachfolger ist zu prüfen, ob eine Abkürzung eingefügt werden muss.
-Bei der Bottom-Up Kontraktion wird die Kontraktion hierbei potentiell mehrfach ausgeführt, wobei beim Lazy Popping sich die Kantendifferenz häufig ändern wird (bei vielen Nachbarn ist es wahrscheinlich, dass einer dieser Kontraktiert wurde) und bei Neighbor Update sind viele Nachbarn zu Updaten.
-Um Graphen mit hohen Knotengraden effizent zu kontrakieren ist es daher entscheidend, sowohl die Kontraktion einzelner Knoten als auch die des gesamten Graphen zu beschleunigen.
+Die zuvor beschriebene Kontraktion von Knoten und Graphen ist bei Graphen mit hohen Knotengraden, wie zum Beispiel Sichtbarkeitsgraphen, deutlich rechenintensiver als bei Graphen mit geringeren Knotengraden, wie etwa Straßengraphen.
+Für die Knoten-Kontraktion muss für jeden Vorgängerknoten eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger und Nachfolger ist zu prüfen, ob eine Abkürzung eingefügt werden muss.
+Ein hoher Knotengrad bedeutet somit viele Dijkstra-Suchen und zahlreiche Vergleiche, ob eine Abkürzung notwendig ist.
+
+Bei der Bottom-Up-Kontraktion wird die Kontraktion potenziell mehrfach simuliert, bevor sie wirklich ausgeführt wird.
+Bei Lazy-Popping werden die Knoten oft nicht kontraktiert, sondern mit aktualisiertem Heuristik-Wert in die Warteschlange zurückgeschoben.
+Beim Neighbor-Update sind jeweils sehr viele Nachbarn zu aktualisieren.
+Auch das Einfügen und Löschen von Kanten stellt hierbei einen nicht zu vernachlässigenden Zeitfaktor dar.
+
+Um Graphen mit hohen Knotengraden effizient zu kontrahieren, ist es entscheidend, die Kontraktion einzelner Knoten zu beschleunigen und eine effizient sowie effizient erstellbare Reihenfolge der Kontraktionen zu finden.
+Auch die zur Repräsentation von Graphen verwendeten Datenstrukturen sollten betrachtet werden, damit das Finden von Nachbarn sowie das Einfügen und Löschen von Kanten effizient und parallel möglich ist.
 
 \section{Kontraktion mit oberer Schranke}
 Anstelle einer potenziell rechenintensiven Dijkstra-Suche pro Vorgänger kann eine Heuristik pro Paar aus Vorgänger und Nachfolger eine obere Schranke für den Abstand geben.
-Eine Abkürzung wird dann eingefügt, wenn die Länge der potenziellen Abkürzung kleiner oder gleich der oberen Schranke ist.
+Eine Kante als Abkürzung wird dann eingefügt, wenn ihre Länge kleiner oder gleich der berechneten oberen Schranke für den Abstand ist.
 Damit dies für die Kontraktion eines einzelnen Knotens effizienter ist, muss die Ermittlung der Heuristik für alle Paare eines bestimmten Vorgängers und aller Nachfolger schneller sein als die Dijkstra-Suche.
-Damit die Kontraktion des gesamten Graphen effizienter ist, müssen die Folgekosten unnötigerweise eingefügter Kanten kleiner sein als die Summe des Zeitgewinns durch die Verwendung der Heuristik.
-Im Follgenden werden verschiedene Heuristiken diskutiert.
+Damit die Kontraktion des gesamten Graphen effizient bleibt, müssen die Folgekosten unnötiger Kanten geringer sein als der Zeitgewinn durch den Einsatz der Heuristik.
+Im Folgenden werden verschiedene Heuristiken diskutiert.
 
-\subsection{Triviale Heurisik}
+\subsection{Triviale Heuristik}
 Die \emph{Triviale Heuristik} setzt die obere Schranke für jedes Knotenpaar auf $\infty$.
-Dies bedeutet, dass für jedes Paar aus Vorgänger- und Nachfolgerknoten eine Abkürzung eingefügt wird, unabhängig von der tatsächlichen kürzesten Pfad Distanz zwischen den Knoten.
-Unter der Annahme, dass in Graphen mit sehr hohem Knotengrad fast alle Nachbarn bereits mit einer Kante verbunden sind, könnte der Anteil der unnötig eingefügten Abkürzungen im Verhältnis zu den notwendig eingefügten Abkürzungen vernachlässigbar sein.
+Dies bedeutet, dass für jedes Paar aus Vorgänger und Nachfolger, unabhängig von der tatsächlichen Distanz, eine Kante als Abkürzung eingefügt wird.
+Unter der Annahme, dass in Graphen mit sehr hohem Knotengrad fast alle Nachbarn bereits mit einer Kante verbunden sind, könnte der Anteil der unnötig eingefügten Abkürzungen im Vergleich zu den notwendigen vernachlässigbar sein.
 
 \subsection{Vereinfacher Graph}
-Sei $G = (V, E)$ der zu Kontraktierende Graph.
+Sei $G = (V, E)$ der zu kontrahierende Graph.
 Lässt sich zu $G$ effizient ein vereinfachter Graph $G' = (V, E')$ mit $\forall s, t \in V \colon {spd}_{G'} ((s, t)) \geq {spd}_{G} ((s, t))$ konstruieren, so kann dieser zur Berechnung der oberen Schranke verwendet werden, etwa indem die Dijkstra Suchen auf ihm ausgeführt werden.
-Alternativ kann $G'$ auch in Contracted oder Hub Graph umgewandelt werden, womit die obere Schranke dann für jedes Vorgänger Nachfolger Paar einzelnen berechnet wird.
+Alternativ kann $G'$ auch in einen Contracted- oder Hub-Graph umgewandelt werden, womit die obere Schranke dann für jedes Vorgänger Nachfolger Paar einzelnen berechnet wird.
 
-Methoden zur Vereinfachung eines Graphens ohne Verkleinerung des Abstandes zweier Knoten werden in dieser Arbeit nicht weiter diskutiert, es ist Anzunehmen, dass die Genauigkeit der oberen Schranke und die Geschwindigkeit der Berechnungen auf dem vereinfachten Graphen im Widerspruch stehen.
+Für Graphen in der euklidischen Ebene sind Triangulierungen aber leicht zu erstellen.
+\todo{Weiter}
+
+Weitere Methoden zur Vereinfachung eines Graphen, ohne den Abstand zwischen zwei Knoten zu verkleinern, werden in dieser Arbeit nicht weiter behandelt.
+Es ist anzunehmen, dass die Genauigkeit der oberen Schranke und die Geschwindigkeit der Berechnungen auf dem vereinfachten Graphen im Widerspruch stehen.
 Weiter sind solche vereinfachten Graphen im Allgemeinen schwer zu konstruieren.
 
-Jedoch lässt sich diese Methode besonders gut auf die in dieser Arbeit bearbeiteten Sichtbarkeitsgraphen und ihre Triangulierungen anwenden, da zweitere eine obere Schranke für erste liefern und Berechnungen auf Ihnen im Vergleich sehr effizent sind.
+Diese Methode lässtich besonders gut auf die in dieser Arbeit bearbeiteten Sichtbarkeitsgraphen und ihre Triangulierungen anwenden, da Triangulierungen eine obere Schranke für Sichtbarkeitsgraphen liefern und Berechnungen auf ihnen im Vergleich sehr effizient sind.
 
-\subsection{Dreickunsgleichung}
+\subsection{Dreiecksungleichung}
 Ähnlich zu ALT\cite{goldberg2005computing} kann eine Menge \emph{Hubs} berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke angeben können.
 Ein Hub ist hierbei ein Knoten $l \in V$, für den die Distanz zu und von allen Knoten bekannt ist, die obere Schranke des Abstandes zweier Knoten $s, t \in V$ kann dann durch ${spd}_G ((u, l)) + {spd}((l, u))$ berechnet werden
 Liegt $l$ dabei auf einem kürzesten Pfad von $u$ nach $v$, so entspricht der Wert sogar genau dem der kürzesten Pfad Distanz.
 Die obere Schranke über mehrere Hubs wird dabei durch die Wahl der kleinsten oberen Schranke bestimmt.
-In der Implementation hierfür reicht es sogar, eine obere Schranke zu finden, die kürzer als die potentielle Abkürzung ist, diese kann dann keine otpimale Abkürzung sein.
+In der Implementation hierfür reicht es sogar, eine obere Schranke zu finden, die kürzer als die potenzielle Abkürzung ist, diese kann dann keine otpimale Abkürzung sein.
 
 Die Hubs können dabei über die Berechnung eines Hitting-Sets bestimmt werden.
 Durch die Auswahl von Hubs auf die Art steigt Genauigkeit der oberen Schranken mit der Hop-Länge der kürzesten Pfade, da die Wahrscheinlichkeit, dass diese durch einen Hub getroffen wird, steigt.
 Durch mehr Hubs steigt allerdings auch der Zeitbedarf der Berechnung der oberen Schranke.
 
 \subsection{Kombination mehrer oberer Schranken}
-Sind für eine Graph mehrere Heuristiken bekannt, so so kann für eine potentielle Abkürzungen aus allen oberen Schranken die kleinste ausgewählt werden.
+Sind für eine Graph mehrere Heuristiken bekannt, so so kann für eine potenzielle Abkürzungen aus allen oberen Schranken die kleinste ausgewählt werden.
 Dies ist besonders dann sinvoll, wenn die Heuristiken jeweils eine Teilmenge alle Knotenpaare gut abdecken.
 Insbesondere die Kombination von Dreicksungleichung und vereinfachtem Graph ist hierbei erfeolgsversprechen unter der Annahme, dass die erste für große und zweitere für kleine Hop-Abstände gute obere Schranken liefert.
 
-\section{Bottom-Up Heurisik}
+\section{Bottom-Up Heuristik}
 
 Damit die Nachfolgenden Kontraktion einfacher werden ist nicht die Kanten Differenz interesannt, sondern $\sum_{n \in \text{Nachbarschaft}(v)} (\text{Grad}_\text{neu}(n))^2 - (\text{Grad}_\text{alt}(n))^2$.
 Der Kantendifferenz ist es egal, dass alle neue Kanten zu einem einzigen Knoten gehen. Dieser Heuristik nicht.

@@ -44,9 +44,9 @@ Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten eine
                         ymin=0, ymax=0.747618384401001,
                         ytick style={color=black},
                         ytick={0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8},
-                        yticklabels={0\%,10\%,20\%,30\%,40\%,50\%,60\%,70\%,80\%},
+                        yticklabels={0,10,20,30,40,50,60,70,80},
                         xlabel={Knotengrad},
-                        ylabel={Anteil der Knoten}
+                        ylabel={Anteil der Knoten (\%)}
                     ]
                     \draw[] (axis cs:2,0) rectangle (axis cs:2002,0.712017508953334);
                     \draw[] (axis cs:2002,0) rectangle (axis cs:4002,0.194220055711032);
@@ -70,11 +70,11 @@ Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten eine
                         xmin=-1198, xmax=25202,
                         xtick distance=4000,
                         xtick style={color=black},
-                        ylabel={Anteil der Knoten},
+                        ylabel={Anteil der Knoten (\%)},
                         ymin=0, ymax=0.637890337808629,
                         ytick style={color=black},
                         ytick={0,0.1,0.2,0.3,0.4,0.5,0.6,0.7},
-                        yticklabels={0\%,10\%,20\%,30\%,40\%,50\%,60\%,70\%}
+                        yticklabels={0,10,20,30,40,50,60,70}
                     ]
                     \draw[] (axis cs:2,0) rectangle (axis cs:2002,0.60751460743679);
                     \draw[] (axis cs:2002,0) rectangle (axis cs:4002,0.207212784893063);
@@ -101,6 +101,7 @@ Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten eine
                         tick align=outside,
                         tick pos=left,
                         xlabel={Knotengrad},
+                        ylabel={Anteil der Knoten (\%)},
                         xmin=-998, xmax=21002,
                         xtick style={color=black},
                         y grid style={darkgray176},
@@ -108,7 +109,7 @@ Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten eine
                         ymin=0, ymax=1.02857224104146,
                         ytick style={color=black},
                         ytick={0,0.2,0.4,0.6,0.8,1,1.2},
-                        yticklabels={0\%,20\%,40\%,60\%,80\%,100\%,120\%}
+                        yticklabels={0,20,40,60,80,100,120}
                     ]
                     \draw[] (axis cs:2,0) rectangle (axis cs:2002,0.979592610515676);
                     \draw[] (axis cs:2002,0) rectangle (axis cs:4002,0.0169022235303201);
@@ -149,6 +150,54 @@ Vielleicht geht ch witness doch?
     \caption{Summe quadratische Knotengrade}
     \label{table:sum_quad_degree}
 \end{table}
+
+\begin{tikzpicture}
+    \begin{axis}[
+            ymax=6,
+            xlabel={Hop-Länge},
+            ylabel={Fehler (\%)},
+            legend style={at={(1,0.4)},anchor=east}
+        ]
+        \addplot+ table [x=hops, y=simple_graph_upper_bound, col sep=comma, mark phase=1, mark repeat=6] {data/bounds/aegaeis.csv};
+        \addlegendentry{$\triangle$};
+
+        \addplot+ table [x=hops, y=10, col sep=comma, mark phase=2, mark repeat=6] {data/bounds/aegaeis.csv};
+        \addlegendentry{10 Hubs};
+
+        \addplot+ table [x=hops, y=20, col sep=comma, mark phase=3, mark repeat=6] {data/bounds/aegaeis.csv};
+        \addlegendentry{20 Hubs};
+
+        \addplot+ table [x=hops, y=40, col sep=comma, mark phase=4, mark repeat=6] {data/bounds/aegaeis.csv};
+        \addlegendentry{40 Hubs};
+
+        \addplot+ table [x=hops, y=80, col sep=comma, mark phase=5, mark repeat=6] {data/bounds/aegaeis.csv};
+        \addlegendentry{80 Hubs};
+    \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+    \begin{axis}[
+            ymax=6,
+            xlabel={Hop-Länge},
+            ylabel={Fehler (\%)},
+            legend style={at={(1,0.4)},anchor=east}
+        ]
+        \addplot+ table [x=hops, y=simple_graph_upper_bound, col sep=comma, mark phase=1, mark repeat=6] {data/bounds/medi.csv};
+        \addlegendentry{$\triangle$};
+
+        \addplot+ table [x=hops, y=10, col sep=comma, mark phase=2, mark repeat=6] {data/bounds/medi.csv};
+        \addlegendentry{10 Hubs};
+
+        \addplot+ table [x=hops, y=20, col sep=comma, mark phase=3, mark repeat=6] {data/bounds/medi.csv};
+        \addlegendentry{20 Hubs};
+
+        \addplot+ table [x=hops, y=40, col sep=comma, mark phase=4, mark repeat=6] {data/bounds/medi.csv};
+        \addlegendentry{40 Hubs};
+
+        \addplot+ table [x=hops, y=80, col sep=comma, mark phase=5, mark repeat=6] {data/bounds/medi.csv};
+        \addlegendentry{80 Hubs};
+    \end{axis}
+\end{tikzpicture}
 
 vergleich der Abstände im vis und graph, sortiert nach hops in vis.
 
@@ -434,3 +483,7 @@ Es wurde überschlagen, wieviele Pfade 1TB an Speicher ergeben.
     \end{tabular}
     \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
 \end{table}
+
+
+11904761880
+24246149
