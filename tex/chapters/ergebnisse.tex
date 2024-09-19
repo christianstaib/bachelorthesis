@@ -1,8 +1,7 @@
 \chapter{Ergebnisse}
 
-Sämtlichen Ergebisse wurden im BwUniCluster2.0 erzeugt. Sofern nicht anders erwähnt wurden
-2x Intel Xeon Gold 6230
-180GB RAM verwendet.
+Sofern nicht anders erwähnt wurden Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von 2.1 Ghz und 180GB RAM benutzt.
+Die Ergebnisse wurden auf gleichen System, aber nicht auf demselben erzeugt.
 
 Die bereitgestellten Graphen mussten vor ihrer Nutzung gereinigt und an die Implementierung angepasst werden.
 Sie enthielten isolierte Knoten, und die Kantengewichte der Sichtbarkeitsgraphen waren als Gleitkommazahlen gespeichert.
@@ -280,7 +279,7 @@ Plot hitting set vs bottom-up order
 
 \section{Dijkstra}
 
-Für die Berechnung des Speedups der in dieser Arbeit angewandeten Methoden wurden für jeden Graph \num{1000} sequentielle $s-t$ Dijkstra-Suchen asugeführt und die durschnittliche Laufzeit ermittelt.
+Für die Berechnung des Speedups der in dieser Arbeit angewandeten Methoden wurden für jeden Graph \num{1000} sequentielle $s$-$t$ Dijkstra-Suchen asugeführt und die durschnittliche Laufzeit ermittelt.
 Die durschnittliche Laufzeiten für das Finden und erstellen des kürzesten Pfad sind in Tabelle \ref{ergebnisse::table:dijkstra_one_to_one} dargestellt.
 Es ist ersichtlich, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten haben.
 

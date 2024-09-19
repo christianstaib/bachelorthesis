@@ -27,10 +27,10 @@ Es kann nun gezeigt werden, dass auch die Rückrichtung gilt, also dass basiende
 
     \begin{itemize}
         \item
-              $E_u$ enthält nur Kanten $(t, h, d)$, $h \in V$ und $d \in \mathbb{R}^+$ mit ${vtl}$, für die es einen $t-h$ Pfad der Länge $d$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte enthält.
+              $E_u$ enthält nur Kanten $(t, h, d)$, $h \in V$ und $d \in \mathbb{R}^+$ mit ${vtl}$, für die es einen $t$-$h$ Pfad der Länge $d$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte enthält.
 
         \item
-              $E_u$ enthält alle Kante $(t, h, {spd}((t, h)))$ mit $h \in V$, für die allen $t-h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat
+              $E_u$ enthält alle Kante $(t, h, {spd}((t, h)))$ mit $h \in V$, für die allen $t$-$h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat
     \end{itemize}
 \end{definition}
 
@@ -113,7 +113,7 @@ Daher entspricht \autoref{ch::fig::upward_graph} gleichzeitig auch dem Downward 
 \section{Contracted Graph Algorithmus}
 
 Das Berechnen aller kürzesten Pfade zwischen zwei Knoten ist aufwändig, daher wird zum Berechnen eines so defineirten Contracted Graphens ein ähnlichen Trick angewendet, wie er bei der Knoten Kontraktion angewandt wird:
-Wir fügen Kanten ein, sobald wir \emph{einen} optimalten $t-h$ Pfad gefunden haben, auf dem $h$ das größte und $t$ das zweitgrößte Level hat.
+Wir fügen Kanten ein, sobald wir \emph{einen} optimalten $t$-$h$-Pfad gefunden haben, auf dem $h$ das größte und $t$ das zweitgrößte Level hat.
 Dies ist hinreichend um die Bedingung zu erfüllen, fügt im Zweifel jedoch mehr Kanten als notwendig ein.
 
 Um einen Upward Graphen zu berechnen, wird für jeden Knoten $t \in V$ eine angepasste Dijkstra Suche ausgeführt, bei der für jeden Knoten jeweils notiert wird, was größte Level auf dem Pfad zur Wurzel ist.
