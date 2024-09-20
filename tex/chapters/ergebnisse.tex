@@ -3,30 +3,10 @@
 Sofern nicht anders erwähnt wurden Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von 2.1 Ghz und 180GB RAM benutzt.
 Die Ergebnisse wurden auf gleichen System, aber nicht auf demselben erzeugt.
 
-Die bereitgestellten Graphen mussten vor ihrer Nutzung gereinigt und an die Implementierung angepasst werden.
-Sie enthielten isolierte Knoten, und die Kantengewichte der Sichtbarkeitsgraphen waren als Gleitkommazahlen gespeichert.
-Für die Anpassung wurde ein Python-Skript benutzt, das folgende Aufgaben durchführt:
-
-\begin{itemize}
-  \item
-    Transformation der Kantengewichte.
-
-  \item
-    Entfernung isolierter Knoten.
-
-  \item
-    Anpassung der Knoten-IDs, sodass die Knoten-IDs im Sichtbarkeitsgraphen den Bereich $0, \dotsc, n$ und im triangulierten Graphen den Bereich $0, \dotsc, n + m$ umfassen.
-\end{itemize}
-
-Während der Untersuchung der triangulierten Graphen wurde festgestellt, dass einige Kanten ein Gewicht von 0 aufwiesen.
-Diese Kanten wurden unverändert beibehalten.
-
-medi und pata Sichtbarkeitsgraphen fehlten jeweils einige Kanten, damit sie ungerichtet sind.
-Diese wurden von Hand ergänzt.
-
 \section{Untersuchung der Graphen}
 
-Die Sichtbarkeitsgraphen wurden auf die Verteilung der Kantengrade untersucht.
+Die bereitgestellten Graphen wurden vor ihrer Nutzung untersucht
+Hierfür wurde zuerst die Verteilung der Knotengrade untersucht.
 Dabei wurden die folgenden Histogramme erstellt.
 Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten einen Grad kleiner \num{2000} haben.
 
@@ -129,10 +109,10 @@ Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten eine
   \caption{Verteilung der Kantengrade}
 \end{figure}
 
-Für die Laufzeit der Kontraktion die Summe der quadratischen Knotengrade bedeutsam.
+Wie diskutiert ist die Summe der quadratischen Knotengrade ein Indikator für die Performanz der Kontraktion.
 Diese sind in \autoref{table:sum_quad_degree} sichtbar.
 Obwohl pata die meisten Knoten hat, ist die summe der Quadrate am kleinsten.
-Vielleicht geht ch witness doch?
+\todo{Traingulierungen auch anzeigen.}
 
 \begin{table}[ht]
   \centering
@@ -160,22 +140,22 @@ Vielleicht geht ch witness doch?
             ylabel={Fehler (\%)},
             legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
           ]
-          \addplot+[mark repeat=7] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/aegaeis.csv};
+          \addplot+[mark repeat=9] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/aegaeis.csv};
           \addlegendentry{$\triangle$};
 
-          \addplot+[mark repeat=7] table [x=hops, y=10, col sep=comma] {data/bounds/aegaeis.csv};
+          \addplot+[mark repeat=9] table [x=hops, y=10, col sep=comma] {data/bounds/aegaeis.csv};
           \addlegendentry{10 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=20, col sep=comma] {data/bounds/aegaeis.csv};
+          \addplot+[mark repeat=9] table [x=hops, y=20, col sep=comma] {data/bounds/aegaeis.csv};
           \addlegendentry{20 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=40, col sep=comma] {data/bounds/aegaeis.csv};
+          \addplot+[mark repeat=9] table [x=hops, y=40, col sep=comma] {data/bounds/aegaeis.csv};
           \addlegendentry{40 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=80, col sep=comma] {data/bounds/aegaeis.csv};
+          \addplot+[mark repeat=9] table [x=hops, y=80, col sep=comma] {data/bounds/aegaeis.csv};
           \addlegendentry{80 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/aegaeis.csv};
+          \addplot+[mark repeat=9] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/aegaeis.csv};
           \addlegendentry{$\triangle$, 80 Hubs};
         \end{axis}
       \end{tikzpicture}
@@ -191,22 +171,22 @@ Vielleicht geht ch witness doch?
             ylabel={Fehler (\%)},
             legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
           ]
-          \addplot+[mark repeat=7] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/medi.csv};
+          \addplot+[mark repeat=12] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/medi.csv};
           \addlegendentry{$\triangle$};
 
-          \addplot+[mark repeat=7] table [x=hops, y=10, col sep=comma] {data/bounds/medi.csv};
+          \addplot+[mark repeat=12] table [x=hops, y=10, col sep=comma] {data/bounds/medi.csv};
           \addlegendentry{10 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=20, col sep=comma] {data/bounds/medi.csv};
+          \addplot+[mark repeat=12] table [x=hops, y=20, col sep=comma] {data/bounds/medi.csv};
           \addlegendentry{20 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=40, col sep=comma] {data/bounds/medi.csv};
+          \addplot+[mark repeat=12] table [x=hops, y=40, col sep=comma] {data/bounds/medi.csv};
           \addlegendentry{40 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=80, col sep=comma] {data/bounds/medi.csv};
+          \addplot+[mark repeat=12] table [x=hops, y=80, col sep=comma] {data/bounds/medi.csv};
           \addlegendentry{80 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/medi.csv};
+          \addplot+[mark repeat=12] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/medi.csv};
           \addlegendentry{$\triangle$, 80 Hubs};
         \end{axis}
       \end{tikzpicture}
@@ -223,22 +203,22 @@ Vielleicht geht ch witness doch?
             ylabel={Fehler (\%)},
             legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
           ]
-          \addplot+[mark repeat=7] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/pata.csv};
+          \addplot+[mark repeat=25] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/pata.csv};
           \addlegendentry{$\triangle$};
 
-          \addplot+[mark repeat=7] table [x=hops, y=10, col sep=comma] {data/bounds/pata.csv};
+          \addplot+[mark repeat=25] table [x=hops, y=10, col sep=comma] {data/bounds/pata.csv};
           \addlegendentry{10 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=20, col sep=comma] {data/bounds/pata.csv};
+          \addplot+[mark repeat=25] table [x=hops, y=20, col sep=comma] {data/bounds/pata.csv};
           \addlegendentry{20 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=40, col sep=comma] {data/bounds/pata.csv};
+          \addplot+[mark repeat=25] table [x=hops, y=40, col sep=comma] {data/bounds/pata.csv};
           \addlegendentry{40 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=80, col sep=comma] {data/bounds/pata.csv};
+          \addplot+[mark repeat=25] table [x=hops, y=80, col sep=comma] {data/bounds/pata.csv};
           \addlegendentry{80 Hubs};
 
-          \addplot+[mark repeat=7] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/pata.csv};
+          \addplot+[mark repeat=25] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/pata.csv};
           \addlegendentry{$\triangle$, 80 Hubs};
         \end{axis}
       \end{tikzpicture}
@@ -248,31 +228,91 @@ Vielleicht geht ch witness doch?
   \caption{Fehler der oberen Schranken}
 \end{figure}
 
-aegaeis
-75.6658\% korrekt
-0.40990444596118253 average
+\todo{Boxplot für alle Hops über 80 und Triangulierung}
 
-%WARUM MEDI, PATA nicht so korrekt?
-\todo{STIMMEN ZAHLEN?}
+% aegaeis
+% 75.6658\% korrekt
+% 0.40990444596118253 average
+%
+% %WARUM MEDI, PATA nicht so korrekt?
+% \todo{STIMMEN ZAHLEN?}
+%
+% medi
+% 0.39110000000000006\% korrekt
+% 0.9727677753480117 average
+%
+% pata
+% 0.068\% korrekt
+% 0.6179520250326755 average
 
-medi
-0.39110000000000006\% korrekt
-0.9727677753480117 average
+% `target/release/hl_predict_orderings -g ../graphs/aegaeis-ref-visibility.fmi -h /pfs/work7/workspace/scratch/st_st162081-graph_data/data_final/aegaeis-ref-visibility/hl_ch_bruteforce.bincode -l 1000 -p 1000000 -s tests/data/aegaeis-ref-graph_hl.bincode`
+% hl:
+% simple ordering                                                        1473.27
+% hitting-set, then hits                                                 1420.17
+% hitting-set, then random                                               1747.03
+% hitting-set, then degree (small to large)                              1582.00
+% hitting-set, then degree (small to large), then hits                   1609.93
+% hitting-set, then degree (large to small)                              2147.25
+% random                                                                 17811.58
+% degree (small to large)                                                7420.85
+% degree (large to small)                                                57435.23
+%
+% ch:
+% simple ordering                                                        838.59
+% hitting-set, then hits                                                 839.80
+% hitting-set, then random                                               1117.53
+% hitting-set, then degree (small to large)                              857.66
+% hitting-set, then degree (small to large), then hits                   842.15
+% hitting-set, then degree (large to small)                              1258.01
+% random                                                                 3151.90
+% degree (small to large)                                                925.99
+% degree (large to small)                                                12964.08
 
-pata
-0.068\% korrekt
-0.6179520250326755 average
+% `target/release/hl_predict_orderings -g ../graphs/medi-ref-visibility.fmi -h /pfs/work7/workspace/scratch/st_st162081-graph_data/data_final/medi-ref-visibility/hl_ch_bruteforce.bincode -l 1000 -p 1000000 -s tests/data/medi-ref-graph_hl_witness.bincode`
+% hl:
+% simple ordering                                                        1930.65
+% hitting-set, then hits                                                 2002.87
+% hitting-set, then random                                               2487.06
+% hitting-set, then degree (small to large)                              2422.12
+% hitting-set, then degree (small to large), then hits                   2443.32
+% hitting-set, then degree (large to small)                              3367.30
+% random                                                                 18700.13
+% degree (small to large)                                                12862.80
+% degree (large to small)                                                78490.52
+%
+% ch:
+% simple ordering                                                        1253.29
+% hitting-set, then hits                                                 1357.61
+% hitting-set, then random                                               1542.52
+% hitting-set, then degree (small to large)                              1223.64
+% hitting-set, then degree (small to large), then hits                   1252.87
+% hitting-set, then degree (large to small)                              1892.62
+% random                                                                 3611.29
+% degree (small to large)                                                1377.39
+% degree (large to small)                                                16523.42
 
-vergleich der Abstände im vis und graph, sortiert nach hops in vis.
-
-Heuristic egde difference (zufall)
-Vis graphen haben sehr hohen degree (TODO Beweis).
-Daher degree x degree viele checks, das gehtn schnell in die Millionen bis Milliarden.
-Idee: betrachte nur ein Subset (tails, heads) und schaue ob und wie genau dieses die Edge difference aproximiert.
-
-Das kann dann wieder für andere Methoden benutzt werden.
-
-Plot hitting set vs bottom-up order
+% `target/release/hl_predict_orderings -g ../graphs/pata-ref-visibility.fmi -h /pfs/work7/workspace/scratch/st_st162081-graph_data/data_final/pata-ref-visibility/hl_ch_bruteforce.bincode -l 1000 -p 1000000 -s tests/data/pata-ref-graph_hl_witness.bincode`
+% hl:
+% simple ordering                                                        552.90
+% hitting-set, then hits                                                 478.80
+% hitting-set, then random                                               1100.42
+% hitting-set, then degree (small to large)                              806.95
+% hitting-set, then degree (small to large), then hits                   859.61
+% hitting-set, then degree (large to small)                              2428.18
+% random                                                                 23690.52
+% degree (small to large)                                                10174.37
+% degree (large to small)                                                115053.22
+% 
+% ch:
+% simple ordering                                                        190.69
+% hitting-set, then hits                                                 207.74
+% hitting-set, then random                                               357.46
+% hitting-set, then degree (small to large)                              213.76
+% hitting-set, then degree (small to large), then hits                   194.37
+% hitting-set, then degree (large to small)                              637.45
+% random                                                                 1213.83
+% degree (small to large)                                                228.77
+% degree (large to small)                                                9335.24
 
 \section{Dijkstra}
 
@@ -280,7 +320,7 @@ Für die Berechnung des Speedups der in dieser Arbeit angewandeten Methoden wurd
 Die durschnittliche Laufzeiten für das Finden und erstellen des kürzesten Pfad sind in Tabelle \ref{ergebnisse::table:dijkstra_one_to_one} dargestellt.
 Es ist ersichtlich, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten haben.
 
-\begin{table}[ht]
+\begin{table}[h!]
   \centering
   \begin{tabular}{
       l % Graph
@@ -305,7 +345,7 @@ Es zeigte sich, dass die durschnittliche Hop-Länge der Sichtbarkeitsgraphen deu
 Obwohl die Sichtbarkeitsgraphen eine niedriger Anzahl an Knoten haben, ist die durschnitliche Anzahl der Queue pops größer.
 Dies legt Nahe, dass die verwendung einer Warteschlange, welche eine \emph{Drecrease-Key} Funktion anbietet, die Geschwindigkeit der Dijkstra Suche erhöhen würde.
 
-\begin{table}[ht]
+\begin{table}[h!]
   \centering
   \begin{tabular}{
       l % Graph
@@ -325,34 +365,52 @@ Dies legt Nahe, dass die verwendung einer Warteschlange, welche eine \emph{Drecr
   \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
 \end{table}
 
-\section{CH mit Witness}
+\section{Graphen-Kontraktion}
 
 Es wurde versucht die CH mit Witness, Edge Difference, Lacy Popping zu erstellen.
 Dies hat für die Sichtbarkeitsgraphen nicht funktioniert, da 3 Tage nicht ausreichten die Graphen zu erzeugen.
 Die Suche ist einfach zu teuer.
 Pro Vorgänger muss eine Suche zu allen Nachfolgern gemacht werden.
 
-\begin{table}[ht]
+\begin{table}[h!]
   \centering
   \begin{tabular}{
       l % Graph
-      S[table-format = 1.2] % creation zeit
-      S[table-format = 4.1] % average time
-      S[table-format = 4.1] % speedup
+      S[table-format = 4.0] % Erstellung
+      S[table-format = 1.2] % Abkürzungen/Katen
+      S[table-format = 3.0] % average time spd
+      S[table-format = 4.0] % speedup
     }
     \toprule
-    {Graph}       & {Erstellung}  & {$\varnothing$ $t({spd})$} & {speedup} \\
-    {}            & {(min)}       & {(µs)}                     & {}        \\ \midrule
-    aegaeis-graph & 2.1336        & 514.069                    & 117.263   \\
-    medi-graph    & 3.08033333333 & 543.803                    & 160.138   \\
-    pata-graph    & 9.84055       & 730.317                    & 363.987   \\\bottomrule
+    {Graph}       & {Erstellung} & {$\frac{\text{Abkürzungen} (C)}{\text{Kanten} (G)}$} & {$\varnothing$ $t({spd})$} & {Speedup} \\
+    {}            & {(min)}      & {}                                                   & {(us)}                     & {}        \\ \midrule
+    aegaeis-graph & 2m22.704s    & 3047836                                              & 313.966                    &           \\
+    medi-graph    & 3m17.204s    & 4535136                                              & 304.089                    &           \\
+    pata-graph    & 9m54.617s    & 14187336                                             & 435.552                    &           \\  \bottomrule
   \end{tabular}
-  \caption{ch one-to-one, averaged over 1000 sequential searches}
+  \caption{CH Graphen-Kontraktion}
 \end{table}
 
-\section{CH All-In}
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 4.0] % Erstellung
+      S[table-format = 1.2] % Abkürzungen/Katen
+      S[table-format = 3.2] % average time spd
+      S[table-format = 3.2] % speedup
+    }
+    \toprule
+    {Graph}       & {Erstellung} & {Label Size} & {$\varnothing$ $t({spd})$} & {Speedup} \\
+    {}            & {(min)}      & {}           & {(ms)}                     & {}        \\ \midrule
+    aegaeis-graph &              &              &                            &           \\
+    medi-graph    &              &              &                            &           \\
+    pata-graph    &              &              &                            &           \\  \bottomrule
+  \end{tabular}
+  \caption{HL Graphen-Kontraktion}
+\end{table}
 
-All in sortiert nach all in edge differnce:
+\todo{Shortcuts durch Kanten, HL Werte}
 
 \section{Hitting Set}
 
@@ -362,7 +420,7 @@ Die dafür benötigte Zeit ist in der \autoref{table:ergebnisse:100k_hitting_set
 Es hätte durchaus mehr Zeit in mehr Pfade gesteckt werden können, jedoch wurde bewusste wenig Aufwand darin gesteckt.
 Wenn das auch auch so funktioniert, dann kann mit den Speedup Techniken viel schneller viel mehr PFade generiert werden.
 
-\begin{table}[ht]
+\begin{table}[h!]
   \centering
   \begin{tabular}{
       l % Graph
@@ -382,8 +440,6 @@ Wenn das auch auch so funktioniert, dann kann mit den Speedup Techniken viel sch
   \label{table:ergebnisse:100k_hitting_set_time}
 \end{table}
 
-Wie hitbar sind die Graphen? plote hit percentage
-
 \section{PEOPLE}
 
 Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung von Contracted und Hub Graphen lies sie auch die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
@@ -392,7 +448,6 @@ Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung von Contract
 
 Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung eines Contracted Graphens lies sich auf alle Graphen anwenden.
 Die erzielten Werte der ERstellung sind in \autoref{table:ergebnisse:people_ch_erstellung} gesammelt.
-Anzahl der Abkürzungen in Relation zu Anzahl der ursprünglichen Kanten.
 
 \begin{table}[ht]
   \centering
@@ -423,22 +478,24 @@ Das sollte noch erkundet werden, warum.
 
 pata hat trotzem mehr Speedup, weil von der Struktur her schon fast ein Straßengraph
 
-\begin{table}[ht]
+\begin{table}[h!]
   \centering
   \begin{tabular}{
       l % Graph
+      S[table-format = 4.0] % Erstellung
+      S[table-format = 1.2] % Abkürzungen/Katen
       S[table-format = 3.2] % average time spd
       S[table-format = 3.2] % speedup
     }
     \toprule
-    {Graph}            & {$\varnothing$ $t({spd})$} & {Speedup}          \\
-    {}                 & {(ms)}                     & {}                 \\ \midrule
-    aegaeis-graph      & 2.337158                   & 25.792521515447394 \\
-    aegaeis-visibility & 443.650843                 & 1.421015958714182  \\
-    medi-graph         & 3.443191                   & 25.291585625078596 \\
-    medi-visibility    & 938.863249                 & 1.363004453910625  \\
-    pata-graph         & 10.199549                  & 26.062502469471934 \\
-    pata-visibility    & 257.635631                 & 3.950136761168722  \\  \bottomrule
+    {Graph}            & {Erstellung}       & {$\frac{\text{Abkürzungen} (C)}{\text{Kanten} (G)}$} & {$\varnothing$ $t({spd})$} & {Speedup}          \\
+    {}                 & {(min)}            & {}                                                   & {(ms)}                     & {}                 \\ \midrule
+    aegaeis-graph      & 20.2               & 4.451385564883044                                    & 2.337158                   & 25.792521515447394 \\
+    aegaeis-visibility & 353.81666666666666 & 0.6929899979252291                                   & 443.650843                 & 1.421015958714182  \\
+    medi-graph         & 38.21666666666667  & 4.736260307048593                                    & 3.443191                   & 25.291585625078596 \\
+    medi-visibility    & 1252.6666666666667 & 0.6412956532751182                                   & 938.863249                 & 1.363004453910625  \\
+    pata-graph         & 342.1666666666667  & 6.071097146885127                                    & 10.199549                  & 26.062502469471934 \\
+    pata-visibility    & 2685.0833333333335 & 1.9430282658000226                                   & 257.635631                 & 3.950136761168722  \\  \bottomrule
   \end{tabular}
   \caption{Speedup der mit PEOPLE erstellten Contracted Graphen}
   \label{table:ergebnisse:people_ch_speedup}

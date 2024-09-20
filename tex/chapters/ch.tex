@@ -24,7 +24,7 @@ Der Name Contraction Hierarchies leitet sich aus dem Konzept der Knoten-Kontrakt
 
   \begin{enumerate}
     \item\label{ch:contraction:when_shortcut}
-      Für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ wird, wenn $v$ auf allen kürzesten Pfaden zwischen $u$ und $w$ liegt, eine Abkürzungskante (Shortcut) $(u, w, {spd}_G((u, w)))$ zu $E$ hinzugefügt.
+      Für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ wird, wenn $(u, v, w)$ der einzige kürzeste $u$-$v$-Pfad ist, eine Abkürzungskante (Shortcut) $(u, w, {spd}_G((u, w)))$ zu $E$ hinzugefügt.
 
     \item
       Alle Kanten von und zu $v$ werden entfernt.

@@ -1,42 +1,44 @@
 \chapter{PEOPLE: Predetermined Order, Prunded Label}\label{chapter:peopel}
 
-Das erstellen von Abkürzungen während der Kontraktion eines Knotes $v$ erfordert mindestens $\abs{\text{Vorgänger}} \cdot \abs{\text{Nachfolger}}$ viele Vergleiche, ob eine Kante einzufügen ist.
-Wird eine Warteschlange mit Kanten-Differenz benutzt, so sind alleine für die Initalsierung deren Initialsierung $\sum_{v \in V} \abs{\text{Vorgänger}(v)} \cdot \abs{\text{Nachfolger}(v)}$ Vergleiche notwendig.
-Für Graphen, welche Knoten mit einem hohem Grad enthalten, kann dies dazu führen, dass die Kontraktion des Graphens nicht in einem sinvollen Zeitrahmen berechenbar ist.
-Trotzdem wäre es praktisch, wenn sich die Query-Zeiten von Contraction Hierarchirs und Hierachical Hub Labeling auch auf sie übertragen ließen.
+Wie im \autoref{chapter:kontraktion} diskutiert wurde, ist Kontraktion von Graphen mit hohem durschnitlichen Knotengrad aufwendig.
+Vielleicht ist die Kontraktion von ihnen sogar so aufwendig, dass sie sich nicht in sinvoller Zeit kontrahieren lassen
+Trotzdem wäre es praktisch, wenn sich die Anfrage-Zeiten von Contraction Hierarchirs und Hierachical Hub Labeling auch auf sie übertragen ließen.
+Hierfür charakterisieren wir den Contracted- und Hub-Graphen neu und stellen anschließend PEOPLE (\textbf{P}redetermined \textbf{O}rder, \textbf{P}runded \textbf{L}ab\textbf{e}l) vor, eine Methode wie Hub- und Contracted-Graphen mit einer vorgegeben vertex-to-level-Funktion ohne Knoten-Kontraktion erstellt werden können.
 
 Um die Nachfolgende Definition vorzubereiten, betrachten wir ein Beispiel.
 Sei $G = (V, E)$ mit $V \supset \{ u, v, w \}$ und $E = \{ (u, v, {spd}((u, v))), (v, w, {spd}((v, w))) \}$, ein Produkt einer Kontraktion, also zu Beginn mehr Kanten und nicht-isolierte Knoten entiehlt
 Es soll nun $v$ kontraktiert werden.
 Hierfür wir eine Kante $(u, w, {spd}((u, w)))$ eingefügt und die Kanten $(u, v), (v, w)$ entfernt.
-Was bedeuted dies für den enstehenden Contracted Graph $C$?
+Daraus können zwei Folgerungen gezogen werden:
+
 \begin{enumerate}
   \item
-    Alle Knoten, einschließlich $v$ haben ein niedriges Level als $u$ und $w$.
-    Inbesondere haben alle Knoten auf allen kürzesten Pfaden von $u$ nach $w$, also die, die bereits kontraktiert wurden, ein niedrigeres Level.
+    Es gibt einen kürzesten Pfad von $u$ nach $w$ in $G$ für den gilt, dass alle Knoten zwischen $u$ und $w$ bereits kontrahiert wurden.
+    Diese haben daher auch ein niedrigeres Level als $u$ und $u$.
 
   \item
     $(u, w) \in E_u$ gilt genau dann, wenn $w$ das größte Level auf allen Pfaden von $u$ nach $w$.
     $(w, u) \in E_d$ gilt, wenn $u$ das größte Level hat.
 \end{enumerate}
 
-Es kann nun gezeigt werden, dass auch die Rückrichtung gilt, also dass basienden auf dieser Chracterisierung ein Contracted Graph gebildet werden kann.
+Basierend auf dieser Überlegung, definieren wir den Upward-Graph neu.
 
-\begin{definition}[Upward Graph]\label{people:def:upward_graph}
-  Sei $G = (V, E)$ und ${vtl}$ eine \emph{vertex-to-level} Funktion dazu. Dann ist $G_u = (V, E_u)$ ein \emph{upward Graph} zu $G$ wenn für jeden Knoten $t \in V$ gilt:
+\begin{definition}[Upward-Graph]\label{people:def:upward_graph}
+  Sei $G = (V, E)$ und ${vtl}$ eine vertex-to-level Funktion dazu.
+  Dann ist $G_u = (V, E_u)$ ein \emph{Upward-Graph} zu $G$ wenn für jeden Knoten $t \in V$ gilt:
 
   \begin{itemize}
     \item
-      $E_u$ enthält nur Kanten $(t, h, d)$, $h \in V$ und $d \in \mathbb{R}^+$ mit ${vtl}$, für die es einen $t$-$h$ Pfad der Länge $d$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte enthält.
+      $E_u$ enthält nur Kanten $(t, h, d)$ mit $h \in V$ und $d \in \mathbb{R}^+$, für die es einen $t$-$h$ Pfad der Länge $d \geq {spd}_G (t, g)$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte Level hat.
 
     \item
-      $E_u$ enthält alle Kante $(t, h, {spd}((t, h)))$ mit $h \in V$, für die allen $t$-$h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat
+      $E_u$ enthält alle Kante $(t, h, {spd}_G (t, h))$ mit $h \in V$, für die gilt, dass auf \emph{allen} $t$-$h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat.
   \end{itemize}
 \end{definition}
 
-Betrachten wir das ganze an dem bereits definierten Beispielgraph.
+Betrachten wir dies wieder am Beispielgraph.
 Sei ${vtl}$ definiert durch die Abbildung in \autoref{ch::fig::vtl_abbildung} definiert.
-Durch Anwendung der Definition \ref{people:def:upward_graph} ergibt sich der in \autoref{ch::fig::upward_graph} gezeigte Upward Graph.
+Durch Anwendung der neuen Definition des Upward-Graph ergibt sich der in \autoref{ch::fig::upward_graph} gezeigte Graph.
 
 \begin{table}[ht]
   \centering
@@ -92,20 +94,62 @@ Durch Anwendung der Definition \ref{people:def:upward_graph} ergibt sich der in 
 
     \draw[->]  (k) edge node[circle, fill=white] {1} (j);
   \end{tikzpicture}
-  \caption{Upward Graph des Beispielgraphs}
+  \caption{Upward-Graph des Beispielgraphs}
   \label{ch::fig::upward_graph}
 \end{figure}
 
-Die Definition des Downward Graphens erfolgt nun analog zu der des Upward Graphens:
+Die Definition des Downward-Graphens erfolgt nun analog zu der des Upward-Graphens:
 
-\begin{definition}[Downward Graph]
-  Sei $G = (V, E)$ und ${vtl}$ eine \emph{vertex-to-level} Funktion dazu. Dann ist ein upward Graph des Umkehrgraphens $G^T$ ein \emph{downward Graph} zu $G$.
+\begin{definition}[Downward-Graph]
+  Sei $G = (V, E)$ und ${vtl}$ eine \emph{vertex-to-level} Funktion dazu. Dann ist ein Upward-Graph des Umkehrgraphens $G^T$ ein \emph{Downward-Graph} zu $G$.
 \end{definition}
 
 Wenn ein Graph ungerichtet ist, dann ist er äuivalent zu seinem Umkehrgraphen und dann ist auch der Upward und Downward Graph äuivalent.
 Daher entspricht \autoref{ch::fig::upward_graph} gleichzeitig auch dem Downward Graph des Beispielgraphens.
+Es ist zu zeigen, dass Anfragen auf einem auf diese Art definiertem Contracted-Graph $C = (G_u, G_d)$ ebenfalls Korrekt sind.
 
-\todo{Beweis Korrektheit}
+\begin{beweis}[Korrektheit Contracted-Graph Anfrage]
+  Da im Upward- und Downard-Graphen nur Kanten existieren, deren Gewicht mindestens der kürzesten Pfad Abstand der verbundenen Knoten enspricht, kann in $C$ kein Pfad gefunden werden, der nicht auch in $G$ exisitert.
+
+  Sei ${sp}_G(s, t)$ der kürzeste Pfad auf $G$ der unter allen kürzesten Pfaden den Knoten $m$ mit dem höchsten Level enthält.
+  Erstelle aus diesem Pfad $(s, \dotsc, t)$ zwei Pfade: $(s, \dotsc, m)$ und $(t, \dotsc, m)$.
+  Betrachte den Teilpfad $(s, \dotsc, m)$ der Hop-Länge $n_s$.
+  Ist $n_s = 1$, so ist nichts weiter zu zeigen.
+
+  Finde nun den ersten Knoten $s'$ nach $s$, für den gilt, dass sein Level größer als das von $s$ ist und zwischen denen auf allen Pfaden nur Knoten kleiner Level liegen.
+  Für diesen gibt es nach der Definiton des Upward-Graphen eine Kante mit optimalem Gewicht in ihm.
+  Widerhole dies für denn Teilpfad $(s', \dotsc, m)$, bis $s' = m$.
+  Durch diese Kanten lässt sich $m$ von $s$ aus in $C$ mit optimaler Distanz finden.
+
+  Analog wird für den Teilpfad $(t, \dotsc, m)$ im Downward-Graphen argumentiert.
+  \qed
+\end{beweis}
+
+Dass nur Kanten $(t, h)$ erstellt werden müssen, wenn $h$ das größte und $t$ das zweitgrößte Level auf allen $t$-$h$-Pfaden hat, ist in \autoref{fig:people:notwendige_kanten} veranschaulicht.
+Es muss keine $(u, w)$ Kante erstellt werden, da $w$ über $v$ erreicht werden kann.
+
+\begin{figure}[h!]
+  \centering
+  \begin{tikzpicture}[scale=1.75]
+    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (0*1.25, 0)  (u)    {u\\0};
+    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (1*1.25, 0)  (v)    {v\\1};
+    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2*1.25, 0)  (w)    {w\\2};
+
+    \draw[->]  (u) edge[bend left=45] node[circle, fill=white] {2} (w);
+    \draw[->]  (u) edge node[circle, fill=white] {1} (v);
+    \draw[->]  (v) edge node[circle, fill=white] {1} (w);
+  \end{tikzpicture}
+  \caption{Beispiel notwendiger Kanten im Upward-Graph}
+  \label{fig:people:notwendige_kanten}
+\end{figure}
+
+\subsection{Kontraktion erfüllt diese Definition}
+
+Bei der Knoten-Kontraktion des Knoten $v$ wird für den Pfad $(u, v, w)$ eine Abkürzung eingefügt, wenn dies der einzige kürzeste $u$-$w$-Pfad ist.
+Ist dies der Fall, dann wurden die Knoten aller andern kürzesten Pfade zuvor bereits kontrahiert und haben daher ein niedrigeres Level.
+Daher bilden diese Abkürzungen mitsamt den Kanten des ursprünglichen Graphen die Kantenmenge des Upward- und Downward-Graphen.
+Wird die Kontraktionsbedingung abgeschwächt, so werden nicht notwendige, nicht optimale $(v, w)$ Kanten eingefügt, die dann einem nicht optimalen Pfad enstprechen auf dem $v$ und $w$ die beiden höchsten Level haben.
+Daher entspricht ein durch Graphen-Kontraktion erzeugter Graph der neuen Definition.
 
 \section{Contracted Graph Algorithmus}
 
@@ -117,8 +161,9 @@ Um einen Upward Graphen zu berechnen, wird für jeden Knoten $t \in V$ eine ange
 Dies Information kann mit der \emph{max-on-path} Funktion ${mop}$ abegrufen werden.
 Ein Knoten $h \in V$, $h \neq t$ ist der Kopf eine Upward Graph Kante, für die gilt, dass ${mop}(h) = {vtl}(h)$ und ${mop}({pre}(h)) = {vtl}(t)$.
 Das Gewicht der Kante kann der Dijkstra Suche entommen werden.
-Die Suche kann abgebrochen werden, wenn nur noch Knoten für alle nicht-expandierten Knoten $h$ ${mop}({pre}(h)) > {vtl}(h)$ gilt.
-Betrachten wir dies am Knoten $a$ im Beispielgraphen:
+Die Suche kann abgebrochen werden, wenn nur noch Knoten für alle nicht-expandierten Knoten $h$ gilt dass ${mop}({pre}(h)) > {vtl}(h)$ ist.
+\autoref{ch:fig:brute_force_suchbaum} zeigt dies für den Knoten $a$ im Beispielgraphen.
+Die linke Zahl steht dabei für das Level des jeweiligen Knoten, die rechte Zahl für das größte Level auf dem Pfad zur Wurzel.
 
 \begin{figure}[ht]
   \centering
@@ -127,16 +172,16 @@ Betrachten wir dies am Knoten $a$ im Beispielgraphen:
     % a & b & c & d & e & f & g & h & i & j & k &
     % 8 & 7 & 3 & 6 & 2 & 5 & 1 & 4 & 0 & 10 & 9 &
 
-    \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 0)  (a)    {a\\8 8};
-    \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 0, 4)  (b)    {b\\7 8};
+    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 0)  (a)    {a\\8 8};
+    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 0, 4)  (b)    {b\\7 8};
     \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 6)  (c)    {c\\3 10};
     \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 8)  (d)    {d\\6 10};
     \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 9)  (e)    {e\\2 10};
     \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 3, 10)  (f)    {f\\5 10};
     \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 3, 7)  (g)    {g\\1 10};
-    \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 2)  (h)    {h\\4 8};
-    \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 1)  (i)    {i\\0 8};
-    \node[circle, draw=green, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 3)  (j)    {j\\10 10};
+    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 2)  (h)    {h\\4 8};
+    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 1)  (i)    {i\\0 8};
+    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 3)  (j)    {j\\10 10};
     \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 5)  (k)    {k\\9 10};
 
     \draw[->]  (a) edge (b);
@@ -160,7 +205,7 @@ Betrachten wir dies am Knoten $a$ im Beispielgraphen:
 \end{figure}
 
 Die Informtion des größten Levels auf dem Pfad zur Wurzel kann dabei beim Update eines Kontens übertragen werden, indem das Maximum des bisherigen größten Levels und das Level des upgedateten Knoten gebildet wird.
-Die Abbruchbedingung kann durch die Verfolgung einer Menge an \emph{lebendigen} erzielt werden, sobald diese keine Knoten mehr entählt, kann die Suche abgebrochen werden.
+Die Abbruchbedingung kann durch die Verfolgung einer Menge an \emph{lebendigen Knoten} erzielt werden, sobald diese keine Knoten mehr entählt, kann die Suche abgebrochen werden.
 Zu beginn ist nur der Startknoten lebendig, die Lebendigkeit wird jeweils an die Kinder vererbt.
 Ein Knoten stirbt, nachdem er expandiert wurde oder wenn er den Kopf einer Kante bildet.
 Gibt es keine lebendigen Knoten mehr, so kann die Suche abgebrochen werden.
@@ -229,25 +274,17 @@ Der textuell beschriebene Algorithmus wird dann wie folgt formal definiert:
 
 \subsection{Abkürzung Problem}
 
-Für abgekürzte Knoten in
+Es liegt nahe als abgekürzten Knoten den Knoten mit dem dritthöchsten Level auszuwählen und sich darauf zu verlassen, dass die Suche von diesem Knoten aus die nächsen Abkürzung findet, da dies der Knoten-Kontraktion enstpricht.
+Dies ist praktisch, da dann jeder Shortcut nur einmal erstellt werden muss, dafür muss jedoch gelten, dass die Vorwärtssuche für $s$-$t$ den gleichen Pfad findet wie die Rückwärtssuche (die Suche auf dem Transponierten Graphen) für $t$-$s$.
+Wird als Graph eine Datenstruktur verwendet, welche die Nachbarn nicht in einer definierten Ordnung ausgibt (etwa ein Hashset), oder eine nicht stabile Prioritätswarteschlange verwendet, ist dies nicht garantiert.
 
-Es liegt nahe als abgekürzten Knoten den Knoten mit dem dritthöchsten Level auszuwählen und sich darauf zu verlassen, dass die Suche von diesem Knoten aus die nächsen Abkürzung findet, und so weiter.
-Dies wäre praktisch, da dann jeder Shortcut nur einmal erstellt werden müsste.
-Zwei Gründe können jedoch dagegen sprechen:
-Wird als Graph eine Datenstruktur verwendet, welche die Nachbarn nicht in einer definierten Ordnung ausgibt (etwa ein Hashset), können zwei Suchen von bzw. zu einem Knoten zwei Unterschiedliche kürzeste Pfad Bäume bilden.
-Eine nicht stabile Prioritätswarteschlange kann ebenfalls den gleichen Effekt herbeiführen.
+\autoref{ch:fig:problem_shortcut} zeigt eine Situation, in der dies auftreten kann.
+In $C$ wurde der Pfad $(a, e)$ gefunden, dess Abkürzungen jetzt ersetzt werden sollen.
+Hierfür wird im ersten Schritt die für die Abkürzung $(a, e)$ der abgekürzte Knoten $d$ gefunden, dadurch ist der Pfad $(a, d, e)$.
+Für den Knoten $a$ wird die Kante $(a, e)$ mit dem abgekürzten Knoten $d$ gefunden.
+Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit dem Knoten $b$ findet, dies geschieht jedoch nicht, wenn von $d$ aus $a$ über $c$ erreicht wird.
 
-\autoref{ch:fig:problem_shortcut} zeigt eine Situation, in der so ein Problem auftreten kann.
-Für den Knoten $a$ wird die Kante $(a, e)$ mit dem abekürztem Knoten $d$ gefunden.
-Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit dem Knotem $b$ findet.
-
-Die Lösung hierfür ist, dass die Abkürzungen, welche benötigt werden, um die ursprüngliche Abkürzung vollständiz zu entpacken, ebenfalls erstellt werden.
-Diese werden aber mit einer hohen Wahrscheinlichkeit von den Bruteforcing der jeweils abgekürzten Knoten endeckt.
-Der Speichermehrbedarf hierbei kann ein Problem für die Umsetzbarkeit des Algorithmus werden, weshalb ein Mechanismus verwendet werden sollte, welcher die mehrfache Speicherung verhindet, etwa eine HashMap.
-Dies führt allerdings zu einem Performance-Hit, da dies synchroniesert werden muss.
-Für denn Fall, dass nur die kürzesten Pfad Abstände Interesannt sind, kann und sollte hierauf verzichtet werden.
-
-\begin{figure}[ht]
+\begin{figure}[h!]
   \centering
 
   \begin{tikzpicture}
@@ -269,14 +306,31 @@ Für denn Fall, dass nur die kürzesten Pfad Abstände Interesannt sind, kann un
   \label{ch:fig:problem_shortcut}
 \end{figure}
 
+Für dieses Problem gibt es zwei Lösungen:
+Die Nachfolgenden Abkürzungen, welche benötigt werden, um eine Abkürzung vollständig zu entpacken werden für jede Abkürzung ebenfalls erstellt, dadurch werden viele Abkürzungen mehrfach erstellt, dies muss daher synchronisiert werden.
+Alternativ kann die Prioritätswarteschlange modifiziert werden, indem es eine Totalordnung der Knoten gibt und diese bestimmt, in welcher Reihenfolge Knoten gleicher Distanz expandiert werden.
+
 \section{Hub Labels Algorithmus}
 
-Der gleiche Idee zur Erstellung eins Contracted Graphens lässt sich auch auf die Erstellung eines Hub Graphens anwenden.
-Hierfür wird die Abbruchbedingung durch die Lebendigkeit entfernt.
+Analog zur neuen Definition des Contracted-Graph lässt sich auch der Hub-Graph neu Definieren.
+Die dafür verwendete Defintion der Forward-Label weicht nur leicht von der des Upward-Graphen ab.
 
-Der Aglorithmus kann auch dafür benutzt werden, die Qualität (durschnitliche Label Size) einer vertex-to-level Funktion anzugeben, ohne den kompletten Hub Graphen zu berechnen.
+\begin{definition}[Forward-Label]
+  Sei $G = (V, E)$ und ${vtl}$ eine vertex-to-level Funktion dazu.
+  Dann ist $L_f (t) \subset V \times \mathbb{R}$ ein Forward-Label für einen Knoten $t$ in $G$ wenn gilt:
+
+  \begin{itemize}
+    \item
+      $L_f (t)$ enthält nur Einträge $(h, d)$ mit $h \in V$ und $d \in \mathbb{R}$, für die es einen $t$-$h$ Pfad der Länge $d \geq {spd}_G (t, g)$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte Level hat.
+
+    \item
+      $L_f (t)$ enthält alle Einträge $(h, {spd}_G (t, h))$ mit $h \in V$, für die gilt, dass auf \emph{allen} $t$-$h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat.
+  \end{itemize}
+\end{definition}
+
+Hierbei ist ein Backward-Label ein Forward-Label das Transponierten Graphen $G^T$ .
+Solche Label können wieder durch Merging aus einem Contracted-Graph erstellt worden durch eine Suche pro Knoten.
+\todo{Algorithmus}
+Die Suche pro Knoten erstellt dabei geprunte Label und kann kann auch dafür benutzt werden, die Qualität (durschnitliche Label Size) einer vertex-to-level Funktion anzugeben, ohne den kompletten Hub Graphen zu berechnen.
 Hierfür würd für $n$ Knoten das Label berechnet und die größte des Labels angegeben.
-Das ist vielleicht interesannt, um gute Top-Down Orderings zu finden (unter der Annahme, dass dieser Orderings auch effizientes Kontraktieren zulassen).
-Da sich das recht schnell berechnen lässt kann man vielleicht einen Solver dafür einsetzen?
-
-Analog dazu kann für einen Knoten $v$ auch der CH Suchbaum berechnet werden, indem iterative für jeden gefunden Knoten wieder die CH Kanten berechnet werden. Das ist potentiell aber etwas teurer.
+Da sich dies leicht parallelisiern läst, könnte in einem zukünftigen Schritt durch Opmierungsalgorithmen die Label Size verkleinert werden.
