@@ -20,15 +20,15 @@ Nachtdem alle Knoten kontrahiert wurden, werden die erwähnten beiden Graphen ge
 Der Name Contraction Hierarchies leitet sich aus dem Konzept der Knoten-Kontraktion (Contraction) ab.
 
 \begin{definition}[Knoten-Kontraktion]
-    Sei $G = (V, E)$ ein Graph. Sei $v \in V$ der zu kontrahierende Knoten. Die Kontraktion von $v$ erfolgt in zwei Schritten:
+  Sei $G = (V, E)$ ein Graph. Sei $v \in V$ der zu kontrahierende Knoten. Die Kontraktion von $v$ erfolgt in zwei Schritten:
 
-    \begin{enumerate}
-        \item\label{ch:contraction:when_shortcut}
-        Für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ wird, wenn $v$ auf allen kürzesten Pfaden zwischen $u$ und $w$ liegt, eine Abkürzungskante (Shortcut) $(u, w, {spd}_G((u, w)))$ zu $E$ hinzugefügt.
+  \begin{enumerate}
+    \item\label{ch:contraction:when_shortcut}
+      Für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ wird, wenn $v$ auf allen kürzesten Pfaden zwischen $u$ und $w$ liegt, eine Abkürzungskante (Shortcut) $(u, w, {spd}_G((u, w)))$ zu $E$ hinzugefügt.
 
-        \item
-              Alle Kanten von und zu $v$ werden entfernt.
-    \end{enumerate}
+    \item
+      Alle Kanten von und zu $v$ werden entfernt.
+  \end{enumerate}
 \end{definition}
 
 Nach der Kontraktion $v$ ist also isoliert.
@@ -37,9 +37,9 @@ Ist die Länge der potenziellen Abkürzung kürzer, als die des in der modifizie
 Die Knoten-Kontraktion bewahrt daher die kürzesten Pfad Distanzen zwischen den verbleibenden Knoten.
 
 \todo{
-    wenn $v$ auf allen kürzesten Pfaden zwischen $u$ und $w$ liegt
+  wenn $v$ auf allen kürzesten Pfaden zwischen $u$ und $w$ liegt
 
-    Beispiele
+  Beispiele
 }
 
 Betrachten wir dies am ungerichteten Beispielgraphen.
@@ -50,111 +50,109 @@ Daher wird eine Kante zwischen $a$ und $j$ eingefügt.
 \autoref{graphs:fig:example_contraction} zeigt den Graphen nach der Kontraktion.
 
 \begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \resizebox{\textwidth}{!}{% <------ Don't forget this %
-            \begin{tikzpicture}[scale=0.750]
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 0.0, 0.5* 8.5)  (a)    {a};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 2.1, 0.5* 2.1)  (b)    {b};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 10.0, 0.5* 1.2)  (c)    {c};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 16.6, 0.5* 0.5)  (d)    {d};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 22.0, 0.5* 2.2)  (e)    {e};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 19.7, 0.5* 8.0)  (f)    {f};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 13.5, 0.5* 10.7)  (g)    {g};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 6.5, 0.5* 11.0)  (h)    {h};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 4.0, 0.5* 6.0)  (i)    {i};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 9.0, 0.5* 5.7)  (j)    {j};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 15.5, 0.5* 4.6)  (k)    {k};
+    \resizebox{\textwidth}{!}{% <------ Don't forget this %
+      \begin{tikzpicture}[scale=0.750]
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 0.0, 0.5* 8.5)  (a)    {a};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 2.1, 0.5* 2.1)  (b)    {b};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 10.0, 0.5* 1.2)  (c)    {c};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 16.6, 0.5* 0.5)  (d)    {d};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 22.0, 0.5* 2.2)  (e)    {e};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 19.7, 0.5* 8.0)  (f)    {f};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 13.5, 0.5* 10.7)  (g)    {g};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 6.5, 0.5* 11.0)  (h)    {h};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 4.0, 0.5* 6.0)  (i)    {i};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 9.0, 0.5* 5.7)  (j)    {j};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 15.5, 0.5* 4.6)  (k)    {k};
 
+        \draw[<->]  (a) edge node[circle, fill=white] {4} (b);
+        \draw[<->]  (a) edge node[circle, fill=white] {3} (h);
+        \draw[<->]  (a) edge node[circle, fill=white] {1} (i);
 
-                \draw[<->]  (a) edge node[circle, fill=white] {4} (b);
-                \draw[<->]  (a) edge node[circle, fill=white] {3} (h);
-                \draw[<->]  (a) edge node[circle, fill=white] {1} (i);
+        \draw[<->]  (b) edge node[circle, fill=white] {4} (c);
+        \draw[<->]  (b) edge node[circle, fill=white] {3} (i);
+        \draw[<->]  (b) edge node[circle, fill=white] {2} (j);
 
-                \draw[<->]  (b) edge node[circle, fill=white] {4} (c);
-                \draw[<->]  (b) edge node[circle, fill=white] {3} (i);
-                \draw[<->]  (b) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (c) edge node[circle, fill=white] {4} (d);
+        \draw[<->]  (c) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (c) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (c) edge node[circle, fill=white] {4} (d);
-                \draw[<->]  (c) edge node[circle, fill=white] {2} (j);
-                \draw[<->]  (c) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (d) edge node[circle, fill=white] {3} (e);
+        \draw[<->]  (d) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (d) edge node[circle, fill=white] {3} (e);
-                \draw[<->]  (d) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (e) edge node[circle, fill=white] {4} (f);
+        \draw[<->]  (e) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (e) edge node[circle, fill=white] {4} (f);
-                \draw[<->]  (e) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (f) edge node[circle, fill=white] {3} (g);
+        \draw[<->]  (f) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (f) edge node[circle, fill=white] {3} (g);
-                \draw[<->]  (f) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (g) edge node[circle, fill=white] {3} (h);
+        \draw[<->]  (g) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (g) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (g) edge node[circle, fill=white] {3} (h);
-                \draw[<->]  (g) edge node[circle, fill=white] {2} (j);
-                \draw[<->]  (g) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (h) edge node[circle, fill=white] {3} (i);
+        \draw[<->]  (h) edge node[circle, fill=white] {1} (j);
 
-                \draw[<->]  (h) edge node[circle, fill=white] {3} (i);
-                \draw[<->]  (h) edge node[circle, fill=white] {1} (j);
+        \draw[<->]  (i) edge node[circle, fill=white] {2} (j);
 
-                \draw[<->]  (i) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (j) edge node[circle, fill=white] {1} (k);
+      \end{tikzpicture}
+    }
+    \caption{Vor der Kontraktion}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \resizebox{\textwidth}{!}{% <------ Don't forget this %
+      \begin{tikzpicture}[scale=0.750]
+        % Nodes
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 0.0, 0.5* 8.5)  (a)    {a};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 2.1, 0.5* 2.1)  (b)    {b};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 10.0, 0.5* 1.2)  (c)    {c};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 16.6, 0.5* 0.5)  (d)    {d};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 22.0, 0.5* 2.2)  (e)    {e};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 19.7, 0.5* 8.0)  (f)    {f};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 13.5, 0.5* 10.7)  (g)    {g};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 6.5, 0.5* 11.0)  (h)    {h};
+        % \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 4.0, 0.5* 6.0)  (i)    {i};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 9.0, 0.5* 5.7)  (j)    {j};
+        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 15.5, 0.5* 4.6)  (k)    {k};
 
-                \draw[<->]  (j) edge node[circle, fill=white] {1} (k);
-            \end{tikzpicture}
-        }
-        \caption{Vor der Kontraktion}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \resizebox{\textwidth}{!}{% <------ Don't forget this %
-            \begin{tikzpicture}[scale=0.750]
-                % Nodes
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 0.0, 0.5* 8.5)  (a)    {a};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 2.1, 0.5* 2.1)  (b)    {b};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 10.0, 0.5* 1.2)  (c)    {c};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 16.6, 0.5* 0.5)  (d)    {d};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 22.0, 0.5* 2.2)  (e)    {e};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 19.7, 0.5* 8.0)  (f)    {f};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 13.5, 0.5* 10.7)  (g)    {g};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 6.5, 0.5* 11.0)  (h)    {h};
-                % \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 4.0, 0.5* 6.0)  (i)    {i};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 9.0, 0.5* 5.7)  (j)    {j};
-                \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.5* 15.5, 0.5* 4.6)  (k)    {k};
+        \draw[<->]  (a) edge node[circle, fill=white] {4} (b);
+        \draw[<->]  (a) edge node[circle, fill=white] {3} (h);
+        \draw[<->]  (a) edge node[circle, fill=white] {3} (j);
 
+        \draw[<->]  (b) edge node[circle, fill=white] {4} (c);
+        \draw[<->]  (b) edge node[circle, fill=white] {2} (j);
 
-                \draw[<->]  (a) edge node[circle, fill=white] {4} (b);
-                \draw[<->]  (a) edge node[circle, fill=white] {3} (h);
-                \draw[<->]  (a) edge node[circle, fill=white] {3} (j);
+        \draw[<->]  (c) edge node[circle, fill=white] {4} (d);
+        \draw[<->]  (c) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (c) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (b) edge node[circle, fill=white] {4} (c);
-                \draw[<->]  (b) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (d) edge node[circle, fill=white] {3} (e);
+        \draw[<->]  (d) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (c) edge node[circle, fill=white] {4} (d);
-                \draw[<->]  (c) edge node[circle, fill=white] {2} (j);
-                \draw[<->]  (c) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (e) edge node[circle, fill=white] {4} (f);
+        \draw[<->]  (e) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (d) edge node[circle, fill=white] {3} (e);
-                \draw[<->]  (d) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (f) edge node[circle, fill=white] {3} (g);
+        \draw[<->]  (f) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (e) edge node[circle, fill=white] {4} (f);
-                \draw[<->]  (e) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (g) edge node[circle, fill=white] {3} (h);
+        \draw[<->]  (g) edge node[circle, fill=white] {2} (j);
+        \draw[<->]  (g) edge node[circle, fill=white] {2} (k);
 
-                \draw[<->]  (f) edge node[circle, fill=white] {3} (g);
-                \draw[<->]  (f) edge node[circle, fill=white] {2} (k);
+        \draw[<->]  (h) edge node[circle, fill=white] {1} (j);
 
-                \draw[<->]  (g) edge node[circle, fill=white] {3} (h);
-                \draw[<->]  (g) edge node[circle, fill=white] {2} (j);
-                \draw[<->]  (g) edge node[circle, fill=white] {2} (k);
-
-                \draw[<->]  (h) edge node[circle, fill=white] {1} (j);
-
-                \draw[<->]  (j) edge node[circle, fill=white] {1} (k);
-            \end{tikzpicture}
-        }
-        \caption{Nach der Kontraktion}
-    \end{subfigure}
-    \caption{Kontraktion von $i$}
-    \label{graphs:fig:example_contraction}
+        \draw[<->]  (j) edge node[circle, fill=white] {1} (k);
+      \end{tikzpicture}
+    }
+    \caption{Nach der Kontraktion}
+  \end{subfigure}
+  \caption{Kontraktion von $i$}
+  \label{graphs:fig:example_contraction}
 \end{figure}
 
 Häufig wird die Kontraktionsbedingung abgeschwächt, indem dann eine Kante eingefügt wird, wenn der zu kontrahierende Knoten auf \emph{einem} kürzesten Pfad liegt.
@@ -172,9 +170,9 @@ Der Knoten mit dem niedrigsten \emph{Level} wird dabei zuerst kontrahiert.
 Ihre Umkehrfunktion wird \emph{level-to-vertex}-Funktion genannt.
 
 \begin{definition}[Contrated-Graph]
-    Sei $G = (V, E)$ und $E'$ die durch die vollständige Kontraktion von $G$ erhalten Kanten mit der dazugehörigen vertex-to-level-Funktion ${vtl}$.
+  Sei $G = (V, E)$ und $E'$ die durch die vollständige Kontraktion von $G$ erhalten Kanten mit der dazugehörigen vertex-to-level-Funktion ${vtl}$.
 
-    Ein Contracted-Graph ist dann ein Tupel $C = (G_u, G_d)$. Der \emph{Upward-Graph} ist dabei $G_u = (V, E_u)$ mit $E_u = \{ (t, h) \mid (t, h) \in E' \colon {vtl}(h) > {vtl}(t) \}$, der \emph{Downward-Graph} ist $G_d = (V, E_d)$ mit $E_d = \{ (h, t) \mid (t, h) \in E' \colon {vtl}(h) < {vtl}(t) \}$.
+  Ein Contracted-Graph ist dann ein Tupel $C = (G_u, G_d)$. Der \emph{Upward-Graph} ist dabei $G_u = (V, E_u)$ mit $E_u = \{ (t, h) \mid (t, h) \in E' \colon {vtl}(h) > {vtl}(t) \}$, der \emph{Downward-Graph} ist $G_d = (V, E_d)$ mit $E_d = \{ (h, t) \mid (t, h) \in E' \colon {vtl}(h) < {vtl}(t) \}$.
 \end{definition}
 
 Der Name des Upward-Graphen ergibt sich daher, dass die Suche in einem Upward-Graph auf das Level bezogen nur \emph{aufwärts} geht.
@@ -190,40 +188,40 @@ Die Knoten wurden in der Reihenfolge $c$, $d$, $a$, $b$ kontrahiert, wodurch der
 Der optimale $c$-$a$-Pfad in $G$ hat die Distanz zwei, in $G_u$ hat er jedoch die Distanz drei.
 
 \begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \begin{tikzpicture}
-            \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*2.0)  (a)    {a};
-            \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*2.0, 1.75*1.0)  (b)    {b};
-            \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*0.0)  (c)    {c};
-            \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*1.0)  (d)    {d};
+    \begin{tikzpicture}
+      \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*2.0)  (a)    {a};
+      \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*2.0, 1.75*1.0)  (b)    {b};
+      \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*0.0)  (c)    {c};
+      \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*1.0)  (d)    {d};
 
-            \draw[<->]  (a) edge node[circle, fill=white] {1} (b);
-            \draw[<->]  (b) edge node[circle, fill=white] {1} (c);
-            \draw[<->]  (c) edge node[circle, fill=white] {1} (d);
-            \draw[<->]  (d) edge node[circle, fill=white] {2} (a);
-        \end{tikzpicture}
-        \caption{Graph $G$}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \begin{tikzpicture}
-            \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*2.0)  (a)    {a};
-            \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*2.0, 1.75*1.0)  (b)    {b};
-            \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*0.0)  (c)    {c};
-            \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*1.0)  (d)    {d};
+      \draw[<->]  (a) edge node[circle, fill=white] {1} (b);
+      \draw[<->]  (b) edge node[circle, fill=white] {1} (c);
+      \draw[<->]  (c) edge node[circle, fill=white] {1} (d);
+      \draw[<->]  (d) edge node[circle, fill=white] {2} (a);
+    \end{tikzpicture}
+    \caption{Graph $G$}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*2.0)  (a)    {a};
+      \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*2.0, 1.75*1.0)  (b)    {b};
+      \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*0.0)  (c)    {c};
+      \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*1.0)  (d)    {d};
 
-            \draw[->]  (c) edge node[circle, fill=white] {1} (b);
-            \draw[->]  (c) edge node[circle, fill=white] {1} (d);
-            \draw[->]  (d) edge node[circle, fill=white] {2} (b);
-            \draw[->]  (d) edge node[circle, fill=white] {2} (a);
-        \end{tikzpicture}
-        \caption{Upward-Graph $G_u$ zu $G$}
-    \end{subfigure}
-    \caption{Gegenbeispiel optimale Kosten im $G_u$}
-    \label{graphs:fig:counterexample_optimal_Upward}
+      \draw[->]  (c) edge node[circle, fill=white] {1} (b);
+      \draw[->]  (c) edge node[circle, fill=white] {1} (d);
+      \draw[->]  (d) edge node[circle, fill=white] {2} (b);
+      \draw[->]  (d) edge node[circle, fill=white] {2} (a);
+    \end{tikzpicture}
+    \caption{Upward-Graph $G_u$ zu $G$}
+  \end{subfigure}
+  \caption{Gegenbeispiel optimale Kosten im $G_u$}
+  \label{graphs:fig:counterexample_optimal_Upward}
 \end{figure}
 
 \subsection{Anfragen}
@@ -236,27 +234,27 @@ Die Level der Knoten auf dem Pfad steigen von beiden Seiten an, bis sie den Tref
 Die Kante $(a, j)$ ist hierbei eine Abkürzung, sie kürzt $i$ ab, was durch die gestrichelten Pfeile angedeutet wird.
 
 \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}
-        \node[circle, draw] at (0 * 1.5, -2 * 0.75)  (a)    {a};
-        \node[circle, draw] at (1 * 1.5, -4 * 0.75)  (i)    {i};
-        \node[circle, draw] at (2 * 1.5, -0 * 0.75)  (j)    {j};
-        \node[circle, draw] at (3 * 1.5, -1 * 0.75)  (k)    {k};
-        \node[circle, draw] at (4 * 1.5, -3 * 0.75)  (e)    {e};
+  \centering
+  \begin{tikzpicture}
+    \node[circle, draw] at (0 * 1.5, -2 * 0.75)  (a)    {a};
+    \node[circle, draw] at (1 * 1.5, -4 * 0.75)  (i)    {i};
+    \node[circle, draw] at (2 * 1.5, -0 * 0.75)  (j)    {j};
+    \node[circle, draw] at (3 * 1.5, -1 * 0.75)  (k)    {k};
+    \node[circle, draw] at (4 * 1.5, -3 * 0.75)  (e)    {e};
 
-        % draw axis
-        \draw[->] (-1, -4 * 0.75) -- (-1, 0) node[above] {Level};
+    % draw axis
+    \draw[->] (-1, -4 * 0.75) -- (-1, 0) node[above] {Level};
 
-        \draw[->]  (a) -- (j);
-        \draw[->]  (e) -- (k);
-        \draw[->]  (k) -- (j);
+    \draw[->]  (a) -- (j);
+    \draw[->]  (e) -- (k);
+    \draw[->]  (k) -- (j);
 
-        \draw[->, dotted]  (a) -- (i);
-        \draw[->, dotted]  (i) -- (j);
+    \draw[->, dotted]  (a) -- (i);
+    \draw[->, dotted]  (i) -- (j);
 
-    \end{tikzpicture}
-    \caption{Beispiel einer Suche im Contrated Graph}
-    \label{fig:ch:beispiel_suche}
+  \end{tikzpicture}
+  \caption{Beispiel einer Suche im Contrated Graph}
+  \label{fig:ch:beispiel_suche}
 \end{figure}
 
 Algorithmus \ref{ch:query_simple} definiert dies formal.
@@ -268,56 +266,56 @@ Dieser Pfad muss aber kein Pfad auf $G$ sein, da er noch Abkürzungen enthalten 
 In \autoref{ch:subsection:pfad_gewinnung} wird darauf eingegangen, wie diese entfernt werden können.
 
 \begin{algorithm}[ht]
-    \caption{Construction Hierarchies Query}
-    \begin{algorithmic}[1]
-        \Require Upward-Graph $G_u = (V, E_u)$, Downward-Graph $G_d = (V, E_d)$, Startknoten $s \in V$, Zielknoten $t \in V$
-        \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$, ${pre}_u$, ${dist}_d$, ${pre}_d$
-        \State ${dist}_u$, ${pre}_u$ $\leftarrow$ Dijkstra$(G_u, s)$
-        \State ${dist}_d$, ${pre}_d$ $\leftarrow$ Dijkstra$(G_d, t)$
+  \caption{Construction Hierarchies Query}
+  \begin{algorithmic}[1]
+    \Require Upward-Graph $G_u = (V, E_u)$, Downward-Graph $G_d = (V, E_d)$, Startknoten $s \in V$, Zielknoten $t \in V$
+    \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$, ${pre}_u$, ${dist}_d$, ${pre}_d$
+    \State ${dist}_u$, ${pre}_u$ $\leftarrow$ Dijkstra$(G_u, s)$
+    \State ${dist}_d$, ${pre}_d$ $\leftarrow$ Dijkstra$(G_d, t)$
 
-        \State
-        \State $m \leftarrow {none}$
-        \State $d \leftarrow \infty$
-        \State
-        Solche eine Abkürz
-        \ForAll {$v \in V$}
-        \If {${dist}_u(v) + {dist}_d(v) < d$}
-        \State $m \leftarrow v$
-        \State $d \leftarrow {dist}_u(v) + {dist}_d(v)$
-        \EndIf
-        \EndFor
+    \State
+    \State $m \leftarrow {none}$
+    \State $d \leftarrow \infty$
+    \State
+    Solche eine Abkürz
+    \ForAll {$v \in V$}
+    \If {${dist}_u(v) + {dist}_d(v) < d$}
+    \State $m \leftarrow v$
+    \State $d \leftarrow {dist}_u(v) + {dist}_d(v)$
+    \EndIf
+    \EndFor
 
-        \State
-        \State \Return $m$, ${dist}_u$, ${pre}_u$, ${dist}_d$, ${pre}_d$
-    \end{algorithmic}
-    \label{ch:query_simple}
+    \State
+    \State \Return $m$, ${dist}_u$, ${pre}_u$, ${dist}_d$, ${pre}_d$
+  \end{algorithmic}
+  \label{ch:query_simple}
 \end{algorithm}
 
 Die Korrektheit des Algorithmus ist nicht sofort ersichtlich, da nicht alle besuchten Knoten eine optimal Distanz haben sind und nur ein Teil aller Knoten besucht wird.
 Der Beweis hierfür betrachtet einen kürzesten Pfad auf $G$ und argumentiert, warum dieser gefunden wird:
 
 \begin{beweis}[Korrektheit Contracted-Graph Anfrage]\label{ch:proof:correct}
-    Der Upward-Graph $G_u$ und der Downward-Graph $G_d$ enthalten nur Kanten, die mindestens so lang sind, wie der Abstand in $G$.
-    Daher kann ein $s$-$t$-Pfad in $C$ nur dann gefunden werden, wenn auch in $G$ ein $s$-$t$-Pfad existiert.
+  Der Upward-Graph $G_u$ und der Downward-Graph $G_d$ enthalten nur Kanten, die mindestens so lang sind, wie der Abstand in $G$.
+  Daher kann ein $s$-$t$-Pfad in $C$ nur dann gefunden werden, wenn auch in $G$ ein $s$-$t$-Pfad existiert.
 
-    Nun ist zu zeigen, dass eine Suche auf $C$ die kürzesten Pfad Distanz in $G$ findet
-    Sei ${sp}_G(s, t)$ der kürzeste Pfad auf $G$ der unter allen kürzesten Pfaden den Knoten $m$ mit dem höchsten Level enthält.
-    Erstelle aus diesem Pfad $(s, \dotsc, t)$ zwei Pfade: $(s, \dotsc, m)$ und $(t, \dotsc, m)$.
+  Nun ist zu zeigen, dass eine Suche auf $C$ die kürzesten Pfad Distanz in $G$ findet
+  Sei ${sp}_G(s, t)$ der kürzeste Pfad auf $G$ der unter allen kürzesten Pfaden den Knoten $m$ mit dem höchsten Level enthält.
+  Erstelle aus diesem Pfad $(s, \dotsc, t)$ zwei Pfade: $(s, \dotsc, m)$ und $(t, \dotsc, m)$.
 
-    Betrachte den Teilpfad $(u, \dotsc, t)$ mit der Hop-Länge $n_u$.
-    Aus diesem werden alle Knoten zwischen $u$ und $t$ entfernt, die ein kleineres Level als ihre Vorgänger haben.
-    Dies wird so oft wiederholt, bis keine Knoten mehr entfernt werden.
+  Betrachte den Teilpfad $(u, \dotsc, t)$ mit der Hop-Länge $n_u$.
+  Aus diesem werden alle Knoten zwischen $u$ und $t$ entfernt, die ein kleineres Level als ihre Vorgänger haben.
+  Dies wird so oft wiederholt, bis keine Knoten mehr entfernt werden.
 
-    Betrachte den entstehenden Pfad als überlappende Tupel der Form $(v_{i}, v_{i + 1})$.
-    Für diese gilt, dass ${vtl}(v_i) < {vtl}(v_{i + 1})$, da wir uns im Teilpfad des Upward-Graphens befinden.
-    Die Knoten-Kontraktion erhält den Abstand der übrigen Knoten, also gab es zum Zeitpunkt der Kontraktion von $v_i$ einen optimalen Pfad von $v_i$ zu $v_{i + 1}$.
-    Alle Knoten, die ursprünglich zwischen ihnen lagen und entfernt wuren, haben ein kleineres Level als $v_i$, waren also zum Zeitpunkt der Kontraktion von $v_i$ bereits Kontraktiert.
-    Also gab es vor der Kontraktion von $v_i$ eine direkte Kante zu $v_{i + 1}$, diese wurde gesammelt und dazu benutzt den Upward-Graphen zu bauen.
-    Daher wird $v_{i + 1}$ von $v_i$ aus gefunden.
-    Da dies für alle überlappenden Tupel gilt, wird $t$ von $u$ aus mit optimalen Abstand gefunden.
+  Betrachte den entstehenden Pfad als überlappende Tupel der Form $(v_{i}, v_{i + 1})$.
+  Für diese gilt, dass ${vtl}(v_i) < {vtl}(v_{i + 1})$, da wir uns im Teilpfad des Upward-Graphens befinden.
+  Die Knoten-Kontraktion erhält den Abstand der übrigen Knoten, also gab es zum Zeitpunkt der Kontraktion von $v_i$ einen optimalen Pfad von $v_i$ zu $v_{i + 1}$.
+  Alle Knoten, die ursprünglich zwischen ihnen lagen und entfernt wuren, haben ein kleineres Level als $v_i$, waren also zum Zeitpunkt der Kontraktion von $v_i$ bereits Kontraktiert.
+  Also gab es vor der Kontraktion von $v_i$ eine direkte Kante zu $v_{i + 1}$, diese wurde gesammelt und dazu benutzt den Upward-Graphen zu bauen.
+  Daher wird $v_{i + 1}$ von $v_i$ aus gefunden.
+  Da dies für alle überlappenden Tupel gilt, wird $t$ von $u$ aus mit optimalen Abstand gefunden.
 
-    Analog wird für den Teilpfad $(t, \dotsc, m)$ im Downward-Graphen argumentiert.
-    \qed
+  Analog wird für den Teilpfad $(t, \dotsc, m)$ im Downward-Graphen argumentiert.
+  \qed
 \end{beweis}
 
 \subsection{Erstellung des Pfades}\label{ch:subsection:pfad_gewinnung}
@@ -331,30 +329,30 @@ Da die ${vtl}$-Funktion bijektiv ist, gilt für alle Knoten $u, v \in V$, $u \ne
 Daher reicht es für die Ersetzung der Abkürzungen in Pfaden in $C$ \emph{eine} HashMap zu benutzen, da keine Kollisionen zwischen Abkürzungen des Upward- und des Downward-Graphen entstehen können.
 
 \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[scale=0.75]
-        \node[align=left] at (1.75*-1.25,1.75*2) {Iteration 0};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*2.0)  (a_0)    {a};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*3.0, 1.75*2.0)  (d_0)    {d};
-        \draw[->]  (a_0) edge node {} (d_0);
+  \centering
+  \begin{tikzpicture}[scale=0.75]
+    \node[align=left] at (1.75*-1.25,1.75*2) {Iteration 0};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*2.0)  (a_0)    {a};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*3.0, 1.75*2.0)  (d_0)    {d};
+    \draw[->]  (a_0) edge node {} (d_0);
 
-        \node[align=left] at (1.75*-1.25,1.75*1) {Iteration 1};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*1.0)  (a_1)    {a};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*2.0, 1.75*1.0)  (c_1)    {c};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*3.0, 1.75*1.0)  (d_1)    {d};
-        \draw[->]  (a_1) edge node {} (c_1);
-        \draw[->]  (c_1) edge node {} (d_1);
+    \node[align=left] at (1.75*-1.25,1.75*1) {Iteration 1};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*1.0)  (a_1)    {a};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*2.0, 1.75*1.0)  (c_1)    {c};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*3.0, 1.75*1.0)  (d_1)    {d};
+    \draw[->]  (a_1) edge node {} (c_1);
+    \draw[->]  (c_1) edge node {} (d_1);
 
-        \node[align=left] at (1.75*-1.25,1.75*0) {Iteration 2};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*0.0)  (a_2)    {a};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*0.0)  (b_2)    {b};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*2.0, 1.75*0.0)  (c_2)    {c};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*3.0, 1.75*0.0)  (d_2)    {d};
-        \draw[->]  (a_2) edge node {} (b_2);
-        \draw[->]  (b_2) edge node {} (c_2);
-        \draw[->]  (c_2) edge node {} (d_2);
-    \end{tikzpicture}
-    \caption{Beispiel des iterativen Ersetzen von Abkürzungen}
+    \node[align=left] at (1.75*-1.25,1.75*0) {Iteration 2};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*0.0, 1.75*0.0)  (a_2)    {a};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*1.0, 1.75*0.0)  (b_2)    {b};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*2.0, 1.75*0.0)  (c_2)    {c};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1.75*3.0, 1.75*0.0)  (d_2)    {d};
+    \draw[->]  (a_2) edge node {} (b_2);
+    \draw[->]  (b_2) edge node {} (c_2);
+    \draw[->]  (c_2) edge node {} (d_2);
+  \end{tikzpicture}
+  \caption{Beispiel des iterativen Ersetzen von Abkürzungen}
 \end{figure}
 
 Um diese Funktion zu erhalten, müssen die Abkürzungen, welche beim Kontrahieren des Graphens eingefügt werden, mitsamt dem übersprungenen Knoten gesammelt werden.
@@ -362,42 +360,42 @@ Einen möglichen Algorithmus, welcher Abkürzungen in einem Pfad ersetzt, ist in
 Der Algorithmus betrachtet den Pfad mit Abkürzungen als Stapel und bearbeitet jeweils nur die beiden obersten Knoten, da das Einfügen in ein Array an einer bestimmten Stelle rechenintensiv ist.
 
 \begin{algorithm}[ht]
-    \caption{Shortcut replacement}
-    \begin{algorithmic}[1]
-        \Require Pfad $p$ mit Abkürzungen, Abkürzungungsfunktion $S \colon V \times V \to V \cup \{ {none} \}$
-        \Ensure Pfad $p'$ ohne Shortcuts
+  \caption{Shortcut replacement}
+  \begin{algorithmic}[1]
+    \Require Pfad $p$ mit Abkürzungen, Abkürzungungsfunktion $S \colon V \times V \to V \cup \{ {none} \}$
+    \Ensure Pfad $p'$ ohne Shortcuts
 
-        \If {$\text{len}(p) == 1$}
-        \State \Return $p$
-        \EndIf
-        \State
+    \If {$\text{len}(p) == 1$}
+    \State \Return $p$
+    \EndIf
+    \State
 
-        \State $p' \leftarrow ()$
-        \State
+    \State $p' \leftarrow ()$
+    \State
 
-        \While {$\text{len}(p) >= 2$}
-        \State $w \leftarrow \text{pop}(p)$
-        \State $u \leftarrow \text{pop}(p)$
-        \State $v \leftarrow S((u, w))$
-        \State
+    \While {$\text{len}(p) >= 2$}
+    \State $w \leftarrow \text{pop}(p)$
+    \State $u \leftarrow \text{pop}(p)$
+    \State $v \leftarrow S((u, w))$
+    \State
 
-        \If {$v \neq none$}
-        \State $\text{push}(p, u)$
-        \State $\text{push}(p, v)$
-        \State $\text{push}(p, w)$
-        \Else
-        \State $\text{push}(p, u)$
-        \State $\text{push}(p', w)$
-        \EndIf
-        \EndWhile
+    \If {$v \neq none$}
+    \State $\text{push}(p, u)$
+    \State $\text{push}(p, v)$
+    \State $\text{push}(p, w)$
+    \Else
+    \State $\text{push}(p, u)$
+    \State $\text{push}(p', w)$
+    \EndIf
+    \EndWhile
 
-        \State
-        \State $p' \leftarrow \text{reversed}(p')$
+    \State
+    \State $p' \leftarrow \text{reversed}(p')$
 
-        \State
-        \State \Return $p'$
-    \end{algorithmic}
-    \label{ch:alg:shortcut_replacement}
+    \State
+    \State \Return $p'$
+  \end{algorithmic}
+  \label{ch:alg:shortcut_replacement}
 \end{algorithm}
 
 \subsection{Early stop}
@@ -415,10 +413,10 @@ Mit der von \cite{schultes2007dynamic} vorgestellten Methode \emph{stall-on-dema
 Hierfür wird die Expansion eines Knotens abgebrochen, wenn er durch eine Kante des jeweils anderen Graphen günstiger erreicht werden kann.
 
 \begin{definition}[stall-on-demand]
-    Sei $C = (G_u, G_d)$ ein Contracted-Graph mit $G_u = (V, E_u)$ und $G_d = (V, E_d)$.
-    Der Knoten $u \in V$ hat keine optimale Distanz in der Dijkstra-Suche von $s$ in $G_u$, wenn zum Zeitpunkt seiner Expansion es eine Kante $(u, v, d) \in E_d$, $v \in V$, $d \in \mathbb{R}$ gibt mit ${dist}(v) + d < {dist}(u)$.
-    Die Expansion von $u$ kann dann abgebrochen werden, die aus $u$ ausgehenden Kanten müssen nicht betrachtet werden.
-    Gleiches gilt analog für $G_d$.
+  Sei $C = (G_u, G_d)$ ein Contracted-Graph mit $G_u = (V, E_u)$ und $G_d = (V, E_d)$.
+  Der Knoten $u \in V$ hat keine optimale Distanz in der Dijkstra-Suche von $s$ in $G_u$, wenn zum Zeitpunkt seiner Expansion es eine Kante $(u, v, d) \in E_d$, $v \in V$, $d \in \mathbb{R}$ gibt mit ${dist}(v) + d < {dist}(u)$.
+  Die Expansion von $u$ kann dann abgebrochen werden, die aus $u$ ausgehenden Kanten müssen nicht betrachtet werden.
+  Gleiches gilt analog für $G_d$.
 \end{definition}
 
 Betrachten wird dies an dem Beispiel in \autoref{fig:ch:stall_example}.
@@ -428,24 +426,24 @@ Bisher wurde $v$ in der Upward-Suche mit einer Distanz von eins expandiert, als 
 $u$ hat die Distanz drei in der Upward-Suche, kann aber durch die Verwendung der Upward-Kante mit der Distanz zwei erreicht werden, also ist die Distanz drei nicht optimal und von $u$ ausgehenden Kanten müssen nicht relaxiert werden.
 
 \begin{figure}
-    \centering
-    \begin{tikzpicture}[scale=1.75]
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0, 2)  (v)    {v};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1, 2)  (u)    {u};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1, 3)  (w)    {w};
+  \centering
+  \begin{tikzpicture}[scale=1.75]
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0, 2)  (v)    {v};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1, 2)  (u)    {u};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (1, 3)  (w)    {w};
 
-        \node[] at (0, 1)  (uv)    {};
-        \node[] at (1, 1)  (uu)    {};
+    \node[] at (0, 1)  (uv)    {};
+    \node[] at (1, 1)  (uu)    {};
 
-        \draw[->,blue]  (u) edge node[circle, fill=white] {1} (w);
+    \draw[->,blue]  (u) edge node[circle, fill=white] {1} (w);
 
-        \draw[->,red]  (u) edge node[circle, fill=white] {1} (v);
+    \draw[->,red]  (u) edge node[circle, fill=white] {1} (v);
 
-        \draw[->,blue]  (uv) edge node[circle, fill=white] {1} (v);
-        \draw[->,blue]  (uu) edge node[circle, fill=white] {3} (u);
-    \end{tikzpicture}
-    \caption{Beispiel stall-on-demand}
-    \label{fig:ch:stall_example}
+    \draw[->,blue]  (uv) edge node[circle, fill=white] {1} (v);
+    \draw[->,blue]  (uu) edge node[circle, fill=white] {3} (u);
+  \end{tikzpicture}
+  \caption{Beispiel stall-on-demand}
+  \label{fig:ch:stall_example}
 \end{figure}
 
 \subsection{Erstellung}
@@ -497,14 +495,14 @@ In der in \cite{abraham2011hub} vorgestellten Terminologie wird das Label des Up
 Ein kürzester Pfad wird gefunden, in dem der Knoten mit der geringsten Summe der Distanzen des Forward und Backward-Labels gefunden wird.
 
 \begin{definition}[Hub Graph]
-    Sei $G = (V, E)$.
-    Ein \emph{Hub Graph} ist $H = (L_f, L_b)$ und es gilt:
-    Die Forward-Label-Funktion $L_f \colon V \to V \times \mathbb{R}^+_0$ weist jedem Knoten ein Forward-Label zu.
-    Sei $L_f (u)$ das Forward-Label des Knotens $u \in V$, dann gibt es für jeden Knoten $v \in V$ höchstens ein $(v, d) \in L_f (u)$ und es gilt $d \geq {spd}_G(u, v)$.
-    Ein Backward-Label ist ein Forward-Label des Umkehrgraphens $G^T$.
+  Sei $G = (V, E)$.
+  Ein \emph{Hub Graph} ist $H = (L_f, L_b)$ und es gilt:
+  Die Forward-Label-Funktion $L_f \colon V \to V \times \mathbb{R}^+_0$ weist jedem Knoten ein Forward-Label zu.
+  Sei $L_f (u)$ das Forward-Label des Knotens $u \in V$, dann gibt es für jeden Knoten $v \in V$ höchstens ein $(v, d) \in L_f (u)$ und es gilt $d \geq {spd}_G(u, v)$.
+  Ein Backward-Label ist ein Forward-Label des Umkehrgraphens $G^T$.
 
-    Zusammen erfüllen die Forward-Label und die Backward-Label die Abdeckungseigenschaft:
-    Für jedes Knotenpaar $s, t \in V$ für die es einen kürzesten $s$-$t$ Pfad gibt, gibt es einen Knoten $m \in V$ mit $(m, d_f) \in L_f (s)$, $(m, d_r) \in L_r$ und $d_f + d_r = {spd}_G (s, t)$.
+  Zusammen erfüllen die Forward-Label und die Backward-Label die Abdeckungseigenschaft:
+  Für jedes Knotenpaar $s, t \in V$ für die es einen kürzesten $s$-$t$ Pfad gibt, gibt es einen Knoten $m \in V$ mit $(m, d_f) \in L_f (s)$, $(m, d_r) \in L_r$ und $d_f + d_r = {spd}_G (s, t)$.
 \end{definition}
 
 Die Definition der Label ähnelt bereits dem Beweis der Korrektheit der Contracted-Graph Query, bei diesem wurde ebenfalls mit dem Treffpunktknoten $m$ argumentiert.
@@ -519,30 +517,29 @@ Sei $H = (L_f, L_b)$ ein Hub-Graph.
 Algorithmus \ref{hl:alg:query} zeigt, wie wenige Schritte dafür notwendig sind, eine kürzeste Pfad Distanz in $H$ zu finden, nur noch das Finden des Knotens mit der geringsten Summe der Distanzen ist dafür erforderlich.
 Da die Labels den Suchbäumen der Upward- bzw. Downward-Suche entsprechen, ist die Korrektheit der Hub-Graph-Anfrage durch die Korrektheit der Contracted-Graph-Anfrage gegeben.
 
-
 \begin{algorithm}[ht]
-    \caption{Hub-Label-Anfrage}
-    \begin{algorithmic}[1]
-        \Require Forward-Label-Funktion $L_f$, Backward-Label-Funktion $L_b$, Startknoten $s \in V$, Zielknoten $t \in V$
-        \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$
-        \State $l_s \leftarrow L_f (s)$
-        \State $l_t \leftarrow L_b (t)$
+  \caption{Hub-Label-Anfrage}
+  \begin{algorithmic}[1]
+    \Require Forward-Label-Funktion $L_f$, Backward-Label-Funktion $L_b$, Startknoten $s \in V$, Zielknoten $t \in V$
+    \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$
+    \State $l_s \leftarrow L_f (s)$
+    \State $l_t \leftarrow L_b (t)$
 
-        \State
-        \State $m \leftarrow {none}$
-        \State $d \leftarrow \infty$
+    \State
+    \State $m \leftarrow {none}$
+    \State $d \leftarrow \infty$
 
-        \ForAll {$v \in V \colon (v, d_f) \in l_s \land (v, d_r) \in l_t$}
-        \If {$d_f + d_r < d$}
-        \State $d \leftarrow d_f + d_r$
-        \State $m \leftarrow v$
-        \EndIf
-        \EndFor
+    \ForAll {$v \in V \colon (v, d_f) \in l_s \land (v, d_r) \in l_t$}
+    \If {$d_f + d_r < d$}
+    \State $d \leftarrow d_f + d_r$
+    \State $m \leftarrow v$
+    \EndIf
+    \EndFor
 
-        \State
-        \State \Return $m$, $d$
-    \end{algorithmic}
-    \label{hl:alg:query}
+    \State
+    \State \Return $m$, $d$
+  \end{algorithmic}
+  \label{hl:alg:query}
 \end{algorithm}
 
 \subsection{Pfaderstellung}
@@ -564,16 +561,16 @@ Um das Finden der Vorgänger effizienter zu machen, wird nicht der Vorgänger se
 \autoref{ch:fig:label} zeigt ein Label solcher Art.
 
 \begin{figure}[ht]
-    \centering
-    \begin{tabular}{@{}llllll@{}}
-        \toprule
-        Index           &  & 0   & 1   & 2   & 2 \\ \midrule
-        Vertex          &  & $e$ & $j$ & $k$ &   \\
-        Distanz         &  & 0   & 3   & 2   &   \\
-        Vorgänger Index &  & -   & 2   & 0   &   \\ \bottomrule
-    \end{tabular}
-    \caption{Beispiel eines Labels}
-    \label{ch:fig:label}
+  \centering
+  \begin{tabular}{@{}llllll@{}}
+    \toprule
+    Index           &  & 0   & 1   & 2   & 2 \\ \midrule
+    Vertex          &  & $e$ & $j$ & $k$ &   \\
+    Distanz         &  & 0   & 3   & 2   &   \\
+    Vorgänger Index &  & -   & 2   & 0   &   \\ \bottomrule
+  \end{tabular}
+  \caption{Beispiel eines Labels}
+  \label{ch:fig:label}
 \end{figure}
 
 \subsection{Erstellung}

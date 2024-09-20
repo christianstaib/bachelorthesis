@@ -12,10 +12,10 @@ Zwar gibt es Möglichkeiten, den Graphen zu verändern, und schneller Pfade zwis
 Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden von kürzesten Pfaden und kürzesten Pfad-Distanzen (\emph{Contraction Hierarchies} und \emph{Hierarchical Hub Labeling}) auf diese Graphen anwenden lassen.
 
 \begin{figure}[ht]%
-    \centering
-    \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth]{img/thessaloniki-visibility.png}}}%
-    \caption{Sichtbarkeitsgraph des Hafens von Thessaloniki}%
-    \label{fig:thessaloniki-visibility}%
+  \centering
+  \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth]{img/thessaloniki-visibility.png}}}%
+  \caption{Sichtbarkeitsgraph des Hafens von Thessaloniki}%
+  \label{fig:thessaloniki-visibility}%
 \end{figure}
 
 \section{Bearbeitete Graphen}
@@ -30,24 +30,24 @@ Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kant
 die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(b, a)$.
 
 \begin{table}[ht]
-    \centering
-    \begin{tabular}{
-            l % Graph
-            S[table-format = 7.0] % Zeit
-            S[table-format = 9.0] % Zeit
-            S[table-format = 4.1] % Zeit
-        }
-        \toprule
-        {Graph}            & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad} \\ \midrule
-        aegaeis-graph      & 524881      & 2795322     & 5.32562999994        \\
-        aegaeis-visibility & 201040      & 310231834   & 1543.13486868        \\
-        medi-graph         & 795606      & 4223566     & 5.30861506826        \\
-        medi-visibility    & 310114      & 730772544   & 2356.46421638        \\
-        pata-graph         & 2240339     & 11632900    & 5.1924731034         \\
-        pata-visibility    & 1002171     & 315653758   & 314.969958221        \\ \bottomrule
-    \end{tabular}
-    \caption{Bearbeite Graphen}
-    \label{table:input_graphs}
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 7.0] % Zeit
+      S[table-format = 9.0] % Zeit
+      S[table-format = 4.1] % Zeit
+    }
+    \toprule
+    {Graph}            & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad} \\ \midrule
+    aegaeis-graph      & 524881      & 2795322     & 5.32562999994        \\
+    aegaeis-visibility & 201040      & 310231834   & 1543.13486868        \\
+    medi-graph         & 795606      & 4223566     & 5.30861506826        \\
+    medi-visibility    & 310114      & 730772544   & 2356.46421638        \\
+    pata-graph         & 2240339     & 11632900    & 5.1924731034         \\
+    pata-visibility    & 1002171     & 315653758   & 314.969958221        \\ \bottomrule
+  \end{tabular}
+  \caption{Bearbeite Graphen}
+  \label{table:input_graphs}
 \end{table}
 
 \subsection{Triangulierung}
@@ -62,14 +62,13 @@ Erst Triangulierung. Wenn Dreiecke sehr schmal sind, dann ersetzen durch Subdrei
 Die Knoten eines triangulierten Graphen $G_g$ bilden eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
 Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.
 
-
 \begin{figure}[ht]%
-    \centering
-    \subfloat[\centering aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
-    %\qquad
-    \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
-    \caption{Hafen von Thessaloniki}%
-    \label{fig:thessaloniki_comparison}%
+  \centering
+  \subfloat[\centering aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
+  %\qquad
+  \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
+  \caption{Hafen von Thessaloniki}%
+  \label{fig:thessaloniki_comparison}%
 \end{figure}
 
 \section{Speedup-Techniken}
