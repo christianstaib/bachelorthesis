@@ -7,10 +7,10 @@ Die Ergebnisse wurden auf gleichen System, aber nicht auf demselben erzeugt.
 
 Die bereitgestellten Graphen wurden vor ihrer Nutzung untersucht
 Hierfür wurde zuerst die Verteilung der Knotengrade untersucht.
-Dabei wurden die folgenden Histogramme erstellt.
+Dabei wurden die Histogramme in \autoref{ergebnisse:fig:degree_hist} erstellt.
 Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten einen Grad kleiner \num{2000} haben.
 
-\begin{figure}[!ht]
+\begin{figure}[h!]
   \begin{subfigure}[b]{0.5\textwidth}
     \resizebox{\textwidth}{!}{%
       \begin{tikzpicture}
@@ -107,12 +107,12 @@ Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten eine
     \caption{pata-vis}
   \end{subfigure}
   \caption{Verteilung der Kantengrade}
+  \label{ergebnisse:fig:degree_hist}
 \end{figure}
 
 Wie diskutiert ist die Summe der quadratischen Knotengrade ein Indikator für die Performanz der Kontraktion.
 Diese sind in \autoref{table:sum_quad_degree} sichtbar.
 Obwohl pata die meisten Knoten hat, ist die summe der Quadrate am kleinsten.
-\todo{Traingulierungen auch anzeigen.}
 
 \begin{table}[ht]
   \centering
@@ -130,7 +130,7 @@ Obwohl pata die meisten Knoten hat, ist die summe der Quadrate am kleinsten.
   \label{table:sum_quad_degree}
 \end{table}
 
-\begin{figure}[!ht]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
+\begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
   \begin{subfigure}[b]{0.5\textwidth}
     \resizebox{\textwidth}{!}{%
       \begin{tikzpicture}
@@ -245,6 +245,302 @@ Obwohl pata die meisten Knoten hat, ist die summe der Quadrate am kleinsten.
 % 0.068\% korrekt
 % 0.6179520250326755 average
 
+\section{Dijkstra}
+
+Für die Berechnung des Speedups der in dieser Arbeit angewandeten Methoden wurden für jeden Graph \num{1000} sequentielle $s$-$t$ Dijkstra-Suchen asugeführt und die durschnittliche Laufzeit ermittelt.
+Die durschnittliche Laufzeiten für das Finden und erstellen des kürzesten Pfad sind in Tabelle \ref{ergebnisse::table:dijkstra_one_to_one} dargestellt.
+Es ist ersichtlich, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten haben.
+
+Zusätzlich zur durschnitlichen Laufzeit wurde die die Durschnitswerte der Hop-Länge, des Dijsktra-Rank und der Queue pops ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
+Es zeigte sich, dass die durschnittliche Hop-Länge der Sichtbarkeitsgraphen deutlich signifikant kürzer ist, als die der Triangulierungen.
+Obwohl die Sichtbarkeitsgraphen eine niedriger Anzahl an Knoten haben, ist die durschnitliche Anzahl der Queue pops größer.
+Dies legt Nahe, dass die verwendung einer Warteschlange, welche eine \emph{Drecrease-Key} Funktion anbietet, die Geschwindigkeit der Dijkstra Suche erhöhen würde.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 4.1] % Zeit
+      S[table-format = 3.0] % hop-länge
+      S[table-format = 7.0] % rank
+      S[table-format = 7.0] % queue pops
+    }
+    \toprule
+    {Graph}            & {$\varnothing$ $t({spd})$} & {$\varnothing$  Hop-Länge} & {$\varnothing$ Dijkstra Rank} & {$\varnothing$ Queue pops} \\
+                       & {(\si{\ms})}               &                            &                               &                            \\
+    \midrule
+    aegaeis-graph      & 60.281198                  & 215.7201                   & 260447.36                     & 325845.56                  \\
+    aegaeis-visibility & 630.434928                 & 16.311                     & 98650.82                      & 517346.63                  \\
+    medi-graph         & 87.08376                   & 340.445                    & 394855.78                     & 494553.97                  \\
+    medi-visibility    & 1279.67479                 & 23.6149                    & 154092.42                     & 959206.4                   \\
+    pata-graph         & 265.825771                 & 883.979                    & 1120841.9                     & 1387047.8                  \\
+    pata-visibility    & 1017.695977                & 63.817                     & 498570.2                      & 2429689.8                  \\ \bottomrule
+  \end{tabular}
+  \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
+\end{table}
+
+\section{Graphen-Kontraktion}
+
+Ausgangspunkt der Analyzse, ob sich die in dieser Arbeit bearbeiteten Sichtbarkeitsgraphen kontrahieren lassen, war die Anwendung der klassischen Graphen-Kontraktion mit Witness-Suche, wobei ein für diese Arbeit entwickeltes Programm genutzt wurde.
+Die Reihenfolge der Kontrraktion wurde dabei durch die Kanten-Differenz mit Lazy-Popping bestimmt.
+Für die triangulierten Graphen war es möglich einen Contracted-Graphen zu erstellen, die Bearbeitung der Sichtbarkeitsgraphen wurde nach drei Tagen abgebrochen, wobei in dieser Zeit noch nicht alle initalen Kanten-Differenzen berechnet wurden.
+Die Ergebnisse der trianguleirten Graphen sind in Tabelle \autoref{fig:ergebnisse:ch_graph_kontraktion_triangulierungen} zu sehen.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      r % Erstellung
+      S[table-format = 1.2] % Abkürzungen/Katen
+      S[table-format = 9.0] % average time spd
+      S[table-format = 4.0] % speedup
+    }
+    \toprule
+    {Graph}       & {Erstellung} & {$\frac{\text{Abkürzungen} (C)}{\text{Kanten} (G)}$} & {$\varnothing$ $t({spd})$} & {Speedup}                          \\
+    {}            & {(min)}      & {}                                                   & {(\si{\us})}               & {}                                 \\
+    \midrule
+    aegaeis-graph & 2m 22s       & \fpeval{3047836/2795322}                             & 313.966                    & \fpeval{(60.281198*1000)/313.966}  \\
+    medi-graph    & 3m 17s       & \fpeval{4535136/4223566}                             & 304.089                    & \fpeval{(87.08376*1000)/304.089}   \\
+    pata-graph    & 9m 54s       & \fpeval{14187336/11632900}                           & 435.552                    & \fpeval{(265.825771*1000)/435.552} \\  \bottomrule
+  \end{tabular}
+  \caption{CH Graphen-Kontraktion}
+  \label{fig:ergebnisse:ch_graph_kontraktion_triangulierungen}
+\end{table}
+
+Bassierend auf den Contracted-Graphen wurde jeweils ein Hub-Graph berechnet, die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:hl_graph_kontraktion_triangulierungen} zu sehen.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      r % Erstellung
+      S[table-format = 3.0] % label
+      S[table-format = 3.2] % average time spd
+      S[table-format = 6.] % speedup
+    }
+    \toprule
+    {Graph}       & {Erstellung}     & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup}                        \\
+    {}            & {}               & {}                                   & {(\si{\us})}               & {}                               \\
+    \midrule
+    aegaeis-graph & 7m 11s           & 141.4722365640974                    & 2.334                      & \fpeval{(60.281198*1000)/2.334}  \\
+    medi-graph    & 9m \phantom{0}1s & 115.88322360565405                   & 1.893                      & \fpeval{(87.08376*1000)/1.893}   \\
+    pata-graph    & 29m 45s          & 133.48887779929734                   & 2.415                      & \fpeval{(265.825771*1000)/2.415} \\
+    \bottomrule
+  \end{tabular}
+  \caption{HL Graphen-Kontraktion}
+  \label{fig:ergebnisse:hl_graph_kontraktion_triangulierungen}
+\end{table}
+
+Als zusätzlicher Anhaltspunkt um die Qualität der erzeugten Contracted-Graphen zu beurteilen wurde ein externes Programm benutzt, um ebenfalls Contracted-Graphen zu erzeugen.
+Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:fmi_ch_graph_kontraktion_triangulierungen} aufgelistet.
+Da dieses Programm ein anders Format zur Speicherung benutz, wurden die Anfrage-Zeiten nicht erhoben.
+Dieses Programm kontrahiert mehrere Knoten gleichzeitig, indem es \emph{Unabhänige Teilmengen} von Knoten findet, und kann daher besser parallel arbeiten, durch den hohen Grad der Sichtbarkeitsgraphen ist jedoch anzunehmen, dass es nur wenige, kleine unabhängige Teilmengen gibt.
+Auch dieses Programm hat nach drei Tagen Laufzeit auf den Sichtbarkeitsgraphen keine Ergebnisse produziert.
+
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      r % Erstellung
+      S[table-format = 1.2] % Abkürzungen/Katen
+      S[table-format = 9.0] % average time spd
+      S[table-format = 4.0] % speedup
+    }
+    \toprule
+    {Graph}       & {Erstellung} & {$\frac{\text{Abkürzungen} (C)}{\text{Kanten} (G)}$} \\
+    {}            & {(min)}      & {}                                                   \\
+    \midrule
+    aegaeis-graph & 22s          & \fpeval{(5446922-(2795322/2))/2795322}               \\
+    medi-graph    & 34s          & \fpeval{(8156314-(4223566/2))/4223566}               \\
+    pata-graph    & 1m 48s       & \fpeval{(23557322-(11632900/2))/11632900}            \\  \bottomrule
+  \end{tabular}
+  \caption{FMI CH Graphen-Kontraktion}
+  \label{fig:ergebnisse:fmi_ch_graph_kontraktion_triangulierungen}
+\end{table}
+
+\section{PEOPLE}
+
+Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung von Contracted und Hub Graphen lies sie auch die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
+
+\subsection{Contracted Graph}
+
+Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung eines Contracted Graphens lies sich auf alle Graphen anwenden.
+Die erzielten Werte der ERstellung sind in \autoref{table:ergebnisse:people_ch_erstellung} gesammelt.
+
+Der Speedup ist in \autoref{table:ergebnisse:people_ch_speedup} zusammgenfasst.
+Der Speedup der Trianuglierten Graphen ist deutlich kleiner, als der mit CH Witness, jedoch eine größenordnung schneller.
+Der Speedup der Sichtbarkeitsgraphen ist kleines als eine Größenordnung.
+Das sollte noch erkundet werden, warum.
+
+pata hat trotzem mehr Speedup, weil von der Struktur her schon fast ein Straßengraph
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 4.0] % Erstellung
+      S[table-format = 1.2] % Abkürzungen/Katen
+      S[table-format = 3.2] % average time spd
+      S[table-format = 3.2] % speedup
+    }
+    \toprule
+    {Graph}            & {Erstellung} & {$\frac{\text{Abkürzungen} (C)}{\text{Kanten} (G)}$} & {$\varnothing$ $t({spd})$} & {Speedup}                      \\
+    {}                 & {}           & {}                                                   & {(\si{\ms})}               & {}                             \\ \midrule
+    aegaeis-graph      &              & \fpeval{12443056/2795322}                            & 2.290886                   & \fpeval{60.281198/2.290886}    \\
+    aegaeis-visibility &              & \fpeval{214987558/310231834}                         & 408.948758                 & \fpeval{630.434928/408.948758} \\
+    medi-graph         &              & \fpeval{20003908/4223566}                            & 3.38788                    & \fpeval{87.08376/3.38788}      \\
+    medi-visibility    &              & \fpeval{468641256/730772544}                         & 832.555567                 & \fpeval{1279.67479/832.555567} \\
+    pata-graph         &              & \fpeval{70624466/11632900}                           & 10.16729                   & \fpeval{265.825771/10.16729}   \\
+    pata-visibility    &              & \fpeval{613324174/315653758}                         &                            & \fpeval{1017.695977/1}         \\  \bottomrule
+  \end{tabular}
+  \caption{Speedup der mit PEOPLE erstellten Contracted Graphen}
+  \label{table:ergebnisse:people_ch_speedup}
+\end{table}
+
+\subsection{Hub Graph}
+
+\subsubsection{Bootstraping HL}
+
+Das Merging war deutlicht teruer als erwartet.
+Dies ist dadurch zu erklären, dass für jeden Knoten die Anzahl der ausgehenden Contrated Graph Knoten viele Labels gemerged werden, welche durschnitlich sehr groß sind.
+Das Mergen lässt sich aber gut parallisieren, durch eine Fold Operation, bei der jeder Thread für sich eine Menge an Labels merged.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{ % DIREKT
+      l % Graph
+      S[table-format = 4.0] % creation zeit
+      S[table-format = 4.1] % average time
+    }
+    \toprule
+    {Graph}            & {Erstellung}       & {$\varnothing$ Label Größe} \\
+    {}                 & {(min)}            & {}                          \\ \midrule
+    aegaeis-graph      & 86.55              & 225.21998319619112          \\
+    aegaeis-visibility & 357.9166666666667  & 2447.866444488659           \\
+    medi-graph         & 191.06666666666666 & 262.34248736183486          \\
+    medi-visibility    & 1317.85            & 3528.6126965393596          \\
+    pata-graph         & 1706.5333333333333 & 451.8001829187458           \\
+    pata-visibility    & 2657.5             & 1823.062327697596           \\  \bottomrule
+  \end{tabular}
+  \caption{Erstellung von Hub Graphen mit PEOPLE}
+\end{table}
+
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      r % Erstellung
+      S[table-format = 3.0] % label
+      S[table-format = 3.2] % average time spd
+      S[table-format = 6.] % speedup
+    }
+    \toprule
+    {Graph}       & {Erstellung}     & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup}                        \\
+    {}            & {}               & {}                                   & {(\si{\us})}               & {}                               \\
+    \midrule
+    aegaeis-graph & 7m 11s           & 141.4722365640974                    & 2.334                      & \fpeval{(60.281198*1000)/2.334}  \\
+    medi-graph    & 9m \phantom{0}1s & 115.88322360565405                   & 1.893                      & \fpeval{(87.08376*1000)/1.893}   \\
+    pata-graph    & 29m 45s          & 133.48887779929734                   & 2.415                      & \fpeval{(265.825771*1000)/2.415} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Erstellung von Hub Graphen mit PEOPLE}
+\end{table}
+
+\subsubsection{Direkt HL}
+
+Das Anwenden des des Algorithmus zur Berechnung des Hub GRaphens hat gut funktioniert.
+\todo{DIE LABELS SIND MINIMAL UNTERSCHIEDLICH GROß}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{% MERGE ONLY
+      l % Graph
+      S[table-format = 4.0] % creation zeit
+      S[table-format = 4.1] % average time
+    }
+    \toprule
+    {Graph}            & {Erstellung}       & {$\varnothing$ Label Größe} \\
+    {}                 & {(min)}            & {}                          \\ \midrule
+    aegaeis-graph      & 12.3               & 225.18963155458096          \\
+    aegaeis-visibility & 455.48333333333335 & 2446.9511241543973          \\
+    medi-graph         & 19.75              & 262.32183266591755          \\
+    medi-visibility    & 1338.4833333333333 & 3527.5645951837378          \\
+    pata-graph         & 82.48333333333333  & 451.71017734369667          \\
+    pata-visibility    & 847.2833333333333  & 1822.0561604813242          \\  \bottomrule
+  \end{tabular}
+  \caption{Erstellung von Hub Graphen durch Merging der mit PEOPLE erzeugen Contracted Graphen}
+\end{table}
+
+\subsubsection{Vergleich}
+
+Für die Sichtbarkeitsgraphen ist es effizienter direkt die HL zu berechen.
+Für die Triangulierten gRaphen ist es effizietner zuerst die  Contrated Graphen zu berechen.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{ %VERGLEICH
+      l % Graph
+      S[table-format = 4.0] % creation zeit
+      S[table-format = 4.0] % average time
+    }
+    \toprule
+    {Graph}            & {CH \& Merging}               & {HL DIREKT}                  \\
+    {}                 & {(min)}                       & {(min)}                      \\ \midrule
+    aegaeis-graph      & \bfseries 32.5                & 86.55                        \\
+    aegaeis-visibility & 809.3                         & \bfseries  357.9166666666667 \\
+    medi-graph         & \bfseries  57.96666666666667  & 191.06666666666666           \\
+    medi-visibility    & 2591.15                       & \bfseries  1317.85           \\
+    pata-graph         & \bfseries  424.65000000000003 & 1706.5333333333333           \\
+    pata-visibility    & 3532.366666666667             & \bfseries 2657.5             \\  \bottomrule
+  \end{tabular}
+  \caption{HL  merged}
+\end{table}
+
+\subsection{Vertex-to-level Vergeleich}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 6.0] % random
+      S[table-format = 6.0] % degree large to small
+      S[table-format = 6.0] % queue pops
+    }
+    \toprule
+    {Graph}            & {random} & {degree (small to large)} & {degree (large to small)} \\ \midrule
+    aegaeis-graph      & 3674.8   & 1313.9                    & 22471.6                   \\
+    aegaeis-visibility & 17143.0  & 7533.1                    & 57248.0                   \\
+    medi-graph         & 3804.2   & 1577.5                    & 32058.1                   \\
+    medi-visibility    & 24135.1  & 12791.3                   & 76832.9                   \\
+    pata-graph         & 4708.9   & 1639.1                    & 61296.9                   \\
+    pata-visibility    & 23282.4  & 10094.1                   & 112915.8                  \\ \bottomrule
+  \end{tabular}
+  \caption{Predicted HL Label Size, 1000}
+\end{table}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 6.0] % random
+      S[table-format = 6.0] % degree large to small
+      S[table-format = 6.0] % queue pops
+    }
+    \toprule
+    {Graph}            & {random} & {degree (small to large)} & {degree (large to small)} \\ \midrule
+    aegaeis-graph      & 52.5     & 11.2                      & 941.6                     \\
+    aegaeis-visibility & 3110.7   & 905.0                     & 13061.7                   \\
+    medi-graph         & 46.8     & 15.0                      & 1299.2                    \\
+    medi-visibility    & 4203.9   & 1322.7                    & 16855.0                   \\
+    pata-graph         & 31.4     & 9.7                       & 1064.8                    \\
+    pata-visibility    & 1305.7   & 264.3                     & 9341.4                    \\ \bottomrule
+  \end{tabular}
+  \caption{Predicted CH Degree, 1000}
+\end{table}
+
+
 % `target/release/hl_predict_orderings -g ../graphs/aegaeis-ref-visibility.fmi -h /pfs/work7/workspace/scratch/st_st162081-graph_data/data_final/aegaeis-ref-visibility/hl_ch_bruteforce.bincode -l 1000 -p 1000000 -s tests/data/aegaeis-ref-graph_hl.bincode`
 % hl:
 % simple ordering                                                        1473.27
@@ -314,334 +610,23 @@ Obwohl pata die meisten Knoten hat, ist die summe der Quadrate am kleinsten.
 % degree (small to large)                                                228.77
 % degree (large to small)                                                9335.24
 
-\section{Dijkstra}
-
-Für die Berechnung des Speedups der in dieser Arbeit angewandeten Methoden wurden für jeden Graph \num{1000} sequentielle $s$-$t$ Dijkstra-Suchen asugeführt und die durschnittliche Laufzeit ermittelt.
-Die durschnittliche Laufzeiten für das Finden und erstellen des kürzesten Pfad sind in Tabelle \ref{ergebnisse::table:dijkstra_one_to_one} dargestellt.
-Es ist ersichtlich, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten haben.
-
-\begin{table}[h!]
+\begin{table}[]
   \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 4.1] % Zeit
-    }
-    \toprule
-    {Graph}            & {$\varnothing$ $t({spd})$} \\
-    {}                 & {ms}                       \\ \midrule
-    aegaeis-graph      & 60.281198                  \\
-    aegaeis-visibility & 630.434928                 \\
-    medi-graph         & 87.08376                   \\
-    medi-visibility    & 1279.67479                 \\
-    pata-graph         & 265.825771                 \\
-    pata-visibility    & 1017.695977                \\ \bottomrule
-  \end{tabular}
-  \caption{Durchschnitliche Laufzeit einer Dijkstra Suche}
-  \label{ergebnisse::table:dijkstra_one_to_one}
-\end{table}
-
-Zusätzlich zur durschnitlichen Laufzeit wurde die die Durschnitswerte der Hop-Länge, des Dijsktra-Rank und der Queue pops ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
-Es zeigte sich, dass die durschnittliche Hop-Länge der Sichtbarkeitsgraphen deutlich signifikant kürzer ist, als die der Triangulierungen.
-Obwohl die Sichtbarkeitsgraphen eine niedriger Anzahl an Knoten haben, ist die durschnitliche Anzahl der Queue pops größer.
-Dies legt Nahe, dass die verwendung einer Warteschlange, welche eine \emph{Drecrease-Key} Funktion anbietet, die Geschwindigkeit der Dijkstra Suche erhöhen würde.
-
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 3.1] % hop-länge
-      S[table-format = 7.0] % rank
-      S[table-format = 7.0] % queue pops
-    }
-    \toprule
-    {Graph}            & {$\varnothing$  Hop-Länge} & {$\varnothing$ Dijkstra Rank} & {$\varnothing$ Queue pops} \\ \midrule
-    aegaeis-graph      & 215.7201                   & 260447.36                     & 325845.56                  \\
-    aegaeis-visibility & 16.311                     & 98650.82                      & 517346.63                  \\
-    medi-graph         & 340.445                    & 394855.78                     & 494553.97                  \\
-    medi-visibility    & 23.6149                    & 154092.42                     & 959206.4                   \\
-    pata-graph         & 883.979                    & 1120841.9                     & 1387047.8                  \\
-    pata-visibility    & 63.817                     & 498570.2                      & 2429689.8                  \\ \bottomrule
-  \end{tabular}
-  \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
-\end{table}
-
-\section{Graphen-Kontraktion}
-
-Es wurde versucht die CH mit Witness, Edge Difference, Lacy Popping zu erstellen.
-Dies hat für die Sichtbarkeitsgraphen nicht funktioniert, da 3 Tage nicht ausreichten die Graphen zu erzeugen.
-Die Suche ist einfach zu teuer.
-Pro Vorgänger muss eine Suche zu allen Nachfolgern gemacht werden.
-
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 4.0] % Erstellung
-      S[table-format = 1.2] % Abkürzungen/Katen
-      S[table-format = 3.0] % average time spd
-      S[table-format = 4.0] % speedup
-    }
-    \toprule
-    {Graph}       & {Erstellung} & {$\frac{\text{Abkürzungen} (C)}{\text{Kanten} (G)}$} & {$\varnothing$ $t({spd})$} & {Speedup} \\
-    {}            & {(min)}      & {}                                                   & {(us)}                     & {}        \\ \midrule
-    aegaeis-graph & 2m22.704s    & 3047836                                              & 313.966                    &           \\
-    medi-graph    & 3m17.204s    & 4535136                                              & 304.089                    &           \\
-    pata-graph    & 9m54.617s    & 14187336                                             & 435.552                    &           \\  \bottomrule
-  \end{tabular}
-  \caption{CH Graphen-Kontraktion}
-\end{table}
-
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 4.0] % Erstellung
-      S[table-format = 1.2] % Abkürzungen/Katen
-      S[table-format = 3.2] % average time spd
-      S[table-format = 3.2] % speedup
-    }
-    \toprule
-    {Graph}       & {Erstellung} & {Label Size} & {$\varnothing$ $t({spd})$} & {Speedup} \\
-    {}            & {(min)}      & {}           & {(ms)}                     & {}        \\ \midrule
-    aegaeis-graph &              &              &                            &           \\
-    medi-graph    &              &              &                            &           \\
-    pata-graph    &              &              &                            &           \\  \bottomrule
-  \end{tabular}
-  \caption{HL Graphen-Kontraktion}
-\end{table}
-
-\todo{Shortcuts durch Kanten, HL Werte}
-
-\section{Hitting Set}
-
-Für die Graphen wurden jeweils ein Hitting Set über \num{100000} Pfade erstellt.
-Diese Pfade wurden mit Dijkstra erstellt.
-Die dafür benötigte Zeit ist in der \autoref{table:ergebnisse:100k_hitting_set_time} angeben.
-Es hätte durchaus mehr Zeit in mehr Pfade gesteckt werden können, jedoch wurde bewusste wenig Aufwand darin gesteckt.
-Wenn das auch auch so funktioniert, dann kann mit den Speedup Techniken viel schneller viel mehr PFade generiert werden.
-
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 4.0] % creation zeit
-    }
-    \toprule
-    {Graph}            & {Erstellung}       \\
-    {}                 & {(min)}            \\ \midrule
-    aegaeis-graph      & 3.4333333333333336 \\
-    aegaeis-visibility & 47.65              \\
-    medi-graph         & 4.883333333333333  \\
-    medi-visibility    & 102.38333333333334 \\
-    pata-graph         & 12.35              \\
-    pata-visibility    & 62.81666666666667  \\  \bottomrule
-  \end{tabular}
-  \caption{Erstellung eines Hitting-Set über \num{100000} Pfade, welche mit Dijkstra-Suchen erzeugt wurden}
-  \label{table:ergebnisse:100k_hitting_set_time}
-\end{table}
-
-\section{PEOPLE}
-
-Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung von Contracted und Hub Graphen lies sie auch die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
-
-\subsection{Contracted Graph}
-
-Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung eines Contracted Graphens lies sich auf alle Graphen anwenden.
-Die erzielten Werte der ERstellung sind in \autoref{table:ergebnisse:people_ch_erstellung} gesammelt.
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 4.0] % creation zeit
-      S[table-format = 9.0] % shortcuts added
-      S[table-format = 4.1] % Knotengrad
-    }
-    \toprule
-    {Graph}            & {Erstellung}       & {Abkürzungen} & {$\varnothing$ Grad} \\
-    {}                 & {(min)}            & {}            & {}                   \\ \midrule
-    aegaeis-graph      & 20.2               & 12443056      & 14.515443            \\
-    aegaeis-visibility & 353.81666666666666 & 214987558     & 1288.5282            \\
-    medi-graph         & 38.21666666666667  & 20003908      & 15.2253065           \\
-    medi-visibility    & 1252.6666666666667 & 468641256     & 1913.623             \\
-    pata-graph         & 342.1666666666667  & 70624466      & 18.35748             \\
-    pata-visibility    & 2685.0833333333335 & 613324174     & 457.05353            \\  \bottomrule
-  \end{tabular}
-  \caption{Erstellung von Contracted Graphen mit PEOPLE}
-  \label{table:ergebnisse:people_ch_erstellung}
-\end{table}
-
-Der Speedup ist in \autoref{table:ergebnisse:people_ch_speedup} zusammgenfasst.
-Der Speedup der Trianuglierten Graphen ist deutlich kleiner, als der mit CH Witness, jedoch eine größenordnung schneller.
-Der Speedup der Sichtbarkeitsgraphen ist kleines als eine Größenordnung.
-Das sollte noch erkundet werden, warum.
-
-pata hat trotzem mehr Speedup, weil von der Struktur her schon fast ein Straßengraph
-
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 4.0] % Erstellung
-      S[table-format = 1.2] % Abkürzungen/Katen
-      S[table-format = 3.2] % average time spd
-      S[table-format = 3.2] % speedup
-    }
-    \toprule
-    {Graph}            & {Erstellung}       & {$\frac{\text{Abkürzungen} (C)}{\text{Kanten} (G)}$} & {$\varnothing$ $t({spd})$} & {Speedup}          \\
-    {}                 & {(min)}            & {}                                                   & {(ms)}                     & {}                 \\ \midrule
-    aegaeis-graph      & 20.2               & 4.451385564883044                                    & 2.337158                   & 25.792521515447394 \\
-    aegaeis-visibility & 353.81666666666666 & 0.6929899979252291                                   & 443.650843                 & 1.421015958714182  \\
-    medi-graph         & 38.21666666666667  & 4.736260307048593                                    & 3.443191                   & 25.291585625078596 \\
-    medi-visibility    & 1252.6666666666667 & 0.6412956532751182                                   & 938.863249                 & 1.363004453910625  \\
-    pata-graph         & 342.1666666666667  & 6.071097146885127                                    & 10.199549                  & 26.062502469471934 \\
-    pata-visibility    & 2685.0833333333335 & 1.9430282658000226                                   & 257.635631                 & 3.950136761168722  \\  \bottomrule
-  \end{tabular}
-  \caption{Speedup der mit PEOPLE erstellten Contracted Graphen}
-  \label{table:ergebnisse:people_ch_speedup}
-\end{table}
-
-\subsection{Hub Graph}
-
-\subsubsection{Bootstraping HL}
-
-Das Merging war deutlicht teruer als erwartet.
-Dies ist dadurch zu erklären, dass für jeden Knoten die Anzahl der ausgehenden Contrated Graph Knoten viele Labels gemerged werden, welche durschnitlich sehr groß sind.
-Das Mergen lässt sich aber gut parallisieren, durch eine Fold Operation, bei der jeder Thread für sich eine Menge an Labels merged.
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{ % DIREKT
-      l % Graph
-      S[table-format = 4.0] % creation zeit
-      S[table-format = 4.1] % average time
-    }
-    \toprule
-    {Graph}            & {Erstellung}       & {$\varnothing$ Label Größe} \\
-    {}                 & {(min)}            & {}                          \\ \midrule
-    aegaeis-graph      & 86.55              & 225.21998319619112          \\
-    aegaeis-visibility & 357.9166666666667  & 2447.866444488659           \\
-    medi-graph         & 191.06666666666666 & 262.34248736183486          \\
-    medi-visibility    & 1317.85            & 3528.6126965393596          \\
-    pata-graph         & 1706.5333333333333 & 451.8001829187458           \\
-    pata-visibility    & 2657.5             & 1823.062327697596           \\  \bottomrule
-  \end{tabular}
-  \caption{Erstellung von Hub Graphen mit PEOPLE}
-\end{table}
-
-\subsubsection{Direkt HL}
-
-Das Anwenden des des Algorithmus zur Berechnung des Hub GRaphens hat gut funktioniert.
-\todo{DIE LABELS SIND MINIMAL UNTERSCHIEDLICH GROß}
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{% MERGE ONLY
-      l % Graph
-      S[table-format = 4.0] % creation zeit
-      S[table-format = 4.1] % average time
-    }
-    \toprule
-    {Graph}            & {Erstellung}       & {$\varnothing$ Label Größe} \\
-    {}                 & {(min)}            & {}                          \\ \midrule
-    aegaeis-graph      & 12.3               & 225.18963155458096          \\
-    aegaeis-visibility & 455.48333333333335 & 2446.9511241543973          \\
-    medi-graph         & 19.75              & 262.32183266591755          \\
-    medi-visibility    & 1338.4833333333333 & 3527.5645951837378          \\
-    pata-graph         & 82.48333333333333  & 451.71017734369667          \\
-    pata-visibility    & 847.2833333333333  & 1822.0561604813242          \\  \bottomrule
-  \end{tabular}
-  \caption{Erstellung von Hub Graphen durch Merging der mit PEOPLE erzeugen Contracted Graphen}
-\end{table}
-
-\subsubsection{Vergleich}
-
-Für die Sichtbarkeitsgraphen ist es effizienter direkt die HL zu berechen.
-Für die Triangulierten gRaphen ist es effizietner zuerst die  Contrated Graphen zu berechen.
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{ %VERGLEICH
-      l % Graph
-      S[table-format = 4.0] % creation zeit
-      S[table-format = 4.0] % average time
-    }
-    \toprule
-    {Graph}            & {CH \& Merging}               & {HL DIREKT}                  \\
-    {}                 & {(min)}                       & {(min)}                      \\ \midrule
-    aegaeis-graph      & \bfseries 32.5                & 86.55                        \\
-    aegaeis-visibility & 809.3                         & \bfseries  357.9166666666667 \\
-    medi-graph         & \bfseries  57.96666666666667  & 191.06666666666666           \\
-    medi-visibility    & 2591.15                       & \bfseries  1317.85           \\
-    pata-graph         & \bfseries  424.65000000000003 & 1706.5333333333333           \\
-    pata-visibility    & 3532.366666666667             & \bfseries 2657.5             \\  \bottomrule
-  \end{tabular}
-  \caption{HL  merged}
-\end{table}
-
-\subsubsection{Neuberechnen mit größeren Hitting Set}
-
-Die benutzten Hub Graphen wurden benutzt, um ein großes Hitting Set zu erzeugen.
-Es wurde überschlagen, wieviele Pfade 1TB an Speicher ergeben.
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 4.0] % rank
-      S[table-format = 11.0] % queue pops
-    }
-    \toprule
-    {Graph}            & {Speicherbedarf Pfad} & {Pfade}     \\
-    {}                 & {Byte}                & {}          \\ \midrule
-    aegaeis-graph      & 880                   & 1136363636  \\
-    aegaeis-visibility & 84                    & 11904761904 \\
-    medi-graph         & 1380                  & 724637681   \\
-    medi-visibility    & 112                   & 8928571428  \\
-    pata-graph         & 3552                  & 281531531   \\
-    pata-visibility    & 272                   & 3676470588  \\ \bottomrule
-  \end{tabular}
-  \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
-\end{table}
-
-\subsection{Vertex-to-level Vergeleich}
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{
-      l % Graph
+  \begin{tabular}{l
       S[table-format = 6.0] % random
-      S[table-format = 6.0] % degree large to small
-      S[table-format = 6.0] % queue pops
-    }
-    \toprule
-    {Graph}            & {random} & {degree (small to large)} & {degree (large to small)} \\ \midrule
-    aegaeis-graph      & 3674.8   & 1313.9                    & 22471.6                   \\
-    aegaeis-visibility & 17143.0  & 7533.1                    & 57248.0                   \\
-    medi-graph         & 3804.2   & 1577.5                    & 32058.1                   \\
-    medi-visibility    & 24135.1  & 12791.3                   & 76832.9                   \\
-    pata-graph         & 4708.9   & 1639.1                    & 61296.9                   \\
-    pata-visibility    & 23282.4  & 10094.1                   & 112915.8                  \\ \bottomrule
-  \end{tabular}
-  \caption{Predicted HL Label Size, 1000}
-\end{table}
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{
-      l % Graph
       S[table-format = 6.0] % random
-      S[table-format = 6.0] % degree large to small
-      S[table-format = 6.0] % queue pops
+      S[table-format = 6.0] % random
+      S[table-format = 6.0] % random
+      S[table-format = 6.0] % random
+      S[table-format = 6.0] % random
     }
     \toprule
-    {Graph}            & {random} & {degree (small to large)} & {degree (large to small)} \\ \midrule
-    aegaeis-graph      & 52.5     & 11.2                      & 941.6                     \\
-    aegaeis-visibility & 3110.7   & 905.0                     & 13061.7                   \\
-    medi-graph         & 46.8     & 15.0                      & 1299.2                    \\
-    medi-visibility    & 4203.9   & 1322.7                    & 16855.0                   \\
-    pata-graph         & 31.4     & 9.7                       & 1064.8                    \\
-    pata-visibility    & 1305.7   & 264.3                     & 9341.4                    \\ \bottomrule
+    Graph              & \multicolumn{3}{c}{Hitting-Set}          & {$\triangle$}     & {Zufällig} & {Grad}   \\ \cline{2-4}
+                       & {Zufällig} & {Hits}            & {Grad}  &                   &            &          \\
+    \midrule
+    aegaeis-visibility & 1747.03    & \bfseries 1420.17 & 1582.00 & 1473.27           & 17811.58   & 7420.85  \\
+    medi-visibility    & 2487.06    & 2002.87           & 2422.12 & \bfseries 1930.65 & 18700.13   & 12862.80 \\
+    pata-visibility    & 1100.42    & \bfseries 478.80  & 806.95  & 552.90            & 23690.52   & 10174.37 \\
+    \bottomrule
   \end{tabular}
-  \caption{Predicted CH Degree, 1000}
 \end{table}
