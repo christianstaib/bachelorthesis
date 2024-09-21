@@ -134,104 +134,6 @@ Wieviel Zeit pro Paar?
   \label{table:sum_quad_degree}
 \end{table}
 
-\begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
-  \begin{subfigure}[b]{0.5\textwidth}
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            ymax=6,
-            xlabel={Hop-Länge},
-            ylabel={Fehler (\%)},
-            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
-          ]
-          \addplot+[mark repeat=9] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{$\triangle$};
-
-          \addplot+[mark repeat=9] table [x=hops, y=10, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{10 Hubs};
-
-          \addplot+[mark repeat=9] table [x=hops, y=20, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{20 Hubs};
-
-          \addplot+[mark repeat=9] table [x=hops, y=40, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{40 Hubs};
-
-          \addplot+[mark repeat=9] table [x=hops, y=80, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{80 Hubs};
-
-          \addplot+[mark repeat=9] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{$\triangle$, 80 Hubs};
-        \end{axis}
-      \end{tikzpicture}
-    }
-    \caption{aegaeis-vis}
-  \end{subfigure}%
-  \begin{subfigure}[b]{0.5\textwidth}
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            ymax=6,
-            xlabel={Hop-Länge},
-            ylabel={Fehler (\%)},
-            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
-          ]
-          \addplot+[mark repeat=12] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{$\triangle$};
-
-          \addplot+[mark repeat=12] table [x=hops, y=10, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{10 Hubs};
-
-          \addplot+[mark repeat=12] table [x=hops, y=20, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{20 Hubs};
-
-          \addplot+[mark repeat=12] table [x=hops, y=40, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{40 Hubs};
-
-          \addplot+[mark repeat=12] table [x=hops, y=80, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{80 Hubs};
-
-          \addplot+[mark repeat=12] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{$\triangle$, 80 Hubs};
-        \end{axis}
-      \end{tikzpicture}
-    }
-    \caption{medi-vis}
-  \end{subfigure}
-  \par\bigskip
-  \begin{subfigure}[b]{0.5\textwidth}
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            ymax=6,
-            xlabel={Hop-Länge},
-            ylabel={Fehler (\%)},
-            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
-          ]
-          \addplot+[mark repeat=25] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{$\triangle$};
-
-          \addplot+[mark repeat=25] table [x=hops, y=10, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{10 Hubs};
-
-          \addplot+[mark repeat=25] table [x=hops, y=20, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{20 Hubs};
-
-          \addplot+[mark repeat=25] table [x=hops, y=40, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{40 Hubs};
-
-          \addplot+[mark repeat=25] table [x=hops, y=80, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{80 Hubs};
-
-          \addplot+[mark repeat=25] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{$\triangle$, 80 Hubs};
-        \end{axis}
-      \end{tikzpicture}
-    }
-    \caption{pata}
-  \end{subfigure}
-  \caption{Fehler der oberen Schranken}
-\end{figure}
-
 \todo{Boxplot für alle Hops über 80 und Triangulierung}
 
 % aegaeis
@@ -249,7 +151,7 @@ Wieviel Zeit pro Paar?
 % 0.068\% korrekt
 % 0.6179520250326755 average
 
-\section{Dijkstra}
+\subsection{Dijkstra}
 
 Für die Berechnung des Speedups der in dieser Arbeit angewandeten Methoden wurden für jeden Graph \num{1000} sequentielle $s$-$t$ Dijkstra-Suchen asugeführt und die durschnittliche Laufzeit ermittelt.
 Die durschnittliche Laufzeiten für das Finden und erstellen des kürzesten Pfad sind in Tabelle \ref{fig:ergebnisse:dijkstra} dargestellt.
@@ -368,6 +270,106 @@ Auch dieses Programm hat nach drei Tagen Laufzeit auf den Sichtbarkeitsgraphen k
 
 \todo{Alles :D}
 
+
+\begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
+  \begin{subfigure}[b]{0.5\textwidth}
+    \resizebox{\textwidth}{!}{%
+      \begin{tikzpicture}
+        \begin{axis}[
+            ymax=6,
+            xlabel={Hop-Länge},
+            ylabel={Fehler (\%)},
+            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+          ]
+          \addplot+[mark repeat=9] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/aegaeis.csv};
+          \addlegendentry{$\triangle$};
+
+          \addplot+[mark repeat=9] table [x=hops, y=10, col sep=comma] {data/bounds/aegaeis.csv};
+          \addlegendentry{10 Hubs};
+
+          \addplot+[mark repeat=9] table [x=hops, y=20, col sep=comma] {data/bounds/aegaeis.csv};
+          \addlegendentry{20 Hubs};
+
+          \addplot+[mark repeat=9] table [x=hops, y=40, col sep=comma] {data/bounds/aegaeis.csv};
+          \addlegendentry{40 Hubs};
+
+          \addplot+[mark repeat=9] table [x=hops, y=80, col sep=comma] {data/bounds/aegaeis.csv};
+          \addlegendentry{80 Hubs};
+
+          \addplot+[mark repeat=9] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/aegaeis.csv};
+          \addlegendentry{$\triangle$, 80 Hubs};
+        \end{axis}
+      \end{tikzpicture}
+    }
+    \caption{aegaeis-vis}
+  \end{subfigure}%
+  \begin{subfigure}[b]{0.5\textwidth}
+    \resizebox{\textwidth}{!}{%
+      \begin{tikzpicture}
+        \begin{axis}[
+            ymax=6,
+            xlabel={Hop-Länge},
+            ylabel={Fehler (\%)},
+            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+          ]
+          \addplot+[mark repeat=12] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/medi.csv};
+          \addlegendentry{$\triangle$};
+
+          \addplot+[mark repeat=12] table [x=hops, y=10, col sep=comma] {data/bounds/medi.csv};
+          \addlegendentry{10 Hubs};
+
+          \addplot+[mark repeat=12] table [x=hops, y=20, col sep=comma] {data/bounds/medi.csv};
+          \addlegendentry{20 Hubs};
+
+          \addplot+[mark repeat=12] table [x=hops, y=40, col sep=comma] {data/bounds/medi.csv};
+          \addlegendentry{40 Hubs};
+
+          \addplot+[mark repeat=12] table [x=hops, y=80, col sep=comma] {data/bounds/medi.csv};
+          \addlegendentry{80 Hubs};
+
+          \addplot+[mark repeat=12] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/medi.csv};
+          \addlegendentry{$\triangle$, 80 Hubs};
+        \end{axis}
+      \end{tikzpicture}
+    }
+    \caption{medi-vis}
+  \end{subfigure}
+  \par\bigskip
+  \begin{subfigure}[b]{0.5\textwidth}
+    \resizebox{\textwidth}{!}{%
+      \begin{tikzpicture}
+        \begin{axis}[
+            ymax=6,
+            xlabel={Hop-Länge},
+            ylabel={Fehler (\%)},
+            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+          ]
+          \addplot+[mark repeat=25] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/pata.csv};
+          \addlegendentry{$\triangle$};
+
+          \addplot+[mark repeat=25] table [x=hops, y=10, col sep=comma] {data/bounds/pata.csv};
+          \addlegendentry{10 Hubs};
+
+          \addplot+[mark repeat=25] table [x=hops, y=20, col sep=comma] {data/bounds/pata.csv};
+          \addlegendentry{20 Hubs};
+
+          \addplot+[mark repeat=25] table [x=hops, y=40, col sep=comma] {data/bounds/pata.csv};
+          \addlegendentry{40 Hubs};
+
+          \addplot+[mark repeat=25] table [x=hops, y=80, col sep=comma] {data/bounds/pata.csv};
+          \addlegendentry{80 Hubs};
+
+          \addplot+[mark repeat=25] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/pata.csv};
+          \addlegendentry{$\triangle$, 80 Hubs};
+        \end{axis}
+      \end{tikzpicture}
+    }
+    \caption{pata}
+  \end{subfigure}
+  \caption{Fehler der oberen Schranken}
+\end{figure}
+
+
 \section{PEOPLE}
 
 Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung von Contracted und Hub Graphen lies sie auch die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
@@ -441,7 +443,7 @@ Das Mergen lässt sich aber gut parallisieren, durch eine Fold Operation, bei de
   \begin{tabular}{
       l % Graph
       r % Erstellung
-      S[table-format = 3.0] % label
+      S[table-format = 3.1] % label
       S[table-format = 3.2] % average time spd
       S[table-format = 6.] % speedup
     }
@@ -462,22 +464,26 @@ Das Mergen lässt sich aber gut parallisieren, durch eine Fold Operation, bei de
 Das Anwenden des des Algorithmus zur Berechnung des Hub GRaphens hat gut funktioniert.
 \todo{DIE LABELS SIND MINIMAL UNTERSCHIEDLICH GROß}
 
-\begin{table}[ht]
+\begin{table}[h!]
   \centering
-  \begin{tabular}{% MERGE ONLY
+  \begin{tabular}{
       l % Graph
-      S[table-format = 4.0] % creation zeit
-      S[table-format = 4.1] % average time
+      r % Erstellung
+      S[table-format = 3.1] % label
+      S[table-format = 3.2] % average time spd
+      S[table-format = 6.] % speedup
     }
     \toprule
-    {Graph}            & {Erstellung}       & {$\varnothing$ Label Größe} \\
-    {}                 & {(min)}            & {}                          \\ \midrule
-    aegaeis-graph      & 12.3               & 225.18963155458096          \\
-    aegaeis-visibility & 455.48333333333335 & 2446.9511241543973          \\
-    medi-graph         & 19.75              & 262.32183266591755          \\
-    medi-visibility    & 1338.4833333333333 & 3527.5645951837378          \\
-    pata-graph         & 82.48333333333333  & 451.71017734369667          \\
-    pata-visibility    & 847.2833333333333  & 1822.0561604813242          \\  \bottomrule
+    {Graph}            & {Erstellung} & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup}  \\
+    {}                 & {}           & {}                                   & {(\si{\us})}               & {}         \\
+    \midrule1
+    aegaeis-graph      &              & 225.18963155458096                   &                            & \fpeval{1} \\
+    aegaeis-visibility &              & 2446.9511241543973                   &                            & \fpeval{1} \\
+    medi-graph         &              & 262.32183266591755                   &                            & \fpeval{1} \\
+    medi-visibility    &              & 3527.5645951837378                   &                            & \fpeval{1} \\
+    pata-graph         &              & 451.71017734369667                   &                            & \fpeval{1} \\
+    pata-visibility    &              & 1822.0561604813242                   &                            & \fpeval{1} \\
+    \bottomrule
   \end{tabular}
   \caption{Erstellung von Hub Graphen durch Merging der mit PEOPLE erzeugen Contracted Graphen}
 \end{table}

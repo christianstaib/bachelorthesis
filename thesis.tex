@@ -1,4 +1,4 @@
-\documentclass[oneside, parskip]{scrbook}
+\documentclass[12pt,a4paper,oneside]{scrbook}
 \usepackage{mystyle}
 
 % faster tikz. Needs to be here because of overleaf
@@ -10,31 +10,34 @@
 \makeatother
 
 
-
-\title{Anwendung von Contraction Hierarchies und Hierarchical Hub Labeling auf nicht-Straßengraphen}
-\author{Christian Staib}
 \date{\today}
-\publishers{Universität Stuttgart}
+% \publishers{Universität Stuttgart}
 
 \begin{document}
 
-
-\frontmatter
+\tikzexternaldisable
 \begin{titlepage}
-    \begin{tikzpicture}[overlay,remember picture,line width=5pt]
+    \begin{tikzpicture}[overlay,remember picture,y=-1cm]
         % set a new origin [1]
-        \coordinate (O) at (current page.south west);
-        % 210 × 297 
-        \draw[fill=black] (0,0) rectangle (10.0,10.0);
+        \coordinate (O) at (current page.north west);
+        \draw[fill=white,draw=yellow] ($(O)+(6.51,9.32)$) rectanglenode[align=center]{
+                \large Bachelorarbeit
+                \\
+                \\
+                \Large \textbf{Anwendung von}\\
+                \Large \textbf{Contraction Hierarchies und} \\
+                \Large \textbf{Hierarchical Hub Labeling}\\
+                \Large \textbf{auf Nicht-Straßengraphen}
+                \\
+                \\
+                \large Christian Staib
+            } ($(O)+(15.37,14.97)$);
     \end{tikzpicture}
 \end{titlepage}
-
+\tikzexternalenable
 
 \clearpage
-\newpage
 
-
-\mainmatter
 \input{tex/chapters/abstract}
 \tableofcontents
 \input{tex/chapters/einleitung}
@@ -45,7 +48,6 @@
 \input{tex/chapters/ergebnisse}
 
 
-\backmatter
 \printbibliography
 
 \end{document}
