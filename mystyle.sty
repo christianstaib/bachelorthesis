@@ -39,6 +39,7 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usetikzlibrary{patterns,shapes.arrows}
+\usetikzlibrary{calc,positioning}%
 \usepgfplotslibrary{groupplots,dateplot}
 \pgfplotsset{compat=newest}
 \DeclareUnicodeCharacter{2212}{−}
@@ -60,10 +61,12 @@
 \usepackage{siunitx}
 \sisetup{locale = DE}
 \sisetup{table-auto-round = true}
-\sisetup{math-micro=\text{µ},text-micro=µ}
-\sisetup{detect-weight=true,detect-inline-weight=math}
+%\sisetup{math-micro=\text{µ},text-micro=µ}
+\sisetup{detect-weight=true}
 \AtBeginDocument{\RenewCommandCopy\qty\SI}
 \usepackage{todonotes}
+\usepackage[absolute,overlay]{textpos} % To position text at exact coordinates
+\usepackage{graphicx}
 
 % Hyperlinks
 \usepackage{hyperref}

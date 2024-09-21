@@ -10,7 +10,7 @@ Hierfür wurde zuerst die Verteilung der Knotengrade untersucht.
 Dabei wurden die Histogramme in \autoref{ergebnisse:fig:degree_hist} erstellt.
 Für jeden der Sichtbarkeitsgraphen gilt, dass mindestens 90\% aller Knoten einen Grad kleiner \num{2000} haben.
 
-\begin{figure}[h!]
+\begin{figure}[p]
   \begin{subfigure}[b]{0.5\textwidth}
     \resizebox{\textwidth}{!}{%
       \begin{tikzpicture}
@@ -114,17 +114,21 @@ Wie diskutiert ist die Summe der quadratischen Knotengrade ein Indikator für di
 Diese sind in \autoref{table:sum_quad_degree} sichtbar.
 Obwohl pata die meisten Knoten hat, ist die summe der Quadrate am kleinsten.
 
+Dann naive Rechnung: Knoten-Differenz soll in einem Tag stattfinden, 40 Kerne.
+Wieviel Zeit pro Paar?
+
 \begin{table}[ht]
   \centering
   \begin{tabular}{
       l % Graph
       S[table-format = 13.0] % Zeit
+      S[table-format = 3.1] % Zeit pro Paars
     }
     \toprule
-    {Graph}            & {$\sum_{v \in V} (\text{Grad}(v))^2$} \\ \midrule
-    aegaeis-visibility & 1153579966074                         \\
-    medi-visibility    & 4667069733248                         \\
-    pata-visibility    & 426189267238                          \\ \bottomrule
+    {Graph}            & {$\sum_{v \in V} (\text{Grad}(v))^2$} & {Zeit pro paar in us}                       \\ \midrule
+    aegaeis-visibility & 1153579966074                         & \fpeval{(10e6)*40*(24*60*60)/1153579966074} \\
+    medi-visibility    & 4667069733248                         & \fpeval{(10e6)*40*(24*60*60)/4667069733248} \\
+    pata-visibility    & 426189267238                          & \fpeval{(10e6)*40*(24*60*60)/426189267238}  \\ \bottomrule
   \end{tabular}
   \caption{Summe quadratische Knotengrade}
   \label{table:sum_quad_degree}
@@ -248,7 +252,7 @@ Obwohl pata die meisten Knoten hat, ist die summe der Quadrate am kleinsten.
 \section{Dijkstra}
 
 Für die Berechnung des Speedups der in dieser Arbeit angewandeten Methoden wurden für jeden Graph \num{1000} sequentielle $s$-$t$ Dijkstra-Suchen asugeführt und die durschnittliche Laufzeit ermittelt.
-Die durschnittliche Laufzeiten für das Finden und erstellen des kürzesten Pfad sind in Tabelle \ref{ergebnisse::table:dijkstra_one_to_one} dargestellt.
+Die durschnittliche Laufzeiten für das Finden und erstellen des kürzesten Pfad sind in Tabelle \ref{fig:ergebnisse:dijkstra} dargestellt.
 Es ist ersichtlich, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten haben.
 
 Zusätzlich zur durschnitlichen Laufzeit wurde die die Durschnitswerte der Hop-Länge, des Dijsktra-Rank und der Queue pops ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
@@ -277,6 +281,7 @@ Dies legt Nahe, dass die verwendung einer Warteschlange, welche eine \emph{Drecr
     pata-visibility    & 1017.695977                & 63.817                     & 498570.2                      & 2429689.8                  \\ \bottomrule
   \end{tabular}
   \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
+  \label{fig:ergebnisse:dijkstra}
 \end{table}
 
 \section{Graphen-Kontraktion}
@@ -358,6 +363,10 @@ Auch dieses Programm hat nach drei Tagen Laufzeit auf den Sichtbarkeitsgraphen k
   \caption{FMI CH Graphen-Kontraktion}
   \label{fig:ergebnisse:fmi_ch_graph_kontraktion_triangulierungen}
 \end{table}
+
+\subsection{Kontraktion mit oberer Schranke}
+
+\todo{Alles :D}
 
 \section{PEOPLE}
 
@@ -499,116 +508,6 @@ Für die Triangulierten gRaphen ist es effizietner zuerst die  Contrated Graphen
 \end{table}
 
 \subsection{Vertex-to-level Vergeleich}
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 6.0] % random
-      S[table-format = 6.0] % degree large to small
-      S[table-format = 6.0] % queue pops
-    }
-    \toprule
-    {Graph}            & {random} & {degree (small to large)} & {degree (large to small)} \\ \midrule
-    aegaeis-graph      & 3674.8   & 1313.9                    & 22471.6                   \\
-    aegaeis-visibility & 17143.0  & 7533.1                    & 57248.0                   \\
-    medi-graph         & 3804.2   & 1577.5                    & 32058.1                   \\
-    medi-visibility    & 24135.1  & 12791.3                   & 76832.9                   \\
-    pata-graph         & 4708.9   & 1639.1                    & 61296.9                   \\
-    pata-visibility    & 23282.4  & 10094.1                   & 112915.8                  \\ \bottomrule
-  \end{tabular}
-  \caption{Predicted HL Label Size, 1000}
-\end{table}
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 6.0] % random
-      S[table-format = 6.0] % degree large to small
-      S[table-format = 6.0] % queue pops
-    }
-    \toprule
-    {Graph}            & {random} & {degree (small to large)} & {degree (large to small)} \\ \midrule
-    aegaeis-graph      & 52.5     & 11.2                      & 941.6                     \\
-    aegaeis-visibility & 3110.7   & 905.0                     & 13061.7                   \\
-    medi-graph         & 46.8     & 15.0                      & 1299.2                    \\
-    medi-visibility    & 4203.9   & 1322.7                    & 16855.0                   \\
-    pata-graph         & 31.4     & 9.7                       & 1064.8                    \\
-    pata-visibility    & 1305.7   & 264.3                     & 9341.4                    \\ \bottomrule
-  \end{tabular}
-  \caption{Predicted CH Degree, 1000}
-\end{table}
-
-
-% `target/release/hl_predict_orderings -g ../graphs/aegaeis-ref-visibility.fmi -h /pfs/work7/workspace/scratch/st_st162081-graph_data/data_final/aegaeis-ref-visibility/hl_ch_bruteforce.bincode -l 1000 -p 1000000 -s tests/data/aegaeis-ref-graph_hl.bincode`
-% hl:
-% simple ordering                                                        1473.27
-% hitting-set, then hits                                                 1420.17
-% hitting-set, then random                                               1747.03
-% hitting-set, then degree (small to large)                              1582.00
-% hitting-set, then degree (small to large), then hits                   1609.93
-% hitting-set, then degree (large to small)                              2147.25
-% random                                                                 17811.58
-% degree (small to large)                                                7420.85
-% degree (large to small)                                                57435.23
-%
-% ch:
-% simple ordering                                                        838.59
-% hitting-set, then hits                                                 839.80
-% hitting-set, then random                                               1117.53
-% hitting-set, then degree (small to large)                              857.66
-% hitting-set, then degree (small to large), then hits                   842.15
-% hitting-set, then degree (large to small)                              1258.01
-% random                                                                 3151.90
-% degree (small to large)                                                925.99
-% degree (large to small)                                                12964.08
-
-% `target/release/hl_predict_orderings -g ../graphs/medi-ref-visibility.fmi -h /pfs/work7/workspace/scratch/st_st162081-graph_data/data_final/medi-ref-visibility/hl_ch_bruteforce.bincode -l 1000 -p 1000000 -s tests/data/medi-ref-graph_hl_witness.bincode`
-% hl:
-% simple ordering                                                        1930.65
-% hitting-set, then hits                                                 2002.87
-% hitting-set, then random                                               2487.06
-% hitting-set, then degree (small to large)                              2422.12
-% hitting-set, then degree (small to large), then hits                   2443.32
-% hitting-set, then degree (large to small)                              3367.30
-% random                                                                 18700.13
-% degree (small to large)                                                12862.80
-% degree (large to small)                                                78490.52
-%
-% ch:
-% simple ordering                                                        1253.29
-% hitting-set, then hits                                                 1357.61
-% hitting-set, then random                                               1542.52
-% hitting-set, then degree (small to large)                              1223.64
-% hitting-set, then degree (small to large), then hits                   1252.87
-% hitting-set, then degree (large to small)                              1892.62
-% random                                                                 3611.29
-% degree (small to large)                                                1377.39
-% degree (large to small)                                                16523.42
-
-% `target/release/hl_predict_orderings -g ../graphs/pata-ref-visibility.fmi -h /pfs/work7/workspace/scratch/st_st162081-graph_data/data_final/pata-ref-visibility/hl_ch_bruteforce.bincode -l 1000 -p 1000000 -s tests/data/pata-ref-graph_hl_witness.bincode`
-% hl:
-% simple ordering                                                        552.90
-% hitting-set, then hits                                                 478.80
-% hitting-set, then random                                               1100.42
-% hitting-set, then degree (small to large)                              806.95
-% hitting-set, then degree (small to large), then hits                   859.61
-% hitting-set, then degree (large to small)                              2428.18
-% random                                                                 23690.52
-% degree (small to large)                                                10174.37
-% degree (large to small)                                                115053.22
-% 
-% ch:
-% simple ordering                                                        190.69
-% hitting-set, then hits                                                 207.74
-% hitting-set, then random                                               357.46
-% hitting-set, then degree (small to large)                              213.76
-% hitting-set, then degree (small to large), then hits                   194.37
-% hitting-set, then degree (large to small)                              637.45
-% random                                                                 1213.83
-% degree (small to large)                                                228.77
-% degree (large to small)                                                9335.24
 
 \begin{table}[]
   \centering

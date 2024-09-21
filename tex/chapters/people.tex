@@ -13,12 +13,12 @@ Daraus können zwei Folgerungen gezogen werden:
 
 \begin{enumerate}
   \item
-    Es gibt einen kürzesten Pfad von $u$ nach $w$ in $G$ für den gilt, dass alle Knoten zwischen $u$ und $w$ bereits kontrahiert wurden.
-    Diese haben daher auch ein niedrigeres Level als $u$ und $u$.
+        Es gibt einen kürzesten Pfad von $u$ nach $w$ in $G$ für den gilt, dass alle Knoten zwischen $u$ und $w$ bereits kontrahiert wurden.
+        Diese haben daher auch ein niedrigeres Level als $u$ und $u$.
 
   \item
-    $(u, w) \in E_u$ gilt genau dann, wenn $w$ das größte Level auf allen Pfaden von $u$ nach $w$.
-    $(w, u) \in E_d$ gilt, wenn $u$ das größte Level hat.
+        $(u, w) \in E_u$ gilt genau dann, wenn $w$ das größte Level auf allen Pfaden von $u$ nach $w$.
+        $(w, u) \in E_d$ gilt, wenn $u$ das größte Level hat.
 \end{enumerate}
 
 Basierend auf dieser Überlegung, definieren wir den Upward-Graph neu.
@@ -29,10 +29,10 @@ Basierend auf dieser Überlegung, definieren wir den Upward-Graph neu.
 
   \begin{itemize}
     \item
-      $E_u$ enthält nur Kanten $(t, h, d)$ mit $h \in V$ und $d \in \mathbb{R}^+$, für die es einen $t$-$h$ Pfad der Länge $d \geq {spd}_G (t, g)$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte Level hat.
+          $E_u$ enthält nur Kanten $(t, h, d)$ mit $h \in V$ und $d \in \mathbb{R}^+$, für die es einen $t$-$h$ Pfad der Länge $d \geq {spd}_G (t, g)$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte Level hat.
 
     \item
-      $E_u$ enthält alle Kante $(t, h, {spd}_G (t, h))$ mit $h \in V$, für die gilt, dass auf \emph{allen} $t$-$h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat.
+          $E_u$ enthält alle Kante $(t, h, {spd}_G (t, h))$ mit $h \in V$, für die gilt, dass auf \emph{allen} $t$-$h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat.
   \end{itemize}
 \end{definition}
 
@@ -214,9 +214,9 @@ Die Berechung ist \emph{embarrassingly parallel}, da jeder Knoten für sich selb
 Der textuell beschriebene Algorithmus wird dann wie folgt formal definiert:
 
 \begin{algorithm}[ht]
-  \caption{Contracted Graph Brute Force Suchalgorithmus}
+  \caption{Contracted-Graph PEOPLE Algorithmus}
   \begin{algorithmic}[1]
-    \Require Graph $G = (V, E)$, vertex-to-level Funktion ${vtl}$, Startknoten $s \in V$, Zielknoten $t \in V$
+    \Require Graph $G = (V, E)$, vertex-to-level Funktion ${vtl}$, Knoten $s \in V$
     \Ensure $E_s$
     \State // Initialisiere Distanz- und Vorgänger-Funktion
     \ForAll{$v \in V$}
@@ -321,10 +321,10 @@ Die dafür verwendete Defintion der Forward-Label weicht nur leicht von der des 
 
   \begin{itemize}
     \item
-      $L_f (t)$ enthält nur Einträge $(h, d)$ mit $h \in V$ und $d \in \mathbb{R}$, für die es einen $t$-$h$ Pfad der Länge $d \geq {spd}_G (t, g)$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte Level hat.
+          $L_f (t)$ enthält nur Einträge $(h, d)$ mit $h \in V$ und $d \in \mathbb{R}$, für die es einen $t$-$h$ Pfad der Länge $d \geq {spd}_G (t, g)$ gibt, so dass auf ihm $h$ das größte und $t$ das zweitgrößte Level hat.
 
     \item
-      $L_f (t)$ enthält alle Einträge $(h, {spd}_G (t, h))$ mit $h \in V$, für die gilt, dass auf \emph{allen} $t$-$h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat.
+          $L_f (t)$ enthält alle Einträge $(h, {spd}_G (t, h))$ mit $h \in V$, für die gilt, dass auf \emph{allen} $t$-$h$ Pfaden $h$ das größte und $t$ zweitgröste Level hat.
   \end{itemize}
 \end{definition}
 

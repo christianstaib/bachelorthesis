@@ -17,15 +17,35 @@
 \publishers{Universität Stuttgart}
 
 \begin{document}
-\maketitle
+
 
 \frontmatter
-\include{tex/frontmatter}
+\begin{titlepage}
+    \begin{tikzpicture}[overlay,remember picture,line width=5pt]
+        % set a new origin [1]
+        \coordinate (O) at (current page.south west);
+        % 210 × 297 
+        \draw[fill=black] (0,0) rectangle (10.0,10.0);
+    \end{tikzpicture}
+\end{titlepage}
+
+
+\clearpage
+\newpage
+
 
 \mainmatter
-\include{tex/mainmatter}
+\input{tex/chapters/abstract}
+\tableofcontents
+\input{tex/chapters/einleitung}
+\input{tex/chapters/graphs}
+\input{tex/chapters/ch}
+\input{tex/chapters/kontraktion}
+\input{tex/chapters/people}
+\input{tex/chapters/ergebnisse}
+
 
 \backmatter
-\include{tex/backmatter}
+\printbibliography
 
 \end{document}
