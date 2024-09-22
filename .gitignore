@@ -305,3 +305,4 @@ TSWLatexianTemp*
 *.pdf
 
 tikzexternalize/
+*.bcf-SAVE-ERROR

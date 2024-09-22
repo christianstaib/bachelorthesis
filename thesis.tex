@@ -15,79 +15,39 @@
 \date{\today}
 % \publishers{Universität Stuttgart}
 
-\tikzset{zeilenabstand/.style={%
-            execute at begin node=\begin{spacing}{#1}\hspace{0pt},%
-                execute at end node=\vspace{-\ht\strutbox}\end{spacing}}}
+
+
 
 \begin{document}
 \thispagestyle{empty}
 \pagenumbering{roman}
 
-\tikzexternaldisable
-\begin{titlepage}
-    \begin{tikzpicture}[overlay,remember picture,y=-1cm]
-        % set a new origin [1]
-        \coordinate (O) at (current page.north west);
-
-        \node[text width=9cm,align=flush center,zeilenabstand=1.5] at ($(O)+(10.95,12.05)$)
-        {
-        {\large Bachelorarbeit}
-        \\[0.75\baselineskip]
-        {\Large \bfseries \MyTitle}
-        \\[0.75\baselineskip]
-        {\large \MyAuthor}
-        };
+\include{tex/titlepage}
+\cleardoublepage
 
 
+\include{tex/abstract}
+\cleardoublepage
 
-        \node[text width=9cm,align=flush center] at ($(O)+(10.95,4.21)$)
-        {
-            Institut für Formale Methoden der Informatik
-            \\[1.5\baselineskip]
-            Universität Stuttgart\\
-            Universitätsstraße 38\\
-            70569 Stuttgart
-        };
-
-
-        \node[] at ($(O)+(10.95,1.75)$)
-        {\includegraphics{img/unistuttgart_logo_deutsch.pdf} };
-
-
-        \node[align=center] at ($(O)+(10.95,24.16)$)
-        {
-            \begin{tabular}{lll}
-                \textbf{Studiengang:} &  & Informatik             \\
-                \textbf{Prüfer/in}:   &  & Prof. Dr. Stefan Funke \\
-                \textbf{Betreuer/in}: &  & Daniel Koch            \\
-                \\
-                \textbf{Beginn am:}   &  & 8. April 2024          \\
-                \textbf{Beendet am:}  &  & 8. Oktober 2024        \\
-            \end{tabular}
-        };
-    \end{tikzpicture}
-
-\end{titlepage}
-\tikzexternalenable
-
-
-\clearpage
-
-\input{tex/chapters/abstract}
 \tableofcontents
+
+\cleardoublepage
 \pagenumbering{arabic}
-\input{tex/chapters/einleitung}
-\input{tex/chapters/graphs}
-\input{tex/chapters/ch}
-\input{tex/chapters/kontraktion}
-\input{tex/chapters/people}
-\input{tex/chapters/ergebnisse}
+
+\include{tex/einleitung}
+\include{tex/graphs}
+\include{tex/ch}
+\include{tex/kontraktion}
+\include{tex/people}
+\include{tex/ergebnisse}
+\include{tex/ausblick
+}
 
 
 \printbibliography
 
 \clearpage
 \thispagestyle{empty}
-\input{tex/chapters/erklearung}
+\include{tex/erklearung}
 
 \end{document}

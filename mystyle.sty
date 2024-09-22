@@ -80,6 +80,12 @@
 
 \usepackage{authoraftertitle}
 \usepackage{setspace}
+\usepackage{fancyhdr}
+
+% Titlepage
+\tikzset{zeilenabstand/.style={%
+            execute at begin node=\begin{spacing}{#1}\hspace{0pt},%
+                execute at end node=\vspace{-\ht\strutbox}\end{spacing}}}
 
 % Optional packages (commented out)
 % \usepackage{subfig}
