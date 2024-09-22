@@ -15,6 +15,10 @@
 \date{\today}
 % \publishers{Universität Stuttgart}
 
+\tikzset{zeilenabstand/.style={%
+            execute at begin node=\begin{spacing}{#1}\hspace{0pt},%
+                execute at end node=\vspace{-\ht\strutbox}\end{spacing}}}
+
 \begin{document}
 \thispagestyle{empty}
 \pagenumbering{roman}
@@ -25,13 +29,41 @@
         % set a new origin [1]
         \coordinate (O) at (current page.north west);
 
-        \node[text width=9cm,align=flush center] at ($(O)+(10.95,12.05)$)
+        \node[text width=9cm,align=flush center,zeilenabstand=1.5] at ($(O)+(10.95,12.05)$)
         {
-        {\Large Bachelorarbeit}
-        \\[2\baselineskip]
-        {\huge \MyTitle}
-        \\[2\baselineskip]
-        {\Large \MyAuthor}
+        {\large Bachelorarbeit}
+        \\[0.75\baselineskip]
+        {\Large \bfseries \MyTitle}
+        \\[0.75\baselineskip]
+        {\large \MyAuthor}
+        };
+
+
+
+        \node[text width=9cm,align=flush center] at ($(O)+(10.95,4.21)$)
+        {
+            Institut für Formale Methoden der Informatik
+            \\[1.5\baselineskip]
+            Universität Stuttgart\\
+            Universitätsstraße 38\\
+            70569 Stuttgart
+        };
+
+
+        \node[] at ($(O)+(10.95,1.75)$)
+        {\includegraphics{img/unistuttgart_logo_deutsch.pdf} };
+
+
+        \node[align=center] at ($(O)+(10.95,24.16)$)
+        {
+            \begin{tabular}{lll}
+                \textbf{Studiengang:} &  & Informatik             \\
+                \textbf{Prüfer/in}:   &  & Prof. Dr. Stefan Funke \\
+                \textbf{Betreuer/in}: &  & Daniel Koch            \\
+                \\
+                \textbf{Beginn am:}   &  & 8. April 2024          \\
+                \textbf{Beendet am:}  &  & 8. Oktober 2024        \\
+            \end{tabular}
         };
     \end{tikzpicture}
 
