@@ -457,13 +457,11 @@ Bei der Top-Down-Kontraktion ist die level-to-vertex-Funktion ${ltv}$ vorgegeben
 Die Knoten werden in Reihenfolge ihres Levels kontrahiert, wobei mit dem niedrigsten Level begonnen wird.
 Diese Herangehensweise bietet einerseits die Möglichkeit dafür eine optimale Reihenfolge anzuwenden, wobei diese für hinreichend große Graphen nur schwer bestimmbar ist.
 
-\paragraph{Sortiert nach Grad}
-Die Knoten werden nach ihrem Grad sortiert, wobei die kleinsten Grade zuerst kontrahiert werden.
+Bei der \emph{Sortierung nach Grad} werden die Knoten werden nach ihrem Grad sortiert, wobei die kleinsten Grade zuerst kontrahiert werden.
 Die Überlegung dahinter ist, dass Knoten mit vielen Nachbarn auch viele neue Kanten einfügen können, was vermieden werden soll.
 Nach größtem Grad ist vielleicht auch spannend.
 
-\paragraph{Sortiert durch Hitting-Set}
-Es wird über eine möglichst große Anzahl an Pfaden ein Hitting-Set gebildet, die Knoten des Hitting-Sets werden dann nach der Anzahl ihrer Hits sortiert.
+Die Knoten können auch über ein Hitting-Set sortiert werden: Hierbei wird über eine möglichst große Anzahl an Pfaden ein Hitting-Set gebildet, die Knoten des Hitting-Sets werden dann nach der Anzahl ihrer Hits sortiert.
 Die Knoten die nicht Teil des Hitting-Set sind, werden anschließend die unteren Level zugewiesen, wobei diese wiederum nach einer Metrik sortiert werden können, wie etwa dem Grad.
 
 \subsubsection{Bottom-Up}
