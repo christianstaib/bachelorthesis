@@ -13,6 +13,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathtools}
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
 \usepackage{physics}
 \usepackage{amsthm}
 \DeclareMathOperator{\avg}{\diameter}
@@ -63,7 +64,6 @@
 \sisetup{table-auto-round = true}
 %\sisetup{math-micro=\text{µ},text-micro=µ}
 \sisetup{detect-weight=true}
-\AtBeginDocument{\RenewCommandCopy\qty\SI}
 \usepackage{todonotes}
 \usepackage[absolute,overlay]{textpos} % To position text at exact coordinates
 \usepackage{graphicx}
@@ -80,12 +80,13 @@
 
 \usepackage{authoraftertitle}
 \usepackage{setspace}
-\usepackage{fancyhdr}
 
 % Titlepage
 \tikzset{zeilenabstand/.style={%
             execute at begin node=\begin{spacing}{#1}\hspace{0pt},%
                 execute at end node=\vspace{-\ht\strutbox}\end{spacing}}}
+
+
 
 % Optional packages (commented out)
 % \usepackage{subfig}
