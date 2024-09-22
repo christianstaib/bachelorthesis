@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,oneside,parskip]{scrbook}
+\documentclass[11pt,a4paper,oneside,parskip]{scrbook}
 \usepackage{mystyle}
 
 % faster tikz. Needs to be here because of overleaf
@@ -10,56 +10,40 @@
 \makeatother
 
 
+\title{Anwendung von Contraction Hierarchies und Hierarchical Hub Labeling auf Nicht-Straßengraphen}
+\author{Christian Staib}
 \date{\today}
 % \publishers{Universität Stuttgart}
 
 \begin{document}
+\thispagestyle{empty}
+\pagenumbering{roman}
 
 \tikzexternaldisable
 \begin{titlepage}
     \begin{tikzpicture}[overlay,remember picture,y=-1cm]
         % set a new origin [1]
         \coordinate (O) at (current page.north west);
-        \draw[fill=white,draw=yellow] ($(O)+(6.51,9.32)$) rectangle node[align=center]{
-                \large Bachelorarbeit
-                \\
-                \\
-                \Large \textbf{Anwendung von}\\
-                \Large \textbf{Contraction Hierarchies und} \\
-                \Large \textbf{Hierarchical Hub Labeling}\\
-                \Large \textbf{auf Nicht-Straßengraphen}
-                \\
-                \\
-                \large Christian Staib
-            } ($(O)+(15.37,14.97)$);
+
+        \node[text width=9cm,align=flush center] at ($(O)+(10.95,12.05)$)
+        {
+        {\Large Bachelorarbeit}
+        \\[2\baselineskip]
+        {\huge \MyTitle}
+        \\[2\baselineskip]
+        {\Large \MyAuthor}
+        };
     \end{tikzpicture}
+
 \end{titlepage}
 \tikzexternalenable
 
-
-\begin{tikzpicture}
-    % Define a node with a minipage
-    \node[draw, rectangle, rounded corners, fill=blue!10,
-        minimum width=4cm, minimum height=3cm, align=center]
-    (mynode)
-    at (0,0)
-    {
-        \begin{minipage}{3.5cm}
-            \centering
-            \textbf{Node Title} \\[0.5em]
-            This is a TikZ node containing a minipage. You can include multiple lines of text,
-            images, or other LaTeX elements here.
-        \end{minipage}
-    };
-
-    % Optionally, add more elements connected to the node
-    \draw[->] (mynode) -- (2,2) node[above]{Connection};
-\end{tikzpicture}
 
 \clearpage
 
 \input{tex/chapters/abstract}
 \tableofcontents
+\pagenumbering{arabic}
 \input{tex/chapters/einleitung}
 \input{tex/chapters/graphs}
 \input{tex/chapters/ch}

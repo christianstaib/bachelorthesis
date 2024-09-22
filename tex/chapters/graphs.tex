@@ -139,49 +139,29 @@ Der Greedy-Algorithmus \ref{graphs:alg:greedy-hitting-set} bietet jedoch eine Ap
   \label{graphs:alg:greedy-hitting-set}
 \end{algorithm}
 
+\todo{Beispiel Hitting Set}
+
 \section{Sichtbarkeitsgraphen}
 
 Sichtbarkeitsgraphen sind Graphen, die Punkte in der euklidischen Ebene miteinander verbinden, die sich direkt \emph{sehen} können, das heißt, zwischen denen keine Hindernisse liegen.
 Sie können zum Beispiel dazu verwendet werden, um den optimalen Pfad eines Roboters durch eine Umgebung mit Hindernissen zu bestimmen oder um die Platzierung von Mobilfunkmasten zu optimieren, sodass sie eine möglichst große Fläche abdecken.
 Sichtbarkeitsgraphen können in höheren Dimensionen $\mathbb{R}^n$ mit $n \geq 2$ konstruiert werden, diese Arbeit konzentriert sich jedoch auf die euklidische Ebene $\mathbb{R}^2$.
+Die Anzahl der Kanten ist dabei, abhängig von der Form und Platzierung der Polygone, im schlimmsten Fall quadratisch zu der Anzahl der Eckpunkte.
+Sie sind eine Möglichkeit das Euclidean Shortest Path Problem zu lösen.
 
-\begin{definition}[Sichtbarkeitsgraph]
-  Sei $V$ eine Menge von Punkten in der euklidischen Ebene $\mathbb{R}^2$, $P$ eine Menge von Polygonen (Hindernissen) in ihr, und $d \colon V \times V \to \mathbb{R}^+$ die euklidische Abstandsfunktion.
-
-  Der \emph{Sichtbarkeitsgraph} $G = (V, E)$ ist ein Graph, in dem zwei Knoten $t, h \in V$ genau dann durch eine Kante verbunden sind, wenn die offene Strecke $(th)$ kein Hindernis aus $P$ schneidet.%
-  \footnote{
-    Die Verwendung der offenen Strecke $(th)$ stellt sicher, dass die Endpunkte auf den Seiten der Polygone liegen können, da nur die Strecke zwischen den Punkten überprüft wird.
-  }
-  Die Kante $(t, h)$ erhält als Gewicht den euklidischen Abstand $d(t, h)$.
+\begin{definition}[Euclidean Shortest Path Problem]
+  Sei $P$ eine Menge von Polygonen in $\mathbb{R}^2$ und $s, t$ Eckpunkte dieser Polygone.
+  Was ist kürzeste Pfad von $s$ nach $t$, so dass dieser kein Polygon schneidet?
 \end{definition}
 
-Die in dieser Arbeit betrachteten Sichtbarkeitsgraphen sind von einer besonderen Form:
-Die Menge der Punkte entspricht dabei den Eckpunkten der Polygone.
-Je nach Anzahl, Form und Platzierung der Polygone kann ein Sichtbarkeitsgraph sehr viele Kanten aufweisen, was die Berechnung von kürzesten Pfaden erschwert.
-Abbildung \ref{graph:fig:vis_example} illustriert den zu einer Menge von Polygonen gehörenden Sichtbarkeitsgraphen.
 
-\begin{figure}[ht]
-  \centering
-  \begin{tikzpicture}
-    \node at (0.0, 0.5) (s) {};
-    \node at (3.0, 0.5) (t) {};
-
-    \draw[draw=black] (1.0,0.0) rectangle ++(1.0,1.0);
-    \draw[draw=black] (1.0,1.5) rectangle ++(1.0,1.0);
-
-    \draw  (s) edge node {} (t);
-
-  \end{tikzpicture}
-  \caption{Beispiel eines Sichtbarkeitsgraphens}
-  \label{graph:fig:vis_example}
-\end{figure}
-\todo{Bild schön machen}
+\todo{Bild Sichtbarkeitsgraph}
 
 \subsection{Eigenschaften}
 
 Sichtbarkeitsgraphen sind im Allgemeinen \emph{nicht planar}.
 Sie sind \emph{ungerichtet}, da die Sichtbarkeit zwischen zwei Punkten in beide Richtungen gilt.
-Da die Gewichte der Kanten dem euklidischen Abstand zwischen den verbundenen Punkten entsprechen, bildet dies eine untere Schranke für alle Knotenpaare, da ein kürzester Pfad durch das Umgehen von Hindernissen nur länger werden kann.
+Da die Gewichte der Kanten dem euklidischen Abstand zwischen den verbundenen Punkten entsprechen, bildet dieser eine untere Schranke des Abstandes für alle Knotenpaare, da ein kürzester Pfad durch das Umgehen von Hindernissen nur länger werden kann.
 
 \subsection{Abgrenzung zu Straßengraphen}\label{graphs:strassengraphen}
 

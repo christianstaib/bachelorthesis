@@ -5,10 +5,10 @@ Für die Knoten-Kontraktion muss für jeden Vorgängerknoten eine Dijkstra-Suche
 Ein hoher Knotengrad bedeutet somit viele Dijkstra-Suchen und zahlreiche Vergleiche, ob eine Abkürzung notwendig ist.
 
 Bei der Bottom-Up-Kontraktion wird die Kontraktion potenziell mehrfach simuliert, bevor sie wirklich ausgeführt wird.
-Bei Lazy-Popping werden die Knoten oft nicht kontraktiert, sondern mit aktualisiertem Heuristik-Wert in die Warteschlange zurückgeschoben, da durch viele Nachbarn die Wahrscheinlichkeit dafür steigt, dass dich die Knoten-Differenz verändert hat.
+Beim Lazy-Popping werden die Knoten oft nicht kontraktiert, sondern mit aktualisiertem Heuristik-Wert in die Warteschlange zurückgeschoben, da durch viele Nachbarn die Wahrscheinlichkeit dafür steigt, dass dich die Knoten-Differenz verändert hat.
 Beim Neighbor-Update sind jeweils sehr viele Nachbarn zu aktualisieren.
 
-Um Graphen mit hohen Knotengraden effizient zu kontrahieren, ist es entscheidend, die Kontraktion einzelner Knoten zu beschleunigen und eine effiziente sowie effizient erstellbare Reihenfolge der Kontraktionen zu finden.
+Um Graphen mit hohen Knotengraden schneller zu kontrahieren, ist es entscheidend, die Kontraktion einzelner Knoten zu beschleunigen und eine effiziente sowie effizient erstellbare Reihenfolge der Kontraktionen zu finden.
 Auch die zur Repräsentation von Graphen verwendeten Datenstrukturen sollten betrachtet werden, damit das Finden von Nachbarn sowie das Einfügen und Löschen von Kanten effizient und parallel möglich ist.
 
 \section{Kontraktion mit Heuristik}
@@ -28,18 +28,18 @@ Unter der Annahme, dass in Graphen mit sehr hohem Knotengrad fast alle Nachbarn 
 
 Sei $G = (V, E)$ der zu kontrahierende Graph.
 Lässt sich zu $G$ effizient ein vereinfachter Graph $G' = (V, E')$ mit $\forall s, t \in V \colon {spd}_{G'} (s, t) \geq {spd}_{G} (s, t)$ konstruieren, so kann dieser zur Berechnung der oberen Schranke verwendet werden, etwa indem die Dijkstra -uchen auf ihm ausgeführt werden.
-Alternativ kann $G'$ auch in einen Contracted- oder Hub-Graph umgewandelt werden, womit die obere Schranke dann für jedes Vorgänger-Nachfolger-Paar einzelnen berechnet wird.
+Alternativ kann zu $G'$ auch ein Contracted- oder Hub-Graph erzeugt werden, womit die obere Schranke dann für jedes Vorgänger-Nachfolger-Paar einzelnen berechnet wird.
 
 Für Graphen in der euklidischen Ebene existieren Algorithmen, wie etwa die Delaunay-Triangulierung, die es ermöglichen, leicht einen vereinfachten Graphen zu erstellen.
 
 \subsection{Dreiecksungleichung}
 
-Ähnlich zu ALT\cite{goldberg2005computing} kann eine Menge \emph{Hubs} berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke angeben können.
+Ähnlich zu ALT\cite{goldberg2005computing} kann eine Menge \emph{Hubs} berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke des Abstands zweier Knoten angeben können.
 Ein Hub ist hierbei ein Knoten $h \in V$, für den die Distanz zu und von allen Knoten bekannt ist.
 Die obere Schranke des Abstandes zweier Knoten $s, t \in V$ kann dann durch ${spd}_G (s, h) + {spd}_G (h, t)$ berechnet werden.
 Liegt $h$ dabei auf einem kürzesten Pfad von $u$ nach $v$, so entspricht der Wert sogar genau dem Abstand.
 Die obere Schranke über mehrere Hubs wird durch die Wahl der kleinsten oberen Schranken bestimmt.
-In der Implementation hierfür reicht es sogar, eine obere Schranke zu finden, die kleiner als die potenzielle Abkürzung ist, diese kann dann keine optimale Abkürzung sein und die überprüfung kann abgebrochen werden.
+Hierfür reicht es sogar, eine obere Schranke zu finden, die kleiner als die potenzielle Abkürzung ist, diese Kante kann dann keine optimale Abkürzung sein und die Überprüfung kann abgebrochen werden.
 
 Die Hubs können dabei über die Berechnung eines Hitting-Sets bestimmt werden.
 Durch die Auswahl von Hubs auf diese Art steigt die Genauigkeit der oberen Schranken mit der Hop-Länge der kürzesten Pfade, da die Wahrscheinlichkeit, dass diese durch einen Hub getroffen wird, steigt.
@@ -48,24 +48,24 @@ Durch mehr Hubs steigt allerdings auch der Zeitbedarf der Berechnung der oberen 
 \subsection{Kombination mehrerer oberer Schranken}
 Sind für einen Graphen mehrere Heuristiken bekannt, so kann für eine potenzielle Abkürzung aus allen oberen Schranken die kleinste ausgewählt werden.
 Dies ist besonders dann sinnvoll, wenn die Heuristiken jeweils eine Teilmenge aller Knotenpaare gut abdecken.
-Insbesondere die Kombination von Dreiecksungleichung und vereinfachtem Graph ist hierbei Erfolgsversprechen unter der Annahme, dass die erste für große und zweitere für kleine Hop-Abstände gute obere Schranken liefert.
+Insbesondere die Kombination von Dreiecksungleichung und vereinfachtem Graph ist hierbei erfolgsversprechend, unter der Annahme, dass die erste für große und zweitere für kleine Hop-Abstände gute obere Schranken liefert.
 
-\section{Bottom-Up Heuristik}
-
-Die Verwendung der Kanten-Differenz zur Bestimmung, welche Knoten als nächstes kontrahiert werden soll, minimiert in jedem Schritt greedy die Anzahl der Kanten im gesammten Graph.
-Dabei wird nicht mit einbezeogen, welchen Knoten wieviele Kanten hinzugefügt werden.
-Da bei der Kontraktion eines Knotens für jedes Paar aus Vorgänger und Nachfolger geprüft werden muss, ob eine Abkürzung einzufügen ist, verursacht das hinzufügen ausgehender Kanten zu Knoten mit hohem Grad quadratische Folgekosten.
-
-Eine möglicherweise besser Heuristik ist daher die Summe der Differenz der quadratischen Knotengrade nach und vor der Kontraktion, welche in \autoref{fig:kontraktion:heuristik} definiert ist.
-Diese bevorzugt das Hinzufügen ausgehender Kanten zu Knoten mit kleinem Grad.
-
-\begin{figure}[h!]
-  \begin{equation*}
-    {h} (v) \coloneq \sum_{n \in \text{Nachbarschaft}(v)} (\text{Grad}_\text{neu}(n))^2 - (\text{Grad}_\text{alt}(n))^2
-  \end{equation*}
-  \caption{Vorgeschlagene Heuristik}
-  \label{fig:kontraktion:heuristik}
-\end{figure}
+% \section{Bottom-Up Heuristik}
+% 
+% Die Verwendung der Kanten-Differenz zur Bestimmung, welche Knoten als nächstes kontrahiert werden soll, minimiert in jedem Schritt greedy die Anzahl der Kanten im gesammten Graph.
+% Dabei wird nicht mit einbezeogen, welchen Knoten wieviele Kanten hinzugefügt werden.
+% Da bei der Kontraktion eines Knotens für jedes Paar aus Vorgänger und Nachfolger geprüft werden muss, ob eine Abkürzung einzufügen ist, verursacht das hinzufügen ausgehender Kanten zu Knoten mit hohem Grad quadratische Folgekosten.
+% 
+% Eine möglicherweise besser Heuristik ist daher die Summe der Differenz der quadratischen Knotengrade nach und vor der Kontraktion, welche in \autoref{fig:kontraktion:heuristik} definiert ist.
+% Diese bevorzugt das Hinzufügen ausgehender Kanten zu Knoten mit kleinem Grad.
+% 
+% \begin{figure}[h!]
+%     \begin{equation*}
+%         {h} (v) \coloneq \sum_{n \in \text{Nachbarschaft}(v)} (\text{Grad}_\text{neu}(n))^2 - (\text{Grad}_\text{alt}(n))^2
+%     \end{equation*}
+%     \caption{Vorgeschlagene Heuristik}
+%     \label{fig:kontraktion:heuristik}
+% \end{figure}
 
 \section{Datenstrukturen}
 

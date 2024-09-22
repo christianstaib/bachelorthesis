@@ -24,10 +24,10 @@ Der Name Contraction Hierarchies leitet sich aus dem Konzept der Knoten-Kontrakt
 
   \begin{enumerate}
     \item\label{ch:contraction:when_shortcut}
-      Für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ wird, wenn $(u, v, w)$ der einzige kürzeste $u$-$v$-Pfad ist, eine Abkürzungskante (Shortcut) $(u, w, {spd}_G((u, w)))$ zu $E$ hinzugefügt.
+    Für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ wird, wenn $(u, v, w)$ der einzige kürzeste $u$-$v$-Pfad ist, eine Abkürzungskante (Shortcut) $(u, w, {spd}_G((u, w)))$ zu $E$ hinzugefügt.
 
     \item
-      Alle Kanten von und zu $v$ werden entfernt.
+          Alle Kanten von und zu $v$ werden entfernt.
   \end{enumerate}
 \end{definition}
 
@@ -473,7 +473,7 @@ Dafür wird mit einer Heuristik der jeweils \emph{unwichtigste} Knoten aus einer
 Ein unwichtiger Knoten hat hierbei einen niedrigen Heuristikwert.
 Die in der Praxis am meistverwendeten Heuristiken beinhalten die \emph{Kanten-Differenz}, ziehen jedoch zumeist auch noch weitere Informationen mit ein.
 Sie gibt an, wie sich die Anzahl der Kanten im gesamten Graph durch die Kontraktion verändert.
-Sie wird gebildet, indem die Anzahl der neu hinzugefügten Kanten von der Anzahl der entfernten Kanten subtrahiert wird.
+Sie wird gebildet, indem die Anzahl der neu hinzugefügten Kanten von der Anzahl der entfernten Kanten subtrahiert wird, wofür eine Kontraktion des Knotens \emph{simuliert} wird.
 Die Kontraktion eines Knotens kann dabei die Heuristikwerte anderer Knoten verändern.
 Damit jedes Mal der Knoten mit dem niedrigsten Heuristikwert ausgewählt wird, müssen nach jeder Kontraktion alle Heuristikwerte neuberechnet werden.
 Dies ist im Allgemeinen jedoch zu teuer, weshalb in der Praxis sich zwei Methoden als effektiv erwiesen haben:
@@ -591,7 +591,7 @@ Dies erstellt ebenfalls die benötigten Suchbäume des Upward- bzw. Downward-Gra
 
 \subsubsection{Pruning}
 
-Die erstellten Labels enthalten bisher noch Knoten mit nicht-optimaler Distanz in $G$ (siehe \autoref{graphs:fig:counterexample_optimal_Upward}), was einerseits den Speicherbedarf der  Label als auch die Abfrage Zeiten erhöht.
+Die erstellten Labels enthalten bisher noch Knoten mit nicht-optimaler Distanz in $G$ (siehe \autoref{graphs:fig:counterexample_optimal_Upward}), was einerseits den Speicherbedarf der  Label als auch die Anfrage-Zeiten erhöht.
 Die Einträge mit nicht-optimaler Distanz können dabei entfernt werden, indem die erstellten Hub Label selbst dafür benutzt werden, die Einträge mit nicht-optimaler Distanz zu identifizieren.
 Diese nicht-optimale Einträge können aus dem Label entfernt werden.
 Beim Merging kann dies auch bereits während der Erstellung geschehen, da die Labels von Knoten mit höherem Level bereits existieren.
