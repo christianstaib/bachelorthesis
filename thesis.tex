@@ -4,7 +4,6 @@
 % faster tikz. Needs to be here because of overleaf
 \usepgfplotslibrary{external}
 \tikzexternalize[prefix=tikzexternalize/]
-
 \makeatletter
 \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
 \makeatother
@@ -13,10 +12,8 @@
 \title{Anwendung von Contraction Hierarchies und Hierarchical Hub Labeling auf Nicht-Straßengraphen}
 \author{Christian Staib}
 \date{\today}
-% \publishers{Universität Stuttgart}
 
-
-\usepackage[headsepline,footsepline]{scrlayer-scrpage}
+\setcounter{tocdepth}{2}
 
 \begin{document}
 \thispagestyle{empty}
@@ -47,6 +44,7 @@
 
 \clearpage
 \thispagestyle{empty}
+\pagenumbering{gobble}
 \include{tex/erklearung}
 
 \end{document}

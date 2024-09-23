@@ -154,6 +154,9 @@ Sie sind eine Möglichkeit das Euclidean Shortest Path Problem zu lösen.
   Was ist kürzeste Pfad von $s$ nach $t$, so dass dieser kein Polygon schneidet?
 \end{definition}
 
+\autoref{fig:graphs:eulcidian_shotest_path_problem} zeigt eine solche Situation.
+Die gestrichelten Linien sind dabei Kanten des Sichtbarkeitsgraphen.
+
 \begin{figure}[h!]
   \centering
   \begin{tikzpicture}
@@ -220,6 +223,7 @@ Sie sind eine Möglichkeit das Euclidean Shortest Path Problem zu lösen.
     \draw[dashed] (b3) -- (c3);
   \end{tikzpicture}
   \caption{Beispiel Euclidean Shortest Path Problem}
+  \label{fig:graphs:eulcidian_shotest_path_problem}
 \end{figure}
 
 \subsection{Eigenschaften}
@@ -244,19 +248,17 @@ Diese Beobachtung führt zur Definition der \emph{Highway Dimension}, einem Konz
 Aufgrund der unterschiedlichen Strukturen von Sichtbarkeitsgraphen und Straßengraphen können Algorithmen, die für Straßengraphen gute Laufzeiten aufweisen, zwar auf Sichtbarkeitsgraphen angewendet werden, allerdings ist ihre Rechenzeit häufig zu hoch, um eine effiziente Verarbeitung zu ermöglichen.
 
 
+
 \subsection{Triangulierung}
 
-Die Triangulierung wird on \cite{funkescalable} erklärt.
-Ein Beispiel solch einer Triangulierung ist in \autoref{fig:thessaloniki_comparison} gegeben.
+Um die Distanzen zwischen Knotenpaaren in Sichtbarkeitsgraphen mit einer oberen Schranke abzuschätzen, kann eine \emph{Triangulierung} des Graphs durchgeführt werden, wie beispielsweise durch eine Delaunay-Triangulierung.
+Dieser Ansatz kann jedoch sehr schmale, lange Dreiecke erzeugen, die im Anschluss beseitigt werden können, um eine bessere obere Schranke zu erhalten.
+Das spezifische Verfahren zur Erstellung der in dieser Arbeit verwendeten Triangulierung wurde ausführlich in \cite{funkescalable} beschrieben.
 
-\todo{Details}
-
-Erst Triangulierung. Wenn Dreiecke sehr schmal sind, dann ersetzen durch Subdreiecke.
-
-Die Knoten eines triangulierten Graphen $G_g$ bilden eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
+Die Knoten eines triangulierten Graphen $G_g$ bilden hierbei eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
 Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.
 
-\begin{figure}[ht]%
+\begin{figure}[h!]%
   \centering
   \subfloat[\centering aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
   %\qquad

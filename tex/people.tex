@@ -457,7 +457,7 @@ Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils gr
 
     \State
     \While{$Q \neq \emptyset$}
-    \State $u \leftarrow{extract\_min}(Q)$\label{graphs:dijkstra:pop}
+    \State $u \leftarrow{extract\_min}(Q)$
 
     \State
     \State // Beende frühzeitig wenn Zielknoten gefunden wurde
@@ -495,6 +495,6 @@ Der Algorithmus kann auch dazu verwendet werden, die Ergebnisse einer $s$-$t$-An
 Falls die Labels von $s$ und $t$ noch nicht vorhanden sind, werden sie im Rahmen der Anfrage generiert.
 Nachfolgende Anfragen können dann direkt auf die gespeicherten Labels zugreifen.
 
-PEOPLE kann auch dafür benutzt werden, die durch eine vertex-to-level-Funktion induzierte durschnitliche Label Größe anzugeben, ohne zuerst den Contracted-Graph und anschließend den Hub-Graphen zu berechnen.
+PEOPLE kann auch dafür benutzt werden, die durch eine vertex-to-level-Funktion induzierte durchschnittliche Label Größe anzugeben, ohne zuerst den Contracted-Graph und anschließend den Hub-Graphen zu berechnen.
 Hierfür wird für $n$ Knoten das Label berechnet und über diese die durchschnittliche Größe des Labels angegeben.
 Da sich dies leicht parallelisieren lässt, könnte in einem zukünftigen Schritt durch Optimierungsalgorithmen die Label Größe verkleinert werden.

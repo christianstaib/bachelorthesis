@@ -13,8 +13,6 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathtools}
-\AtBeginDocument{\RenewCommandCopy\qty\SI}
-\usepackage{physics}
 \usepackage{amsthm}
 \DeclareMathOperator{\avg}{\diameter}
 
@@ -68,8 +66,7 @@
 \usepackage[absolute,overlay]{textpos} % To position text at exact coordinates
 \usepackage{graphicx}
 
-% Hyperlinks
-\usepackage{hyperref}
+
 
 % Bibliography
 \usepackage[backend=biber,
@@ -86,6 +83,21 @@
             execute at begin node=\begin{spacing}{#1}\hspace{0pt},%
                 execute at end node=\vspace{-\ht\strutbox}\end{spacing}}}
 
+
+\usepackage{physics}
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+\ExplSyntaxOn
+\msg_redirect_name:nnn { siunitx } { physics-pkg } { none }
+\ExplSyntaxOff
+
+\setlength {\marginparwidth }{2cm}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+
+
+\usepackage[headsepline,footsepline]{scrlayer-scrpage}
 
 
 % Optional packages (commented out)

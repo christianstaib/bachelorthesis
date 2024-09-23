@@ -36,12 +36,6 @@ Um die Abkürzungen zu erzeugen, kann von jedem Vorgänger eine modifizierte Dij
 Ist die Länge der potenziellen Abkürzung kürzer, als die des in der modifizierten Dijkstra-Suche gefundenen Pfades, so liegt $v$ auf allen kürzesten Pfaden zwischen $u$ und $w$.
 Die Knoten-Kontraktion bewahrt daher die kürzesten Pfad Distanzen zwischen den verbleibenden Knoten.
 
-\todo{
-  wenn $v$ auf allen kürzesten Pfaden zwischen $u$ und $w$ liegt
-
-  Beispiele
-}
-
 Betrachten wir dies am ungerichteten Beispielgraphen.
 Sei $i$ der zu kontrahierende Knoten, die Nachbarn sind $a$, $b$, $j$ und $h$.
 Die kürzesten $a$-$b$-, $b$-$j$-, $h$-$j$- und $a$-$h$-Pfade führen nicht durch $i$.
@@ -277,7 +271,6 @@ In \autoref{ch:subsection:pfad_gewinnung} wird darauf eingegangen, wie diese ent
     \State $m \leftarrow {none}$
     \State $d \leftarrow \infty$
     \State
-    Solche eine Abkürz
     \ForAll {$v \in V$}
     \If {${dist}_u(v) + {dist}_d(v) < d$}
     \State $m \leftarrow v$
@@ -405,7 +398,7 @@ Implementierungen ähneln der bidirektionalen Dijkstra-Suche, es werden also abw
 Die Expansion einer Suchrichtung kann dabei gestoppt werden, wenn die kleinste Distanz der Vorwärtswarteschlange größer als die bisherige kleinste Treffpunkt-Distanz ist.
 Wenn beide Suchen gestoppt sind, ist ein vorhandener kürzester Pfad gefunden worden.
 
-\subsection{Stall-on-demand}
+\subsection{stall-on-demand}
 
 Wie \autoref{graphs:fig:counterexample_optimal_Upward} zeigt, sind manche der im Upward- und Downward-Graphen gefunden Distanzen nicht optimal.
 Für das Finden einen kürzesten Pfades sind jedoch nur die Knoten interessant, deren Distanz optimal ist.

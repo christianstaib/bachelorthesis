@@ -5,8 +5,8 @@ Die Ergebnisse wurden auf gleichen System, aber nicht auf demselben erzeugt.
 
 \section{Untersuchung der Graphen}
 
-Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
-Für jeden dieser drei Graphen existiert zusätzlich eine Triangulierung, deren kürzeste Pfade eine untere Schranke zu Sichtbarkeitgraphen darstellt
+Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitsgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
+Für jeden dieser drei Graphen existiert zusätzlich eine Triangulierung, deren kürzeste Pfade eine untere Schranke zu Sichtbarkeitsgraphen darstellt
 \autoref{table:input_graphs} listet die Graphen auf.
 Die Graphen mit dem Präfix \emph{aegaeis} beinhalten das Ägäische Meer, mit \emph{medi} das Mittelmeer und mit \emph{pata} die Chilenische Fjorde.
 Graphen mit dem Postfix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulierungen.
@@ -41,7 +41,7 @@ Für die Berechnung des Speedups der in dieser Arbeit verwendeten Methoden wurde
 Die ermittelten Zeiten für das Finden und Erstellen des kürzesten Pfades sind in Tabelle \ref{fig:ergebnisse:dijkstra} dargestellt.
 Aus den Ergebnissen geht hervor, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten aufweisen.
 
-Zusätzlich zur durschnitlichen Laufzeit wurde die die Durschnitswerte der Hop-Länge, des Dijsktra-Rank und der Queue pops über \num{10000} $s$-$t$-Dijkstra-Suchen ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
+Zusätzlich zur durchschnittlichen Laufzeit wurde die die Durchschnittswerte der Hop-Länge, des Dijsktra-Rank und der Queue pops über \num{10000} $s$-$t$-Dijkstra-Suchen ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
 Dabei zeigte sich, dass die durchschnittliche Hop-Länge in den Sichtbarkeitsgraphen signifikant kürzer ist als in den Triangulierungen.
 Trotz der geringeren Anzahl an Knoten in den Sichtbarkeitsgraphen ist die durchschnittliche Anzahl an Queue Pops jedoch höher.
 Dies deutet darauf hin, dass der Einsatz einer Warteschlange mit einer \emph{Decrease-Key}-Funktion die Effizienz der Dijkstra-Suche potenziell verbessern könnte.
@@ -477,7 +477,7 @@ Die Verwendung eines parallelen \emph{reduce}-Algorithmus zum Mergen der Labels 
 
 Die Hub-Graphen wurden ebenfalls durch PEOPLE berechnet.
 Die Werte sind in \autoref{table:ergebnisse:hl_bruteforce} zu sehen.
-Die durschnittliche Label Größe ist minimal anders.
+Die Durchschnittliche Label Größe ist minimal anders.
 
 \begin{table}[h!]
   \centering
@@ -523,18 +523,18 @@ Interessanterweise ist es bei den Sichtbarkeitsgraphen schneller, direkt einen H
   \centering
   \begin{tabular}{ %VERGLEICH
       l % Graph
-      S[table-format = 4.0] % creation zeit
-      S[table-format = 4.0] % average time
+      r
+      r
     }
     \toprule
-    {Graph}            & {CH \& Merging}               & {HL DIREKT}                  \\
-    {}                 & {(min)}                       & {(min)}                      \\ \midrule
-    aegaeis-graph      & \bfseries 32.5                & 86.55                        \\
-    aegaeis-visibility & 809.3                         & \bfseries  357.9166666666667 \\
-    medi-graph         & \bfseries  57.96666666666667  & 191.06666666666666           \\
-    medi-visibility    & 2591.15                       & \bfseries  1317.85           \\
-    pata-graph         & \bfseries  424.65000000000003 & 1706.5333333333333           \\
-    pata-visibility    & 3532.366666666667             & \bfseries 2657.5             \\  \bottomrule
+    {Graph}            & {CH \& Merging}      & {HL DIREKT}                    \\
+    \midrule
+    aegaeis-graph      & 32m                  & \bfseries 1h 26m               \\
+    aegaeis-visibility & \bfseries 13h 28m    & 5h 57m                         \\
+    medi-graph         & 57 m                 & \bfseries 3h 11m               \\
+    medi-visibility    & \bfseries 1d 19h 10m & 21h 57m                        \\
+    pata-graph         & 7h \phantom{0} 4m    & \bfseries 1d \phantom{0}4h 26m \\
+    pata-visibility    & \bfseries 2d 10h 52m & 1d 20h 17m                     \\  \bottomrule
   \end{tabular}
   \caption{HL  merged}
   \label{table:ergebnisse:vergleich_was_schneller}
@@ -636,15 +636,13 @@ Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{20
     %\filldraw (4.456048319873318, 3.0900255391060227) circle (2pt);
     \node[circle,draw=black, fill=white, inner sep=0pt, minimum size=5pt] at (4.456048319873318, 3.0900255391060227) {};
   \end{tikzpicture}
-  \caption{PEOPLE Contracted-Graph Suchbaum von 1234 in aegaeis-graph}
+  \caption{Suchbaum einer modifizierten Dijkstra-Suche auf aegaeis-graph}
   \label{fig:ergebnisse:ch_people_suchbaum}
 \end{figure}
 
-
-
 \subsection{Vertex-to-level Vergeleich}
 
-Wie im \autoref{chapter:peopel} erwähnt, lässt sich die durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n$ zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
+Wie im \autoref{chapter:peopel} erwähnt, lässt sich durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n$ zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
 Diese Methode wurde verwendet, um verschiedene Funktionen zu testen, deren Ergebnisse in \autoref{table:ergebnisse:vtl_vergleich} aufgeführt sind.
 
 Das verwendete Hitting-Set wurde jeweils über \num{1000000} Pfade gebildet, wobei die Knoten, die nicht im Hitting-Set waren, nach einer weiteren Metrik sortiert wurden.
