@@ -1,11 +1,40 @@
 \chapter{Ergebnisse}
 
-Sofern nicht anders erwähnt wurden Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von 2.1 Ghz und 180GB RAM benutzt.
+Sofern nicht anders erwähnt, beziehen sich die Laufzeiten auf Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von 2.1 Ghz und 180GB RAM.
 Die Ergebnisse wurden auf gleichen System, aber nicht auf demselben erzeugt.
 
 \section{Untersuchung der Graphen}
 
-Die bereitgestellten Graphen wurden vor ihrer Nutzung untersucht
+Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
+Für jeden dieser drei Graphen existiert zusätzlich eine Triangulierung, deren kürzeste Pfade eine untere Schranke zu Sichtbarkeitgraphen darstellt
+\autoref{table:input_graphs} listet die Graphen auf.
+Die Graphen mit dem Präfix \emph{aegaeis} beinhalten das Ägäische Meer, mit \emph{medi} das Mittelmeer und mit \emph{pata} die Chilenische Fjorde.
+Graphen mit dem Postfix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulierungen.
+Die bearbeiteten Graphen sind ungerichtet, werden im folgenden jedoch als gerichtet betrachtet.
+Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kanten gerichtetet zu interpretieren,
+die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(b, a)$.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 7.0] % Zeit
+      S[table-format = 9.0] % Zeit
+      S[table-format = 4.1] % Zeit
+    }
+    \toprule
+    {Graph}            & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad} \\ \midrule
+    aegaeis-graph      & 524881      & 2795322     & 5.32562999994        \\
+    aegaeis-visibility & 201040      & 310231834   & 1543.13486868        \\
+    medi-graph         & 795606      & 4223566     & 5.30861506826        \\
+    medi-visibility    & 310114      & 730772544   & 2356.46421638        \\
+    pata-graph         & 2240339     & 11632900    & 5.1924731034         \\
+    pata-visibility    & 1002171     & 315653758   & 314.969958221        \\ \bottomrule
+  \end{tabular}
+  \caption{Bearbeite Graphen}
+  \label{table:input_graphs}
+\end{table}
+
 \subsection{Dijkstra}
 
 Für die Berechnung des Speedups der in dieser Arbeit verwendeten Methoden wurden für jeden Graphen \num{1000} sequentielle $s$-$t$-Dijkstra-Suchen ausgeführt und die durchschnittliche Laufzeit ermittelt.
@@ -405,7 +434,7 @@ Der Speedup der auf diese Weise erzeugten Contracted-Graphen der Triangulierunge
 Zudem wurden jweils mehr als dreimal so viele Abkürzungen hinzugefügt.
 
 Auf den Sichtbarkeitsgraphen von aegaeis und medi wurde ein Speedup von nur \num{1.5} erzielt, auf pata von immerhin \num{3.5}.
-Im Vergleich zu der Rechenzeit, welche in die ERstellung investiert wurde, ist dies jedoch recht wenig.
+Im Vergleich zu der Rechenzeit, welche in die Erstellung investiert wurde, ist dies jedoch recht wenig.
 
 \subsection{Hub Graph}
 
@@ -510,6 +539,108 @@ Interessanterweise ist es bei den Sichtbarkeitsgraphen schneller, direkt einen H
   \caption{HL  merged}
   \label{table:ergebnisse:vergleich_was_schneller}
 \end{table}
+
+\subsection{Performance Overhead}
+Die Erzeugung der ausgehenden Kanten im Contracted-Graph sowie der Label im Hub-Graph erfolgen durch modifizierte Dijkstra-Suchen, beinhaltet aber zusätzlich unter anderem auch die Sammlung von Abkürzungen.
+
+Zur Quantifizierung des zusätzlichen Rechenaufwands wurden für jeden Graphen, für jeweils \emph{10000} Knoten, jeweils zwei Dijkstra Suchen zu alle anderen Knoten durchgeführt.
+Die dafür benötigte Rechenzeit wurde anschließend auf die Anzahl der Knoten im Graph skaliert.
+\autoref{table:ergebnisse:dijkstra_vs_ch_vs_hl} zeigt die erforderliche Zeit zur Erstellung eines Contracted- und eines Hub-Graphen im Verhältnis zu dieser skalierten Zeit.
+Es fällt auf, dass die für die Konstruktion eines Contracted-Graphen benötigte Zeit nur geringfügig kürzer ist als die eines Hub-Graphen.
+Dies lässt darauf schließen, dass in den meisten Fällen spät abgebrochen wurde.
+
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ %VERGLEICH
+      l % Graph
+      r % Graph
+      S[table-format = 1.3] % average time
+      S[table-format = 1.3] % average time
+    }
+    \toprule
+    {Graph}            & {Dijkstra} & {$\frac{\text{Contracted-Graph}}{\text{Dijkstra}}$} & {$\frac{\text{Hub-Graph}}{\text{Dijkstra}}$}   \\ \midrule
+    aegaeis-graph      & 46m        & \fpeval{(20)/(46)}                                  & \fpeval{(1*60+26)/(46)}                        \\
+    aegaeis-visibility & 5h 19m     & \fpeval{(5*60+53)/(5*60+19)}                        & \fpeval{(5*60+57)/(5*60+19)}                   \\
+    medi-graph         & 1h 46m     & \fpeval{(38)/(1*60+46)}                             & \fpeval{(3*60+11)/(1*60+46)}                   \\
+    medi-visibility    & 19h 51m    & \fpeval{(20*60+52)/(19*60+51)}                      & \fpeval{(21*60+57)/(19*60+51)}                 \\
+    pata-graph         & 14h 55m    & \fpeval{(5*60+42)/(14*60+55)}                       & \fpeval{(1*24*60+4*60+26)/(14*60+55)}          \\
+    pata-visibility    & 1d 12h 32m & \fpeval{(1*24*60+20*60+45)/(1*24*60+12*60+32)}      & \fpeval{(1*24*60+20*60+17)/(1*24*60+12*60+32)} \\  \bottomrule
+  \end{tabular}
+  \caption{todo dijkstra vs ch bruteforce vs hl bruteforce}
+  \label{table:ergebnisse:dijkstra_vs_ch_vs_hl}
+\end{table}
+
+Für die Triangulierung von Sichtbarkeitsgraphen ist es deutlich effizienter, Contracted-Graphen zu erstellen, anstatt für jeden Knoten zwei vollständige Dijkstra-Suchen durchzuführen und noch effizienter, als einen Hub-Graphen zu erstellen.
+Daher ist davon auszugehen, dass die Dijkstra-Suchen häufiger vorzeitig abgebrochen worden konnten.
+
+
+Um dieses Verhalten besser zu verstehen, wurde die Suche nach ausgehenden Kanten eines Knotens im aeagaeis-Sichtbarkeitsgraphen näher untersucht.
+\autoref{fig:ergebnisse:ch_people_suchbaum} zeigt einen entsprechenden Suchbaum.
+In der Abbildung repräsentieren schwarze Punkte die Knoten, die als Köpfe für die aus dem weißen Punkt ausgehenden Upward-Kanten fungieren.
+Die dünnen Kanten führen zu Knoten, die zum Zeitpunkt ihrer Expansion nicht mehr lebendig waren, die gestrichelten Kanten gehen zu Knoten, die zwar gesehen, aber nicht mehr expandiert wurden.
+Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{201040} möglichen Knoten erreicht, was die Effizienz dieses Ansatzes unterstreicht.
+
+\begin{figure}[h!]
+  \centering
+  \begin{tikzpicture}[scale=1.5]
+    \draw[line width=2] (4.456048319873318, 3.0900255391060227) edge (4.456048319873318, 3.0900255391060227);
+    \draw[line width=2] (4.472612660101305, 2.8750437520344008) edge (4.456048319873318, 3.0900255391060227);
+    \draw[line width=2] (4.587260603652865, 2.8905717642487616) edge (4.472612660101305, 2.8750437520344008);
+    \draw[line width=2] (4.5889971877098645, 2.835738571829438) edge (4.472612660101305, 2.8750437520344008);
+    \draw[line width=2] (4.555467757087328, 3.413754167559091) edge (4.456048319873318, 3.0900255391060227);
+    \draw[line width=2] (4.46260040552211, 2.6534343050634845) edge (4.472612660101305, 2.8750437520344008);
+    \draw[line width=2] (4.1474929335649335, 2.778701673953776) edge (4.456048319873318, 3.0900255391060227);
+    \draw[line width=2] (4.05516128339265, 3.390271423153024) edge (4.456048319873318, 3.0900255391060227);
+    \draw[line width=2] (4.731898018021141, 2.721123549710569) edge (4.5889971877098645, 2.835738571829438);
+    \draw[line width=2] (4.808163001152366, 2.6938667891350576) edge (4.731898018021141, 2.721123549710569);
+    \draw[line width=2] (4.7237357395051305, 2.577961439629206) edge (4.731898018021141, 2.721123549710569);
+    \draw[line width=2] (4.9535573880579165, 2.6129010328780566) edge (4.808163001152366, 2.6938667891350576);
+    \draw[line width=2] (3.846534022946102, 2.9349334463667276) edge (4.1474929335649335, 2.778701673953776);
+    \draw[line width=2] (5.001135338416418, 2.434584433495246) edge (4.9535573880579165, 2.6129010328780566);
+    \draw[line width=2] (3.7631245777735245, 2.4062629283591264) edge (4.1474929335649335, 2.778701673953776);
+    \draw[line width=2] (3.2194560637723413, 2.886617108472933) edge (3.846534022946102, 2.9349334463667276);
+
+    \draw[line width=1.25] (4.716279893465014, 3.6306879162957273) edge (4.555467757087328, 3.413754167559091);
+    \draw[line width=1.25] (4.391620967473386, 2.443260777703671) edge (4.46260040552211, 2.6534343050634845);
+    \draw[line width=1.25] (4.675476662781719, 2.4429315389880912) edge (4.46260040552211, 2.6534343050634845);
+    \draw[line width=1.25] (4.331246054122673, 3.7480404128842792) edge (4.555467757087328, 3.413754167559091);
+    \draw[line width=1.25] (4.805591520916153, 3.3906551281084774) edge (4.716279893465014, 3.6306879162957273);
+    \draw[line width=1.25] (5.080161044919507, 3.3717017518306136) edge (4.716279893465014, 3.6306879162957273);
+    \draw[line width=1.25] (4.007883808656132, 3.987747576108802) edge (4.05516128339265, 3.390271423153024);
+    \draw[line width=1.25] (5.199329852951351, 3.9242600178816645) edge (4.716279893465014, 3.6306879162957273);
+    \draw[line width=1.25] (4.5328890621807005, 1.8742850719746684) edge (4.391620967473386, 2.443260777703671);
+    \draw[line width=1.25] (5.112877843259156, 2.1060471378532952) edge (4.675476662781719, 2.4429315389880912);
+    \draw[line width=1.25] (5.385844366594839, 3.3906551281084774) edge (5.080161044919507, 3.3717017518306136);
+
+    \draw[dashed,line width=1.25] (5.113512787335495, 1.7932534850537252) edge (5.112877843259156, 2.1060471378532952);
+    \draw[dashed,line width=1.25] (5.3852877691412, 1.9481038374912885) edge (5.112877843259156, 2.1060471378532952);
+    \draw[dashed,line width=1.25] (3.370595393721487, 4.4601669764603) edge (4.007883808656132, 3.987747576108802);
+    \draw[dashed,line width=1.25] (5.029308443523917, 1.1816258114066613) edge (4.5328890621807005, 1.8742850719746684);
+    \draw[dashed,line width=1.25] (3.5261803967035377, 1.9263597014372635) edge (3.7631245777735245, 2.4062629283591264);
+    \draw[dashed,line width=1.25] (4.041647477097499, 0.0) edge (4.5328890621807005, 1.8742850719746684);
+    \draw[dashed,line width=1.25] (0.0, 3.2073226303808156) edge (3.2194560637723413, 2.886617108472933);
+    \draw[dashed,line width=1.25] (5.6063671485642175, 3.7671352248452195) edge (5.199329852951351, 3.9242600178816645);
+    \draw[dashed,line width=1.25] (5.303556091896411, 1.8632888735496067) edge (5.112877843259156, 2.1060471378532952);
+    \draw[dashed,line width=1.25] (5.679759184661748, 4.563044474936362) edge (5.199329852951351, 3.9242600178816645);
+    \draw[dashed,line width=1.25] (5.668072671564062, 3.3352093179608744) edge (5.385844366594839, 3.3906551281084774);
+    \draw[dashed,line width=1.25] (1.4858865913254249, 1.803766838849441) edge (3.2194560637723413, 2.886617108472933);
+    \draw[dashed,line width=1.25] (4.6321645700874825, 4.491935662294821) edge (4.716279893465014, 3.6306879162957273);
+
+    \filldraw (4.555467757087328, 3.413754167559091) circle (2pt);
+    \filldraw (4.46260040552211, 2.6534343050634845) circle (2pt);
+    \filldraw (4.05516128339265, 3.390271423153024) circle (2pt);
+    \filldraw (3.7631245777735245, 2.4062629283591264) circle (2pt);
+    \filldraw (3.2194560637723413, 2.886617108472933) circle (2pt);
+
+    %\filldraw (4.456048319873318, 3.0900255391060227) circle (2pt);
+    \node[circle,draw=black, fill=white, inner sep=0pt, minimum size=5pt] at (4.456048319873318, 3.0900255391060227) {};
+  \end{tikzpicture}
+  \caption{PEOPLE Contracted-Graph Suchbaum von 1234 in aegaeis-graph}
+  \label{fig:ergebnisse:ch_people_suchbaum}
+\end{figure}
+
+
 
 \subsection{Vertex-to-level Vergeleich}
 

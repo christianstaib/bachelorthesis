@@ -275,7 +275,21 @@ Der textuell beschriebene Algorithmus wird dann wie folgt formal definiert:
     \State
     \State \Return $E_s$
   \end{algorithmic}
+  \label{alg:people:ch}
 \end{algorithm}
+
+\subsection{Änderung von Kantengewichten}
+
+Bei Graphen mit hierarchischer Struktur und einer guten Vertex-to-Level-Funktion ist anzunehmen, dass die Suche nach Algorithmus \ref{alg:people:ch}  in den meisten Fällen früh abbricht.
+Dies ist einerseits für die Effizienz der Berechnung von Vorteil, verdeutlicht aber auch, dass für die bestimmung der ausgehenden Kanten des Contracted-Graphen für viele Knoten jeweils nur die lokale Umgebung eines Knotens von Bedeutung ist.
+Änderungen der Kantengewichte außerhalb dieser Umgebung haben daher in der Regel keinen Einfluss auf die lokale Struktur des Knotens.
+
+Diese Eigenschaft lässt sich nutzen, um nach einer Änderung der Kantengewichte nicht für jeden Knoten sämtliche ausgehenden Kanten neu berechnen zu müssen.
+Zwei mögliche Ansätze bieten sich hierfür an:
+Zum einen könnte für jeden Knoten gespeichert werden, von welchen Kanten er beeinflusst wird.
+Zum anderen könnte für jede Kante berechnet werden, welche Knoten von ihr beeinflusst werden.
+
+Das Speichern des Bereichs, der einen Knoten beeinflusst, kann in Graphen der euklidischen Ebene beispielsweise durch Bounding Boxen realisiert werden. Ob es eine effiziente Methode gibt, mit der der Einflussbereich einer Kante bestimmt werden kann, wird in dieser Arbeit nicht behandelt.
 
 \subsection{Abkürzung Problem}
 

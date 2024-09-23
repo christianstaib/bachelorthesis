@@ -154,8 +154,73 @@ Sie sind eine Möglichkeit das Euclidean Shortest Path Problem zu lösen.
   Was ist kürzeste Pfad von $s$ nach $t$, so dass dieser kein Polygon schneidet?
 \end{definition}
 
+\begin{figure}[h!]
+  \centering
+  \begin{tikzpicture}
+    % Variablen für das erste Polygon
+    \coordinate (a0) at (0.5,0);
+    \coordinate (a1) at (1,2);
+    \coordinate (a2) at (2,1);
+    \coordinate (a3) at (1.5,0);
 
-\todo{Bild Sichtbarkeitsgraph}
+    \filldraw (a0) circle (2pt);
+    \filldraw (a1) circle (2pt);
+    \filldraw (a2) circle (2pt);
+    \filldraw (a3) circle (2pt);
+
+    % Zeichne das erste Polygon
+    \draw[thick] (a0) -- (a1) -- (a2) -- (a3) -- cycle;
+    \node at (a0) [below left] {$s$};
+
+    % Variablen für das Rechteck in der Mitte
+    \coordinate (b0) at (4,0);
+    \coordinate (b1) at (4,3);
+    \coordinate (b2) at (5,3);
+    \coordinate (b3) at (5,0);
+
+    \filldraw (b0) circle (2pt);
+    \filldraw (b1) circle (2pt);
+    \filldraw (b2) circle (2pt);
+    \filldraw (b3) circle (2pt);
+
+    % Zeichne das Rechteck in der Mitte
+    \draw[thick] (b0) -- (b1) -- (b2) -- (b3) -- cycle;
+
+
+    % Variablen für das letzte Polygon
+    \coordinate (c0) at (7,0);
+    \coordinate (c1) at (8,1);
+    \coordinate (c2) at (7.5,2);
+    \coordinate (c3) at (6.5,1.5);
+
+    \filldraw (c0) circle (2pt);
+    \filldraw (c1) circle (2pt);
+    \filldraw (c2) circle (2pt);
+    \filldraw (c3) circle (2pt);
+
+    % Zeichne das letzte Polygon
+    \draw[thick] (c0) -- (c1) -- (c2) -- (c3) -- cycle;
+
+    \node at (c2) [above right] {$t$};
+
+    \draw[dashed] (a1) -- (b0);
+    \draw[dashed] (a1) -- (b1);
+
+    \draw[dashed] (a2) -- (b0);
+    \draw[dashed] (a2) -- (b1);
+
+    \draw[dashed] (a3) -- (b0);
+    \draw[dashed] (a3) -- (b1);
+
+    \draw[dashed] (b2) -- (c0);
+    \draw[dashed] (b2) -- (c2);
+    \draw[dashed] (b2) -- (c3);
+
+    \draw[dashed] (b3) -- (c0);
+    \draw[dashed] (b3) -- (c3);
+  \end{tikzpicture}
+  \caption{Beispiel Euclidean Shortest Path Problem}
+\end{figure}
 
 \subsection{Eigenschaften}
 
@@ -177,6 +242,28 @@ Eine weitere Eigenschaft dieser hierarchischen Struktur ist, dass hinreichend la
 Diese Beobachtung führt zur Definition der \emph{Highway Dimension}, einem Konzept, das von \cite{abraham2010highway} eingeführt wurde.
 
 Aufgrund der unterschiedlichen Strukturen von Sichtbarkeitsgraphen und Straßengraphen können Algorithmen, die für Straßengraphen gute Laufzeiten aufweisen, zwar auf Sichtbarkeitsgraphen angewendet werden, allerdings ist ihre Rechenzeit häufig zu hoch, um eine effiziente Verarbeitung zu ermöglichen.
+
+
+\subsection{Triangulierung}
+
+Die Triangulierung wird on \cite{funkescalable} erklärt.
+Ein Beispiel solch einer Triangulierung ist in \autoref{fig:thessaloniki_comparison} gegeben.
+
+\todo{Details}
+
+Erst Triangulierung. Wenn Dreiecke sehr schmal sind, dann ersetzen durch Subdreiecke.
+
+Die Knoten eines triangulierten Graphen $G_g$ bilden eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
+Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.
+
+\begin{figure}[ht]%
+  \centering
+  \subfloat[\centering aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
+  %\qquad
+  \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
+  \caption{Hafen von Thessaloniki}%
+  \label{fig:thessaloniki_comparison}%
+\end{figure}
 
 % TODO rauswerfen?
 % \section{Dijkstra Algorithmus}
