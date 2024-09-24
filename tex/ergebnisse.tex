@@ -426,7 +426,7 @@ Die Kennzahlen der Erzeug und Anfragezeiten sind in \autoref{table:ergebnisse:pe
     pata-graph         & 5h 42m       & \fpeval{70624466/11632900}                           & 10.16729                   & \fpeval{265.825771/10.16729}    \\
     pata-visibility    & 1d 20h 45m   & \fpeval{613324174/315653758}                         & 288.514849                 & \fpeval{1017.695977/288.514849} \\  \bottomrule
   \end{tabular}
-  \caption{PEOPLE Contracted-Graphen}
+  \caption{Kennwerte von mit PEOPLE erzeugten Contracted-Graphen}
   \label{table:ergebnisse:people_ch_speedup}
 \end{table}
 
@@ -454,26 +454,27 @@ Die Verwendung eines parallelen \emph{reduce}-Algorithmus zum Mergen der Labels 
       r % Erstellung
       S[table-format = 4.1] % label
       S[table-format = 2.2] % average time spd
-      S[table-format = 4.0] % speedup
+      S[table-format = 6.0] % speedup
+      S[table-format = 3.1] % average time sp
     }
     \toprule
-    {Graph}            & {Erstellung}      & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup}                          \\
-    {}                 & {}                & {}                                   & {(\si{\us})}               & {}                                 \\
+    {Graph}            & {Erstellung}      & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup$({spd})$}                 & {$\varnothing$ $t({sp})$} \\
+    {}                 & {}                & {}                                   & {(\si{\us})}               & {}                                 & {(\si{\us})}              \\
     \midrule
-    aegaeis-graph      & 12m               & 225.21998319619112                   & 2.048                      & \fpeval{(60.281198*1000)/2.048}    \\
-    aegaeis-visibility & 7h 35m            & 2447.866444488659                    & 13.215                     & \fpeval{(630.434928*1000)/13.215}  \\
-    medi-graph         & 19m               & 262.34248736183486                   & 2.324                      & \fpeval{(87.08376*1000)/2.324}     \\
-    medi-visibility    & 22h 18m           & 3528.6126965393596                   & 21.864                     & \fpeval{(1279.67479*1000)/21.864}  \\
-    pata-graph         & 1h 22m            & 451.8001829187458                    & 24.822                     & \fpeval{(265.825771*1000)/24.822}  \\
-    pata-visibility    & 14h \phantom{0}7m & 1823.062327697596                    & 26.886                     & \fpeval{(1017.695977*1000)/26.886} \\
+    aegaeis-graph      & 12m               & 225.21998319619112                   & 1.617                      & \fpeval{(60.281198*1000)/1.617}    & 54.266                    \\
+    aegaeis-visibility & 7h 35m            & 2447.866444488659                    & 9.382                      & \fpeval{(630.434928*1000)/9.382}   & 17.026                    \\
+    medi-graph         & 19m               & 262.34248736183486                   & 1.777                      & \fpeval{(87.08376*1000)/1.777}     & 80.017                    \\
+    medi-visibility    & 22h 18m           & 3528.6126965393596                   & 14.887                     & \fpeval{(1279.67479*1000)/14.887}  & 25.867                    \\
+    pata-graph         & 1h 22m            & 451.8001829187458                    & 2.526                      & \fpeval{(265.825771*1000)/2.526}   & 264.981                   \\
+    pata-visibility    & 14h \phantom{0}7m & 1823.062327697596                    & 16.862                     & \fpeval{(1017.695977*1000)/16.862} & 26.942                    \\
     \bottomrule
   \end{tabular}
-  \caption{Erstellung von Hub-Graphen durch Merging der mit PEOPLE erzeugen Contracted-Graphen}
+  \caption{Kennwerte von mit Merging erstellter Hub-Graphen. Die zugrundeliegenden Contracted-Graphen wurden mit PEOPLE erzeugt.}
   \label{table:ergebnisse:hl_ch_bruteforce}
 \end{table}
 
 
-\subsubsection{Direkt HL}
+\subsubsection{PEOPLE}
 
 Die Hub-Graphen wurden ebenfalls durch PEOPLE berechnet.
 Die Werte sind in \autoref{table:ergebnisse:hl_bruteforce} zu sehen.
@@ -487,37 +488,38 @@ Die Durchschnittliche Label Größe ist minimal anders.
       S[table-format = 4.1] % label
       S[table-format = 2.2] % average time spd
       S[table-format = 6.] % speedup
+      S[table-format = 3.1] % average time sp
     }
     \toprule
-    {Graph}            & {Erstellung}         & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup}                          \\
-    {}                 & {}                   & {}                                   & {(\si{\us})}               & {}                                 \\
+    {Graph}            & {Erstellung}         & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup$({spd})$}                 & {$\varnothing$ $t({spd})$} \\
+    {}                 & {}                   & {}                                   & {(\si{\us})}               & {}                                 & {(\si{\us})}               \\
     \midrule
-    aegaeis-graph      & 1h 26m               & 225.18963155458096                   & 2.057                      & \fpeval{(60.281198*1000)/2.057}    \\
-    aegaeis-visibility & 5h 57m               & 2446.9511241543973                   & 13.119                     & \fpeval{(630.434928*1000)/13.119}  \\
-    medi-graph         & 3h 11m               & 262.32183266591755                   & 2.326                      & \fpeval{(87.08376*1000)/2.326}     \\
-    medi-visibility    & 21h 57m              & 3527.5645951837378                   & 21.491                     & \fpeval{(1279.67479*1000)/21.491}  \\
-    pata-graph         & 1d \phantom{0}4h 26m & 451.71017734369667                   & 25.929                     & \fpeval{(265.825771*1000)/25.929}  \\
-    pata-visibility    & 1d 20h 17m           & 1822.0561604813242                   & 26.809                     & \fpeval{(1017.695977*1000)/26.809} \\
+    aegaeis-graph      & 1h 26m               & 225.18963155458096                   & 1.612                      & \fpeval{(60.281198*1000)/1.612}    & 53.997                     \\
+    aegaeis-visibility & 5h 57m               & 2446.9511241543973                   & 9.595                      & \fpeval{(630.434928*1000)/9.595}   & 17.31                      \\
+    medi-graph         & 3h 11m               & 262.32183266591755                   & 1.787                      & \fpeval{(87.08376*1000)/1.787}     & 81.234                     \\
+    medi-visibility    & 21h 57m              & 3527.5645951837378                   & 13.506                     & \fpeval{(1279.67479*1000)/13.506}  & 26.671                     \\
+    pata-graph         & 1d \phantom{0}4h 26m & 451.71017734369667                   & 2.512                      & \fpeval{(265.825771*1000)/2.512}   & 263.59                     \\
+    pata-visibility    & 1d 20h 17m           & 1822.0561604813242                   & 16.635                     & \fpeval{(1017.695977*1000)/16.635} & 27.324                     \\
     \bottomrule
   \end{tabular}
-  \caption{PEOPLE Hub Graph direkt}
+  \caption{Kennwerte von mit PEOPLE erstellen Hub-Graphen}
   \label{table:ergebnisse:hl_bruteforce}
 \end{table}
 
-
-
 Das Anwenden des des Algorithmus zur Berechnung des Hub GRaphens hat gut funktioniert.
-\todo{DIE LABELS SIND MINIMAL UNTERSCHIEDLICH GROß}
 
 
 \subsubsection{Vergleich}
 
 
 Da die Hub-Graphen auf zwei Wegen erzeugt werden können, muss geklärt werden, welcher Weg effizienter ist.
-Dazu wurde die Zeit, die für die Erstellung des Contracted-Graphen benötigt wurde, mit der Zeit zum Mergen addiert und anschließend mit der Zeit zur direkten Erstellung eines Hub-Graphen mittels People verglichen.
+Dazu wurde die Zeit, die für die Erstellung des Contracted-Graphen benötigt wurde, mit der Zeit zum Mergen addiert und anschließend mit der Zeit zur direkten Erstellung eines Hub-Graphen mittels PEOPLE verglichen.
 Die entsprechenden Zahlen sind in Tabelle \autoref{table:ergebnisse:vergleich_was_schneller} aufgeführt.
 
 Interessanterweise ist es bei den Sichtbarkeitsgraphen schneller, direkt einen Hub-Graphen zu berechnen, während es bei den triangulierten Graphen effizienter ist, den Umweg über die Contracted-Graphen zu nehmen.
+
+\todo{DIE LABELS SIND MINIMAL UNTERSCHIEDLICH GROß}
+
 
 \begin{table}[h!]
   \centering
@@ -527,14 +529,14 @@ Interessanterweise ist es bei den Sichtbarkeitsgraphen schneller, direkt einen H
       r
     }
     \toprule
-    {Graph}            & {CH \& Merging}      & {HL DIREKT}                    \\
+    {Graph}            & {Contracted-Graph \& Merging} & {Hub-Graph}                    \\
     \midrule
-    aegaeis-graph      & 32m                  & \bfseries 1h 26m               \\
-    aegaeis-visibility & \bfseries 13h 28m    & 5h 57m                         \\
-    medi-graph         & 57 m                 & \bfseries 3h 11m               \\
-    medi-visibility    & \bfseries 1d 19h 10m & 21h 57m                        \\
-    pata-graph         & 7h \phantom{0} 4m    & \bfseries 1d \phantom{0}4h 26m \\
-    pata-visibility    & \bfseries 2d 10h 52m & 1d 20h 17m                     \\  \bottomrule
+    aegaeis-graph      & 32m                           & \bfseries 1h 26m               \\
+    aegaeis-visibility & \bfseries 13h 28m             & 5h 57m                         \\
+    medi-graph         & 57 m                          & \bfseries 3h 11m               \\
+    medi-visibility    & \bfseries 1d 19h 10m          & 21h 57m                        \\
+    pata-graph         & 7h \phantom{0} 4m             & \bfseries 1d \phantom{0}4h 26m \\
+    pata-visibility    & \bfseries 2d 10h 52m          & 1d 20h 17m                     \\  \bottomrule
   \end{tabular}
   \caption{HL  merged}
   \label{table:ergebnisse:vergleich_was_schneller}
@@ -574,12 +576,11 @@ Dies lässt darauf schließen, dass in den meisten Fällen spät abgebrochen wur
 Für die Triangulierung von Sichtbarkeitsgraphen ist es deutlich effizienter, Contracted-Graphen zu erstellen, anstatt für jeden Knoten zwei vollständige Dijkstra-Suchen durchzuführen und noch effizienter, als einen Hub-Graphen zu erstellen.
 Daher ist davon auszugehen, dass die Dijkstra-Suchen häufiger vorzeitig abgebrochen worden konnten.
 
-
 Um dieses Verhalten besser zu verstehen, wurde die Suche nach ausgehenden Kanten eines Knotens im aeagaeis-Sichtbarkeitsgraphen näher untersucht.
 \autoref{fig:ergebnisse:ch_people_suchbaum} zeigt einen entsprechenden Suchbaum.
 In der Abbildung repräsentieren schwarze Punkte die Knoten, die als Köpfe für die aus dem weißen Punkt ausgehenden Upward-Kanten fungieren.
 Die dünnen Kanten führen zu Knoten, die zum Zeitpunkt ihrer Expansion nicht mehr lebendig waren, die gestrichelten Kanten gehen zu Knoten, die zwar gesehen, aber nicht mehr expandiert wurden.
-Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{201040} möglichen Knoten erreicht, was die Effizienz dieses Ansatzes unterstreicht.
+Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{524881} möglichen Knoten besucht, was die Effizienz dieses Ansatzes unterstreicht.
 
 \begin{figure}[h!]
   \centering
@@ -636,9 +637,141 @@ Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{20
     %\filldraw (4.456048319873318, 3.0900255391060227) circle (2pt);
     \node[circle,draw=black, fill=white, inner sep=0pt, minimum size=5pt] at (4.456048319873318, 3.0900255391060227) {};
   \end{tikzpicture}
-  \caption{Suchbaum einer modifizierten Dijkstra-Suche auf aegaeis-graph}
+  \caption{Suchbaum einer PEOPLE Contracted-Graph Suche auf aegaeis-graph}
   \label{fig:ergebnisse:ch_people_suchbaum}
 \end{figure}
+
+Nach der Untersuchung eines einzelenen Suchvorganges wurden für aegaeis-graph für alle Knoten die bei der Contracted-Graph PEOPLE-Suche gesehen Knoten erfasst.
+Die Ergebisse sind hierbei in \autoref{fig:ergebnisse:efficiency_ch_people} gelistet.
+Bei \num{65}\% aller Suchen wurden weniger als \num{1}\% der \num{524881} Knoten gesehen.
+Die die zugrunde vertex-to-level-Funktion mit einem Hitting-Set über nur \num{100000} Pfade erstellt wurde, ist anzunehemen, dass durch ein besseres vertex-to-level-Funktion noch mehr Suchen lokaler werden.
+
+\begin{figure}[h!]%
+  \centering
+  \begin{tikzpicture}
+
+    \begin{axis}[
+        tick align=outside,
+        tick pos=left,
+        x grid style={darkgray176},
+        xlabel={Gesehene Knoten (\%)},
+        xmin=-5, xmax=105,
+        xtick style={color=black},
+        xtick={-20,0,20,40,60,80,100,120},
+        xticklabels={\ensuremath{-}20,0,20,40,60,80,100,120},
+        y grid style={darkgray176},
+        ylabel={Anteil aller Suchen (\%)},
+        ymin=0, ymax=0.68283477588288,
+        ytick style={color=black},
+        ytick={0,0.1,0.2,0.3,0.4,0.5,0.6,0.7},
+        yticklabels={0,10,20,30,40,50,60,70}
+      ]
+      \draw[] (axis cs:0,0) rectangle (axis cs:1,0.650318834174171);
+      \draw[] (axis cs:1,0) rectangle (axis cs:2,0.0261163959069088);
+      \draw[] (axis cs:2,0) rectangle (axis cs:3,0.0121417997603392);
+      \draw[] (axis cs:3,0) rectangle (axis cs:4,0.00762458538221844);
+      \draw[] (axis cs:4,0) rectangle (axis cs:5,0.00591943697714958);
+      \draw[] (axis cs:5,0) rectangle (axis cs:6,0.00413808082213352);
+      \draw[] (axis cs:6,0) rectangle (axis cs:7,0.0037684732348896);
+      \draw[] (axis cs:7,0) rectangle (axis cs:8,0.00317214759155249);
+      \draw[] (axis cs:8,0) rectangle (axis cs:9,0.00266346086065494);
+      \draw[] (axis cs:9,0) rectangle (axis cs:10,0.00286922178551252);
+      \draw[] (axis cs:10,0) rectangle (axis cs:11,0.00370179145368577);
+      \draw[] (axis cs:11,0) rectangle (axis cs:12,0.00250914016701176);
+      \draw[] (axis cs:12,0) rectangle (axis cs:13,0.00217954164849032);
+      \draw[] (axis cs:13,0) rectangle (axis cs:14,0.0018994781674343);
+      \draw[] (axis cs:14,0) rectangle (axis cs:15,0.0015108186427033);
+      \draw[] (axis cs:15,0) rectangle (axis cs:16,0.00119455648042266);
+      \draw[] (axis cs:16,0) rectangle (axis cs:17,0.00104785656177409);
+      \draw[] (axis cs:17,0) rectangle (axis cs:18,0.00181374444874349);
+      \draw[] (axis cs:18,0) rectangle (axis cs:19,0.0011621681866949);
+      \draw[] (axis cs:19,0) rectangle (axis cs:20,0.000874483930644265);
+      \draw[] (axis cs:20,0) rectangle (axis cs:21,0.00245007916080286);
+      \draw[] (axis cs:21,0) rectangle (axis cs:22,0.00248246745453029);
+      \draw[] (axis cs:22,0) rectangle (axis cs:23,0.00250151939201715);
+      \draw[] (axis cs:23,0) rectangle (axis cs:24,0.00151843941769825);
+      \draw[] (axis cs:24,0) rectangle (axis cs:25,0.000830664474424814);
+      \draw[] (axis cs:25,0) rectangle (axis cs:26,0.00121551361165795);
+      \draw[] (axis cs:26,0) rectangle (axis cs:27,0.00128981616785639);
+      \draw[] (axis cs:27,0) rectangle (axis cs:28,0.00128219539286178);
+      \draw[] (axis cs:28,0) rectangle (axis cs:29,0.0039894757097364);
+      \draw[] (axis cs:29,0) rectangle (axis cs:30,0.00172229514880695);
+      \draw[] (axis cs:30,0) rectangle (axis cs:31,0.00136792911155248);
+      \draw[] (axis cs:31,0) rectangle (axis cs:32,0.00192615087991577);
+      \draw[] (axis cs:32,0) rectangle (axis cs:33,0.00115454741170029);
+      \draw[] (axis cs:33,0) rectangle (axis cs:34,0.00117740973668445);
+      \draw[] (axis cs:34,0) rectangle (axis cs:35,0.00108215004925027);
+      \draw[] (axis cs:35,0) rectangle (axis cs:36,0.000988795555565081);
+      \draw[] (axis cs:36,0) rectangle (axis cs:37,0.00104023578677936);
+      \draw[] (axis cs:37,0) rectangle (axis cs:38,0.000685869749524892);
+      \draw[] (axis cs:38,0) rectangle (axis cs:39,0.00248056226078164);
+      \draw[] (axis cs:39,0) rectangle (axis cs:40,0.00177373538002135);
+      \draw[] (axis cs:40,0) rectangle (axis cs:41,0.00124409151788818);
+      \draw[] (axis cs:41,0) rectangle (axis cs:42,0.00176992499252404);
+      \draw[] (axis cs:42,0) rectangle (axis cs:43,0.000956407261837544);
+      \draw[] (axis cs:43,0) rectangle (axis cs:44,0.00181564964249215);
+      \draw[] (axis cs:44,0) rectangle (axis cs:45,0.00151653422394948);
+      \draw[] (axis cs:45,0) rectangle (axis cs:46,0.00239292334834229);
+      \draw[] (axis cs:46,0) rectangle (axis cs:47,0.00170324321132043);
+      \draw[] (axis cs:47,0) rectangle (axis cs:48,0.00103642539928195);
+      \draw[] (axis cs:48,0) rectangle (axis cs:49,0.00108215004925039);
+      \draw[] (axis cs:49,0) rectangle (axis cs:50,0.00138698104903923);
+      \draw[] (axis cs:50,0) rectangle (axis cs:51,0.000621093162069708);
+      \draw[] (axis cs:51,0) rectangle (axis cs:52,0.00110882276173196);
+      \draw[] (axis cs:52,0) rectangle (axis cs:53,0.00302925806040166);
+      \draw[] (axis cs:53,0) rectangle (axis cs:54,0.00227861172342159);
+      \draw[] (axis cs:54,0) rectangle (axis cs:55,0.00165561336760311);
+      \draw[] (axis cs:55,0) rectangle (axis cs:56,0.00112025392422388);
+      \draw[] (axis cs:56,0) rectangle (axis cs:57,0.00205951444232344);
+      \draw[] (axis cs:57,0) rectangle (axis cs:58,0.00140793818027474);
+      \draw[] (axis cs:58,0) rectangle (axis cs:59,0.000691585330770961);
+      \draw[] (axis cs:59,0) rectangle (axis cs:60,0.00104214098052813);
+      \draw[] (axis cs:60,0) rectangle (axis cs:61,0.00138698104903912);
+      \draw[] (axis cs:61,0) rectangle (axis cs:62,0.000502971149651588);
+      \draw[] (axis cs:62,0) rectangle (axis cs:63,0.00190138336118284);
+      \draw[] (axis cs:63,0) rectangle (axis cs:64,0.00123266035539626);
+      \draw[] (axis cs:64,0) rectangle (axis cs:65,0.00440480794694864);
+      \draw[] (axis cs:65,0) rectangle (axis cs:66,0.00320834627277755);
+      \draw[] (axis cs:66,0) rectangle (axis cs:67,0.00282159194179543);
+      \draw[] (axis cs:67,0) rectangle (axis cs:68,0.00207094560481547);
+      \draw[] (axis cs:68,0) rectangle (axis cs:69,0.00175087305503696);
+      \draw[] (axis cs:69,0) rectangle (axis cs:70,0.00218144684223898);
+      \draw[] (axis cs:70,0) rectangle (axis cs:71,0.00120789283666334);
+      \draw[] (axis cs:71,0) rectangle (axis cs:72,0.00121170322416064);
+      \draw[] (axis cs:72,0) rectangle (axis cs:73,0.00120598764291446);
+      \draw[] (axis cs:73,0) rectangle (axis cs:74,0.00148414593022206);
+      \draw[] (axis cs:74,0) rectangle (axis cs:75,0.000682059362027698);
+      \draw[] (axis cs:75,0) rectangle (axis cs:76,0.0010040371055543);
+      \draw[] (axis cs:76,0) rectangle (axis cs:77,0.00308831906661078);
+      \draw[] (axis cs:77,0) rectangle (axis cs:78,0.00205379886107737);
+      \draw[] (axis cs:78,0) rectangle (axis cs:79,0.00400090687222843);
+      \draw[] (axis cs:79,0) rectangle (axis cs:80,0.00244436357955691);
+      \draw[] (axis cs:80,0) rectangle (axis cs:81,0.00208809234855345);
+      \draw[] (axis cs:81,0) rectangle (axis cs:82,0.00528119707134167);
+      \draw[] (axis cs:82,0) rectangle (axis cs:83,0.00305402557913448);
+      \draw[] (axis cs:83,0) rectangle (axis cs:84,0.00230528443590305);
+      \draw[] (axis cs:84,0) rectangle (axis cs:85,0.00455341305934576);
+      \draw[] (axis cs:85,0) rectangle (axis cs:86,0.00329217479771948);
+      \draw[] (axis cs:86,0) rectangle (axis cs:87,0.00422953012207028);
+      \draw[] (axis cs:87,0) rectangle (axis cs:88,0.00162322507387547);
+      \draw[] (axis cs:88,0) rectangle (axis cs:89,0.00502590110901857);
+      \draw[] (axis cs:89,0) rectangle (axis cs:90,0.00425239244705433);
+      \draw[] (axis cs:90,0) rectangle (axis cs:91,0.00176039902378056);
+      \draw[] (axis cs:91,0) rectangle (axis cs:92,0.00117169415543839);
+      \draw[] (axis cs:92,0) rectangle (axis cs:93,0.00560698520236602);
+      \draw[] (axis cs:93,0) rectangle (axis cs:94,0.00772746584464701);
+      \draw[] (axis cs:94,0) rectangle (axis cs:95,0.00288255814175331);
+      \draw[] (axis cs:95,0) rectangle (axis cs:96,0.00501446994652632);
+      \draw[] (axis cs:96,0) rectangle (axis cs:97,0.0057098656647947);
+      \draw[] (axis cs:97,0) rectangle (axis cs:98,0.00931639743104651);
+      \draw[] (axis cs:98,0) rectangle (axis cs:99,0.0207113612419031);
+      \draw[] (axis cs:99,0) rectangle (axis cs:100,0.0650433145799436);
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Anteil der pro Suche bei der Erstellung des Contracted-Graph von aegaeis-graph gesehenen Knoten}
+  \label{fig:ergebnisse:efficiency_ch_people}
+\end{figure}
+
 
 \subsection{Vertex-to-level Vergeleich}
 
@@ -668,12 +801,33 @@ Letztere, in der Tabelle als $\triangle$ als notiert, führte zu überraschend k
     pata-visibility    & 1100.42    & \bfseries 478.80  & 806.95  & 552.90            & 23690.52   & 10174.37 \\
     \bottomrule
   \end{tabular}
-  \caption{Vergleich level-to-vertex-Funktionen}
+  \caption{Vergleich durch level-to-vertex-Funktionen induzierter durschnitliche Labelgröße}
   \label{table:ergebnisse:vtl_vergleich}
 \end{table}
 
 \subsection{Hitting-Set über 250M Pfade}
 
-Mit den erzeugten Hub-Graphen wurde ein Hitting-Ste über 250 Millionen Pfade gebildet, die Knoten die nicht enthalten waren, wurden nach der Anzahl ihrerer Hits sortiert.
+Mit den erzeugten Hub-Graphen wurde ein Hitting-Ste über 250 Millionen Pfade gebildet, die Knoten die nicht enthalten waren, wurden nach der Anzahl ihrerer Hits sortiert, da dies nach \autoref{table:ergebnisse:vtl_vergleich} erfolgsversprechend scheint.
+Mit dieser vertex-to-level-Funktion wurde über \num{10000} die Labelgröße predicted.
+Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durschnitltiche Label Größe kleiner als der ursprüngliche durschnitliche Knotengrad.
 
-\todo{Tabelle}
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ %VERGLEICH
+      l % Graph
+      r
+      S[table-format = 4.1] % average time
+    }
+    \toprule
+    {Graph}            & {Erstellung} & {Label size} \\ \midrule
+    aegaeis-graph      & 6h 12m       & 90.8         \\
+    aegaeis-visibility & 8h 11m       & 1309.8       \\
+    medi-graph         & 4h 47m       & 88.5         \\
+    medi-visibility    & 12h 26m      & 1739.4       \\
+    pata-graph         &              &              \\
+    pata-visibility    & 9h 29m       & 424.1        \\  \bottomrule
+  \end{tabular}
+  \caption{todo dijkstra vs ch bruteforce vs hl bruteforce}
+\end{table}
+
+Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der \autoref{fig:ergebnisse:efficiency_ch_people} zugrunde liegende Experiment wiederholt, wobei diesmal \num{80.6}\% aller Suchen weniger als 1\% aller Knoten sahen.

@@ -1,22 +1,22 @@
 \chapter{PEOPLE: Predetermined Order, Pruned Label}\label{chapter:peopel}
 
-Wie im \autoref{chapter:kontraktion} diskutiert wurde, ist Kontraktion von Graphen mit hohem durchschnittlichem Knotengrad aufwendig.
+Wie im \autoref{chapter:kontraktion} diskutiert wurde, ist die Kontraktion von Graphen mit hohem durchschnittlichem Knotengrad aufwendig.
 Vielleicht ist die Kontraktion von ihnen sogar so aufwendig, dass sie sich nicht in sinnvoller Zeit kontrahieren lassen.
-Trotzdem wäre es praktisch, wenn sich die Anfrage-Zeiten von Contraction-Hierarchies und Hierarchical Hub Labeling auch auf sie übertragen ließen.
+Trotzdem wäre es praktisch, wenn sich die Anfrage-Zeiten von Contraction Hierarchies und Hierarchical Hub Labeling auch auf sie übertragen ließen.
 Hierfür charakterisieren wir den Contracted- und Hub-Graphen neu und stellen anschließend PEOPLE (\textbf{P}redetermined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l) vor, eine Methode wie Hub- und Contracted-Graphen mit einer vorgegebenen vertex-to-level-Funktion ohne Knoten-Kontraktion erstellt werden können.
 
 \section{Contracted-Graph}
 
 Um die nachfolgende Definition vorzubereiten, betrachten wir ein Beispiel.
-Sei $G = (V, E)$ mit $V \supset \{ u, v, w \}$ und $E = \{ (u, v, {spd}((u, v))), (v, w, {spd}((v, w))) \}$, ein Produkt einer Kontraktion, also zu Beginn mehr Kanten und nicht-isolierte Knoten enthält
+Sei $G = (V, E)$ mit $V \supset \{ u, v, w \}$ und $E = \{ (u, v, {spd}_G (u, v)), (v, w, {spd}_G (v, w)) \}$, ein Produkt einer Kontraktion.
+$G$ enthielt zu Beginn also mehr Kanten und mehr nicht-isolierte Knoten
 Es soll nun $v$ kontrahiert werden.
-Hierfür wird eine Kante $(u, w, {spd}((u, w)))$ eingefügt und die Kanten $(u, v), (v, w)$ entfernt.
+Hierfür wird eine Kante $(u, w, {spd}_G (u, w))$ eingefügt und die Kanten $(u, v), (v, w)$ entfernt.
 Daraus können zwei Folgerungen gezogen werden:
 
 \begin{enumerate}
   \item
-        Es gibt einen kürzesten Pfad von $u$ nach $w$ in $G$ für den gilt, dass alle Knoten zwischen $u$ und $w$ bereits kontrahiert wurden.
-        Diese haben daher auch ein niedrigeres Level als $u$ und $w$.
+        Alle Knoten zwischen $s$ und $t$ auf allen kürzesten $s$-$t$-Pfaden wurden bereits kontrahiert und haben daher auch ein niedrigeres Level als $u$ und $w$.
 
   \item
         $(u, w) \in E_u$ gilt genau dann, wenn $w$ das größte Level auf allen Pfaden von $u$ nach $w$ hat.
@@ -103,7 +103,7 @@ Durch Anwendung der neuen Definition des Upward-Graph ergibt sich der in \autore
 Die Definition des Downward-Graphens erfolgt nun analog zu der des Upward-Graphens:
 
 \begin{definition}[Downward-Graph]
-  Sei $G = (V, E)$ und ${vtl}$ eine \emph{vertex-to-level} Funktion dazu. Dann ist ein Upward-Graph des transponierten Graphens $G^T$ ein \emph{Downward-Graph} zu $G$.
+  Sei $G = (V, E)$ und eine vertex-to-level-Funktion dazu gegeben. Dann ist ein Upward-Graph des transponierten Graphens $G^T$ ein \emph{Downward-Graph} zu $G$.
 \end{definition}
 
 Wenn ein Graph ungerichtet ist, dann ist er äquivalent zu seinem transponierten Graphen und dann ist auch der Upward- und Downward-Graph äquivalent.
@@ -128,6 +128,7 @@ Es ist zu zeigen, dass Anfragen auf einem auf diese Art definiertem Contracted-G
 \end{beweis}
 
 Dass nur Kanten $(t, h)$ erstellt werden müssen, wenn $h$ das größte und $t$ das zweitgrößte Level auf allen $t$-$h$-Pfaden hat, ist in \autoref{fig:people:notwendige_kanten} veranschaulicht.
+Die Zahl unter dem Knotennamen entspricht dabei dem Level des Knotens.
 Es muss keine $(u, w)$ Kante erstellt werden, da $w$ über $v$ erreicht werden kann.
 
 \begin{figure}[h!]
@@ -149,7 +150,7 @@ Es muss keine $(u, w)$ Kante erstellt werden, da $w$ über $v$ erreicht werden k
 
 Bei der Knoten-Kontraktion des Knoten $v$ wird für den Pfad $(u, v, w)$ eine Abkürzung eingefügt, wenn dies der einzige kürzeste $u$-$w$-Pfad ist.
 Ist dies der Fall, dann wurden die Knoten aller andern kürzesten Pfade zuvor bereits kontrahiert und haben daher ein niedrigeres Level als $u$ und $w$.
-Daher bilden diese Abkürzungen mitsamt den Kanten des ursprünglichen Graphen die Kantenmenge des Upward- und Downward-Graphen, wobei die Zuordnung durch die Reihenfolge der Kontraktion von $u$ und $w$ definiert ist.
+Daher bilden diese Abkürzungen mitsamt den Kanten des ursprünglichen Graphen die Kantenmenge des Upward- und Downward-Graphen, wobei die Zuordnung zu Downward- und Upward-Graph durch die Reihenfolge der Kontraktion von $u$ und $w$ definiert ist.
 
 Wenn die Kontraktionsbedingung abgeschwächt wird, werden nicht notwendige und nicht optimale Kanten eingefügt, dies lässt die Definition aber zu.
 Daher entspricht ein durch Graphen-Kontraktion erzeugter Graph der neuen Definition.
@@ -164,7 +165,7 @@ Um einen Upward-Graphen zu berechnen, wird für jeden Knoten $t \in V$ eine ange
 Diese Information kann mit der \emph{max-on-path} Funktion ${mop}$ abegrufen werden.
 Ein Knoten $h \in V$, $h \neq t$ ist der Kopf eine Upward-Graph Kante, für die gilt, dass ${mop}(h) = {vtl}(h)$ und ${mop}({pre}(h)) = {vtl}(t)$.
 Das Gewicht der Kante kann der Dijkstra Suche entnommen werden.
-Die Suche kann abgebrochen werden, wenn nur noch Knoten für alle nicht-expandierten Knoten $h$ gilt, dass ${mop}({pre}(h)) > {vtl}(h)$ ist.
+Die Suche kann abgebrochen werden, wenn ür alle nicht-expandierten Knoten $h$ gilt, dass ${mop}({pre}(h)) > {vtl}(h)$ ist.
 \autoref{ch:fig:ch_brute_force_suchbaum} zeigt dies für den Knoten $a$ im Beispielgraphen.
 Die linke Zahl steht dabei für das Level des jeweiligen Knotens, die rechte Zahl für das größte Level auf dem Pfad zur Wurzel.
 
@@ -175,17 +176,17 @@ Die linke Zahl steht dabei für das Level des jeweiligen Knotens, die rechte Zah
     % a & b & c & d & e & f & g & h & i & j & k &
     % 8 & 7 & 3 & 6 & 2 & 5 & 1 & 4 & 0 & 10 & 9 &
 
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 0) (a) {a\\8 8};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 0, 4) (b) {b\\7 8};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 6) (c) {c\\3 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 8) (d) {d\\6 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 9) (e) {e\\2 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 3, 10) (f) {f\\5 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 3, 7) (g) {g\\1 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 2) (h) {h\\4 8};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 1) (i) {i\\0 8};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 3) (j) {j\\10 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 5) (k) {k\\9 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 1, 0) (a) {a\\8 8};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 0, 4) (b) {b\\7 8};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 1, 6) (c) {c\\3 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 1, 8) (d) {d\\6 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 2, 9) (e) {e\\2 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 3, 10) (f) {f\\5 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 3, 7) (g) {g\\1 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 1, 2) (h) {h\\4 8};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 2, 1) (i) {i\\0 8};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center, very thick] at (2* 2, 3) (j) {j\\10 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 2, 5) (k) {k\\9 10};
 
     \draw[->] (a) edge (b);
     \draw[->] (a) edge (h);
@@ -208,15 +209,16 @@ Die linke Zahl steht dabei für das Level des jeweiligen Knotens, die rechte Zah
 \end{figure}
 
 Die Information des größten Levels auf dem Pfad zur Wurzel kann dabei beim Update eines Knotens übertragen werden, indem das Maximum des bisherigen größten Levels und das Level des upgedateten Knotens gebildet wird.
+
+
 Die Abbruchbedingung kann durch Betrachtung einer Menge an \emph{lebendigen Knoten} verfolgt werden, sobald diese keine Knoten mehr enthält, kann die Suche abgebrochen werden.
 Zu Beginn ist nur der Startknoten lebendig, die Lebendigkeit wird jeweils an die Kinder vererbt.
 Ein Knoten stirbt, nachdem er expandiert wurde oder wenn er den Kopf einer Kante bildet.
-Gibt es keine lebendigen Knoten mehr, so kann die Suche abgebrochen werden.
 In dem Beispiel in \autoref{ch:fig:ch_brute_force_suchbaum} wäre dies etwa nach der Expansion von $b$ der Fall.
-Bei einer \emph{guten} vertex-to-level-Funktion ist die Überlegung, dass die Suche früh abgebrochen werden kann.
+Bei einer \emph{guten} vertex-to-level-Funktion ist die Überlegung, dass viele Suchen früh abgebrochen werden können.
 
 Die Berechnung ist \emph{embarrassingly parallel}, jeder Knoten kann unabhängig von den anderen berechnet werden.
-Der textuell beschriebene Algorithmus wird dann wie folgt formal definiert:
+Der textuell beschriebene Algorithmus ist im Algorithmus \ref{alg:people:ch} ausgeschrieben und wird Contracted-Graph PEOPLE Algorithmus genannt.
 
 \begin{algorithm}[p]
   \caption{Contracted-Graph PEOPLE Algorithmus}
@@ -281,13 +283,13 @@ Der textuell beschriebene Algorithmus wird dann wie folgt formal definiert:
 \subsection{Änderung von Kantengewichten}
 
 Bei Graphen mit hierarchischer Struktur und einer guten Vertex-to-Level-Funktion ist anzunehmen, dass die Suche nach Algorithmus \ref{alg:people:ch}  in den meisten Fällen früh abbricht.
-Dies ist einerseits für die Effizienz der Berechnung von Vorteil, verdeutlicht aber auch, dass für die bestimmung der ausgehenden Kanten des Contracted-Graphen für viele Knoten jeweils nur die lokale Umgebung eines Knotens von Bedeutung ist.
-Änderungen der Kantengewichte außerhalb dieser Umgebung haben daher in der Regel keinen Einfluss auf die lokale Struktur des Knotens.
+Dies ist einerseits für die Effizienz der Berechnung von Vorteil, verdeutlicht aber auch, dass für die Bestimmung der ausgehenden Kanten des Contracted-Graphen für viele Knoten jeweils nur die lokale Umgebung eines Knotens von Bedeutung ist, wobei insbesondere Knoten mit einem hohem Level hierbei eine Ausnahme sind.
+Änderungen der Kantengewichte außerhalb dieser Umgebung haben daher für viele Knoten keinen Einfluss auf den Suchbaum des Algorithmus \ref{alg:people:ch}.
 
 Diese Eigenschaft lässt sich nutzen, um nach einer Änderung der Kantengewichte nicht für jeden Knoten sämtliche ausgehenden Kanten neu berechnen zu müssen.
 Zwei mögliche Ansätze bieten sich hierfür an:
 Zum einen könnte für jeden Knoten gespeichert werden, von welchen Kanten er beeinflusst wird.
-Zum anderen könnte für jede Kante berechnet werden, welche Knoten von ihr beeinflusst werden.
+Zum anderen könnte für eine geänderte Kante berechnet werden, welche Knoten von ihr beeinflusst werden.
 
 Das Speichern des Bereichs, der einen Knoten beeinflusst, kann in Graphen der euklidischen Ebene beispielsweise durch Bounding Boxen realisiert werden. Ob es eine effiziente Methode gibt, mit der der Einflussbereich einer Kante bestimmt werden kann, wird in dieser Arbeit nicht behandelt.
 
@@ -298,13 +300,13 @@ Dies ist praktisch, da dann jeder Shortcut nur einmal erstellt werden muss, daf�
 Wird als Graph eine Datenstruktur verwendet, welche die Nachbarn nicht in einer definierten Ordnung ausgibt (etwa eine HashMap), oder eine nicht stabile Prioritätswarteschlange verwendet, ist dies nicht garantiert.
 
 \autoref{ch:fig:problem_shortcut} zeigt eine Situation, in der dies auftreten kann.
-In $C$ wurde der Pfad $(a, e)$ gefunden, dessen Abkürzungen jetzt ersetzt werden sollen.
+In $C$ wurde der $a$-$e$-Pfad $(a, e)$ gefunden, dessen Abkürzungen jetzt ersetzt werden sollen.
 Hierfür wird im ersten Schritt für die Abkürzung $(a, e)$ der abgekürzte Knoten $d$ gefunden, dadurch ist der Pfad $(a, d, e)$.
 Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit dem Knoten $b$ findet, dies geschieht jedoch nicht, wenn $a$ von $d$ aus über $c$ erreicht wird.
 
 \begin{figure}[h!]
   \centering
-  \begin{subfigure}[b]{1\textwidth}
+  \begin{subfigure}[b]{0.49\textwidth}
     \centering
     \begin{tikzpicture}
       % Nodes
@@ -323,15 +325,38 @@ Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit
     \end{tikzpicture}
     \caption{Graph}
   \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \begin{tikzpicture}
+      % Nodes
+      \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*0, 2*0) (a) {a\\3};
+      \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*1, 2*0) (b) {b\\0};
+      \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*1, 2*-1) (c) {c\\2};
+      \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*2, 2*0) (d) {d\\1};
+      \node[circle, draw, minimum size=1cm, inner sep=0pt, align=left] at (2*3, 2*0) (e) {e\\4};
+
+      \draw[<-] (a) edge node[circle, fill=white] {1} (b);
+      \draw[->] (b) edge node[circle, fill=white] {1} (d);
+      \draw[->] (d) edge node[circle, fill=white] {1} (e);
+
+      \draw[->] (c) edge node[circle, fill=white] {1} (a);
+      \draw[<-] (c) edge node[circle, fill=white] {1} (d);
+
+      \draw[->] (c) edge[bend right] node[circle, fill=white] {2} (e);
+      \draw[->] (a) edge[bend left] node[circle, fill=white] {3} (e);
+    \end{tikzpicture}
+    \caption{Upward- und Downard-Graph}
+  \end{subfigure}
   \begin{subfigure}[b]{0.49\textwidth}
     \centering
     \begin{tikzpicture}[scale=0.8]
       % Nodes
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*0, 2*0) (a) {a\\3 3};
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*0, 2*1) (b) {b\\0 3};
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*1, 2*1) (c) {c\\2 3};
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*0, 2*2) (d) {d\\1 3};
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*0, 2*3) (e) {e\\4 4};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*0, 2*0) (a) {a\\3 3};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*0, 2*1) (b) {b\\0 3};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*1, 2*1) (c) {c\\2 3};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*0, 2*2) (d) {d\\1 3};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center, very thick] at (2*0, 2*3) (e) {e\\4 4};
 
       \draw[->] (a) edge node[] {} (b);
       \draw[->] (b) edge node[] {} (d);
@@ -345,11 +370,11 @@ Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit
     \centering
     \begin{tikzpicture}[scale=0.8]
       % Nodes
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*1, 2*2) (a) {a\\3 4};
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*2, 2*1) (b) {b\\0 1};
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*1, 2*1) (c) {c\\2 2};
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*1, 2*0) (d) {d\\1 1};
-      \node[circle, draw, minimum size=1.2cm, inner sep=0pt, align=center] at (2*0, 2*1) (e) {e\\4 4};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center, very thick] at (2*1, 2*2) (a) {a\\3 3};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*2, 2*1) (b) {b\\0 1};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*1, 2*1) (c) {c\\2 2};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*1, 2*0) (d) {d\\1 1};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center, very thick] at (2*0, 2*1) (e) {e\\4 4};
 
       \draw[->] (d) edge node[] {} (e);
       \draw[->] (d) edge node[] {} (c);
@@ -363,7 +388,8 @@ Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit
 \end{figure}
 
 Für dieses Problem gibt es zwei Lösungen:
-Die nachfolgenden Abkürzungen, welche benötigt werden, um eine Abkürzung vollständig zu entpacken, werden für jede Abkürzung ebenfalls erstellt, dadurch werden viele Abkürzungen mehrfach erstellt, dies muss daher synchronisiert werden.
+Die nachfolgenden Abkürzungen, welche benötigt werden, um eine Abkürzung vollständig zu entpacken, werden für jede Abkürzung ebenfalls erstellt.
+Dadurch werden viele Abkürzungen mehrfach erstellt, dies muss daher synchronisiert werden, damit nicht zu viel Speicher genutzt wird.
 Alternativ kann die Prioritätswarteschlange modifiziert werden, indem eine Totalordnung der Knoten bestimmt, in welcher Reihenfolge Knoten gleicher Distanz expandiert werden.
 
 \section{PEOPLE}
@@ -372,8 +398,8 @@ Analog zur neuen Definition des Contracted-Graph lässt sich auch der Hub-Graph 
 Die dafür verwendete Definition des Forward-Labels weicht nur leicht von der des Upward-Graphen ab, lediglich die Anforderung, dass der betrachtete Knoten das zweitgrößte Level hat, entfällt.
 
 \begin{definition}[Forward-Label]
-  Sei $G = (V, E)$ und ${vtl}$ eine vertex-to-level Funktion dazu.
-  Dann ist $L_f (t) \subset V \times \mathbb{R}$ ein Forward-Label für einen Knoten $t$ in $G$ wenn gilt:
+  Sei $G = (V, E)$ und eine vertex-to-level Funktion dazu gegeben.
+  Dann ist $L_f (t) \subset V \times \mathbb{R}$ ein Forward-Label für einen Knoten $t$ in $G$, wenn gilt:
 
   \begin{itemize}
     \item
@@ -390,8 +416,9 @@ Die Korrektheit dieser Definition folgt direkt daraus, dass der Knoten mit dem h
 
 \subsection{Algorithmus}
 
-Solche Labels können wieder durch Merging aus einem Contracted-Graph erstellt werden, jedoch folgt aus dieser Definition auch direkt die Möglichkeit, das Label eines bestimmten Knotens zu berechnen.
-Der dafür verwendete Algorithmus ist in Algorithmus \ref{alg:people:people} gelistet, er erzeugt ein gepruntes Label, da er aus Suchbaum auf $G$ das Label erzeugt.
+Solche Labels können wieder durch Merging aus einem Contracted-Graph erstellt werden, jedoch folgt aus dieser Definition auch die Möglichkeit, das Label eines bestimmten Knotens zu berechnen.
+Der dafür verwendete Algorithmus ist in Algorithmus \ref{alg:people:people} gelistet, er erzeugt ein gepruntes Label, da er aus einem Dijkstra-Suchbaum auf $G$ das Label erzeugt und dieser nur optimale Distanzen enthält.
+Da er für eine vorgebene vertex-to-level-Funktion geprunte Label erstellt, wird dieser Algorithmus PEOPLE, für \textbf{P}redetermined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l, genannt.
 
 Ein Beispiel einer solche Suche ist in \autoref{ch:fig:hl_brute_force_suchbaum} gezeichnet, dieses verwendet den Beispielgraph, aber nicht die gleiche vertex-to-level-Funktion wie in \autoref{ch::fig::vtl_abbildung}.
 Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils größte auf dem Pfad zur Wurzel ist.
@@ -403,17 +430,17 @@ Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils gr
     % a & b & c & d & e & f & g & h & i & j & k &
     % 8 & 7 & 3 & 6 & 2 & 5 & 1 & 4 & 0 & 10 & 9 &
 
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 0) (a) {a\\8 8};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 0, 4) (b) {b\\7 8};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 6) (c) {c\\3 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 8) (d) {d\\6 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 9) (e) {e\\2 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 3, 10) (f) {f\\11 11};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 3, 7) (g) {g\\1 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 1, 2) (h) {h\\4 8};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 1) (i) {i\\0 8};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 3) (j) {j\\10 10};
-    \node[circle, draw, minimum size=1.2cm, inner sep=0pt , align=center] at (2* 2, 5) (k) {k\\9 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center, very thick] at (2* 1, 0) (a) {a\\8 8};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 0, 4) (b) {b\\7 8};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 1, 6) (c) {c\\3 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 1, 8) (d) {d\\6 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 2, 9) (e) {e\\2 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center, very thick] at (2* 3, 10) (f) {f\\11 11};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 3, 7) (g) {g\\1 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 1, 2) (h) {h\\4 8};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 2, 1) (i) {i\\0 8};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center, very thick] at (2* 2, 3) (j) {j\\10 10};
+    \node[circle, draw, minimum size=1.3cm, inner sep=0pt , align=center] at (2* 2, 5) (k) {k\\9 10};
 
     \draw[->] (a) edge (b);
     \draw[->] (a) edge (h);
@@ -491,10 +518,10 @@ Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils gr
 Die Berechnung der Graphen-Kontraktion in Straßennetzwerken ist in vertretbarer Zeit möglich, jedoch gilt dies nicht für alle Graphenklassen. Insbesondere bei Graphen mit hohem durchschnittlichen Knotengrad stellt die Dijkstra-Suche für jeden Vorgänger einen signifikanten Kostenfaktor dar, sodass die Berechnung der Labels mittels PEOPLE effizienter sein kann.
 Da die Labels parallel berechnet werden können, ist es durch den Einsatz geeigneter Hardware möglich, die Berechnungszeit für alle Labels deutlich zu reduzieren.
 
-Der Algorithmus kann auch dazu verwendet werden, die Ergebnisse einer $s$-$t$-Anfrage effizient zwischenzuspeichern.
-Falls die Labels von $s$ und $t$ noch nicht vorhanden sind, werden sie im Rahmen der Anfrage generiert.
-Nachfolgende Anfragen können dann direkt auf die gespeicherten Labels zugreifen.
+Der Algorithmus kann auch dazu verwendet werden, die Ergebnisse einer $s$-$t$-Anfrage effizient zu cachen.
+Falls die Labels von $s$ und $t$ noch nicht vorhanden sind, werden sie generiert.
+Nachfolgende Anfragen von $s$ oder zu $t$ können dann direkt auf die gespeicherten Labels zugreifen.
 
 PEOPLE kann auch dafür benutzt werden, die durch eine vertex-to-level-Funktion induzierte durchschnittliche Label Größe anzugeben, ohne zuerst den Contracted-Graph und anschließend den Hub-Graphen zu berechnen.
-Hierfür wird für $n$ Knoten das Label berechnet und über diese die durchschnittliche Größe des Labels angegeben.
+Hierfür wird für $n$ Knoten das Label berechnet und über diese die durchschnittliche Größe der Labels angegeben.
 Da sich dies leicht parallelisieren lässt, könnte in einem zukünftigen Schritt durch Optimierungsalgorithmen die Label Größe verkleinert werden.

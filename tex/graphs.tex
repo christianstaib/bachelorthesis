@@ -139,6 +139,8 @@ Der Greedy-Algorithmus \ref{graphs:alg:greedy-hitting-set} bietet jedoch eine Ap
   \label{graphs:alg:greedy-hitting-set}
 \end{algorithm}
 
+Zusätzlich zum Hitting-Set als Menge kann die Information, welcher Knoten in der wievielten Iteration des Greedy-Algorithmus ausgewählt wurde, von Bedeutung sein, daher wird das Hitting-Set im folgenden als geordnete Menge betrachtet.
+
 \todo{Beispiel Hitting Set}
 
 \section{Sichtbarkeitsgraphen}
@@ -161,10 +163,10 @@ Die gestrichelten Linien sind dabei Kanten des Sichtbarkeitsgraphen.
   \centering
   \begin{tikzpicture}
     % Variablen für das erste Polygon
-    \coordinate (a0) at (0.5,0);
-    \coordinate (a1) at (1,2);
-    \coordinate (a2) at (2,1);
-    \coordinate (a3) at (1.5,0);
+    \coordinate (a0) at (0.5,0+0.2);
+    \coordinate (a1) at (1,2+0.2);
+    \coordinate (a2) at (2,1+0.2);
+    \coordinate (a3) at (1.5,0+0.2);
 
     \filldraw (a0) circle (2pt);
     \filldraw (a1) circle (2pt);
@@ -191,10 +193,10 @@ Die gestrichelten Linien sind dabei Kanten des Sichtbarkeitsgraphen.
 
 
     % Variablen für das letzte Polygon
-    \coordinate (c0) at (7,0);
-    \coordinate (c1) at (8,1);
-    \coordinate (c2) at (7.5,2);
-    \coordinate (c3) at (6.5,1.5);
+    \coordinate (c0) at (7,0+0.35);
+    \coordinate (c1) at (8,1+0.35);
+    \coordinate (c2) at (7.5,2+0.35);
+    \coordinate (c3) at (6.5,1.5+0.35);
 
     \filldraw (c0) circle (2pt);
     \filldraw (c1) circle (2pt);
