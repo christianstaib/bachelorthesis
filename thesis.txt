@@ -1,0 +1,1185 @@
+
+
+external
+[prefix=tikzexternalize/]
+
+
+Anwendung von Contraction Hierarchies und Hierarchical Hub Labeling auf Nicht-Straßengraphen
+Christian Staib
+
+
+
+roman
+
+
+
+
+    
+
+
+
+Kurzfassung
+Die Technik der Contraction Hierarchies (CH) und der Hierarchical Hub Labelings (HL) haben sich als äußerst wirksame Techniken zur Beschleunigung von Routenanfragen in Straßennetzwerken erwiesen. Die Anwendung auf Graphen außerhalb des Straßenverkehrs wurde weit weniger untersucht - ein Beispiel hierfür findet sich z.B. in [1] -, auch wenn in diesen Fällen ebenfalls eine schnellere Anfrage von Suchanfragen wünschenswert ist.
+
+Ziel dieser Arbeit ist es, diese Fragestellung eingehender zu untersuchen. Es sind hierbei sowohl andere Graphtypen zu betrachten, als auch ggf. bessere Konstruktionsstrategien für CH bzw. HL zu entwerfen. Graphtypen, die potenziell von Interesse sind:
+
+
+      Sichtbarkeitsgraphen
+      Gridgraphen, wie sie z.B. in Computerspielen vorkommen
+      Kommunikationsgraphen
+      Kollaborationsgraphen
+      Linkgraphen (z.B. von Wikipedia)
+
+Acknowledgement
+
+
+Der Autor dankt dem Land Baden-Württemberg für die Unterstützung durch bwHPC.
+
+
+arabic
+
+Einleitung
+
+Sichtbarkeitsgraphen sind Graphen, die alle Knotenpaare miteinander verbinden, die sich sehen können, auf deren Luftlinie sich also keine Hindernisse befinden.
+Aus einer Küstenlinie kann ein Sichtbarkeitsgraph erstellt werden, indem die Knoten auf der Küstenlinie mit allen Knoten verbunden werden, deren Luftlinie keine Küste kreuzt.
+fig:thessaloniki-visibility zeigt einen Ausschnitt eines solchen Sichtbarkeitsgraphen.
+Zu sehen ist der Hafen der griechischen Stadt Thessaloniki.
+
+Das Finden von kürzesten Pfaden ist in solchen Graphen rechenintensiver als etwa auf Straßengraphen mit vergleichbarer Knotenanzahl, da sie unter anderem einen höheren durchschnittlichen Knotengrad und keine inhärente hierarchische Struktur besitzen.
+Zwar gibt es Möglichkeiten, den Graphen zu verändern, und schneller Pfade zwischen Knoten zu berechnen, etwa durch Triangulierung oder Rasterisierung, jedoch sind diese Pfade nicht mehr garantiert optimal.
+
+Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden von kürzesten Pfaden und kürzesten Pfad-Distanzen (Contraction Hierarchies und Hierarchical Hub Labeling) auf diese Graphen anwenden lassen.
+
+
+    [aegaeis-visibility]
+  Sichtbarkeitsgraph des Hafens von Thessaloniki
+  
+
+
+
+
+
+
+
+
+
+
+
+
+Graphen
+
+Ein Graph ist eine mathematische Struktur zur Darstellung von Beziehungen zwischen Objekten.
+Die Idee, Objekte durch Verknüpfungen zu verbinden, bildet die Grundlage für zahlreiche Anwendungen, unter anderem die Routenplanung.
+Graphen und insbesondere kürzeste Pfade spielen darüber hinaus eine wichtige Rolle; in einem Wissensgraphen kann ein Pfad beispielsweise die Gültigkeit einer Aussage repräsentieren.
+graphs:fig:beispielgraph zeigt einen Graphen, der im Folgenden für Beispiele verwendet wird.
+
+
+    
+  Beispielgraph
+  
+Definitionen
+Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, führen wir ein einige grundlegende Begriffe ein.
+
+[Graph]
+  Sofern nicht anders angegeben, bezeichnet Graph im Folgenden einen endlichen, gerichteten Graphen mit Kantengewichten, ohne Mehrfachkanten und Schleifen.
+
+  Als Schreibweise wird  verwendet, wobei  die Knotenmenge und  die Kantenmenge ist. Eine Kante ist hierbei ein Tupel . Man bezeichnet  als Fuß (Tail),  als Kopf (Head) und  als Gewicht (Weight). Gelegentlich wird auch nur  geschrieben, um auszudrücken, dass zwei Knoten verbunden sind.
+
+  Wird  als ungerichtet bezeichnet, so gilt  und  kann als  geschrieben werden.
+
+Das Gewicht der Kanten ist hierbei auf positive reelle Zahlen begrenzt, da das Verwenden eines Kantengewichtes  dazu führen kann, dass ein kürzester Pfad mehrfach einen Teilpfad der Länge 0 durchläuft.
+Negative Kantengewichte erschweren die Definition und Argumentation, sodass hier auf diese nicht weiter eingegangen wird.
+
+[Nachbar]
+  Sei . Ein Knoten  heißt Vorgänger eines Knotens  wenn .  ist dann ein Nachfolger von .
+  Ist  ungerichtet, so spricht man in beiden Fällen von Nachbarn.
+
+Die Anzahl der Nachbarn eines Knotens wird als sein Grad bezeichnet, wobei bei gerichteten Graphen vom Eingangsgrad und Ausgangsgrad gesprochen wird.
+Hat ein Knoten keine Vorgänger oder Nachfolger, so nennt man ihn isoliert.
+
+[Pfad]
+  Ein Pfad  in einem Graphen  ist eine Folge von Knoten , wobei für alle  gilt, dass 
+  Der Knoten  wird Startknoten,  Zielknoten genannt.
+  Die Summe der Kantengewichte aller Kanten  wird seine Länge, die Anzahl der Kantennutzungen () seine Hop-Länge, genannt.
+
+Häufig wird für den Startknoten der Buchstabe  (Source) und für den Zielknoten der Buchstabe  (Target) verwendet.
+Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zur Definition des kürzesten Pfades.
+
+[Kürzester Pfad]
+  Ein Pfad  ist ein kürzester Pfad, wenn die Länge von  unter allen Pfaden von  nach  minimal ist.
+  Die Länge des kürzesten Pfades wird als Abstand von  und  bezeichnet.
+
+  Die Funktion  (Shortest Path Distance) weist einem Knotenpaar den Abstand zu, wobei dieser unendlich ist, wenn kein Pfad zwischen ihnen existiert.
+  Dann bezeichnet  (Shortest Path) einen kürzesten Pfad zwischen  und .
+
+Die zu beantwortende Frage, ob es zwischen zwei Knoten  einen Pfad gibt und was der Abstand der Knoten ist, bezeichnet man auch als --Anfrage (Query) und einen gefundenen Pfad als --Pfad.
+Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig, die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu bestimmen.
+Auch die Umkehrung dieses Problem ist Interessant, also die kürzesten Pfade von allen Knoten zu einem Anderen zu bestimmen.
+Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph  dem Finden aller kürzester Pfade von einem Knoten auf dem Transponierten Graph  entspricht.
+
+[Transponierter Graph]
+  Sei  ein Graph. Dann ist  mit  der transponierte Graph von .
+
+Ein ungerichteter Graph ist hierbei selbst sein transponierter Graph.
+
+[Hitting-Set]
+  Sei  ein Graph und  eine Menge an Pfaden auf .
+  Ein Hitting-Set  ist eine Menge an Knoten, in der jeder Pfad  mindestens einen Knoten aus  enthält.
+
+Ein triviales Beispiel für ein Hitting-Set ist  selbst, im Weiteren sind jedoch möglichst kleine Hitting-Sets nützlich.
+Das Finden kleinst möglicher Hitting-Sets ist NP-vollständig.
+Der Greedy-Algorithmus  bietet jedoch eine Approximation in polynomieller Zeit an.
+
+
+
+Zusätzlich zum Hitting-Set als Menge kann die Information, welcher Knoten in der wievielten Iteration des Greedy-Algorithmus ausgewählt wurde, von Bedeutung sein, daher wird das Hitting-Set im folgenden als geordnete Menge betrachtet.
+
+Beispiel Hitting Set
+
+Sichtbarkeitsgraphen
+
+Sichtbarkeitsgraphen sind Graphen, die Punkte in der euklidischen Ebene miteinander verbinden, die sich direkt sehen können, das heißt, zwischen denen keine Hindernisse liegen.
+Sie können zum Beispiel dazu verwendet werden, um den optimalen Pfad eines Roboters durch eine Umgebung mit Hindernissen zu bestimmen oder um die Platzierung von Mobilfunkmasten zu optimieren, sodass sie eine möglichst große Fläche abdecken.
+Sichtbarkeitsgraphen können in höheren Dimensionen  mit  konstruiert werden, diese Arbeit konzentriert sich jedoch auf die euklidische Ebene .
+Die Anzahl der Kanten ist dabei, abhängig von der Form und Platzierung der Polygone, im schlimmsten Fall quadratisch zu der Anzahl der Eckpunkte.
+Sie sind eine Möglichkeit das Euclidean Shortest Path Problem zu lösen.
+
+[Euclidean Shortest Path Problem]
+  Sei  eine Menge von Polygonen in  und  Eckpunkte dieser Polygone.
+  Was ist kürzeste Pfad von  nach , so dass dieser kein Polygon schneidet?
+
+fig:graphs:eulcidian_shotest_path_problem zeigt eine solche Situation.
+Die gestrichelten Linien sind dabei Kanten des Sichtbarkeitsgraphen.
+
+
+    
+  Beispiel Euclidean Shortest Path Problem
+  
+Eigenschaften
+
+Sichtbarkeitsgraphen sind im Allgemeinen nicht planar.
+Sie sind ungerichtet, da die Sichtbarkeit zwischen zwei Punkten in beide Richtungen gilt.
+Da die Gewichte der Kanten dem euklidischen Abstand zwischen den verbundenen Punkten entsprechen, bildet dieser eine untere Schranke des Abstandes für alle Knotenpaare, da ein kürzester Pfad durch das Umgehen von Hindernissen nur länger werden kann.
+
+Abgrenzung zu Straßengraphen
+Straßengraphen stellen eine spezielle Klasse von Graphen dar.
+Eines ihrer auffälligsten Merkmale ist, dass sie nahezu planar sind, wobei Ausnahmen in Form von Brücken und Tunneln existieren.
+Die Kantengewichte können etwa dem Luftlinienabstand oder der Reisezeit entsprechen, wobei sich letztere im Verlauf der Zeit ändert, etwa durch Stau oder Bauarbeiten.
+Sie haben einen relativ geringen durchschnittlichen Knotengrad, denn Kreuzungen von mehr als zwei Straßen sind selten.
+
+Sie besitzen eine hierarchische Struktur: Einfach gesagt, je schneller auf einer Straße gefahren werden darf, desto wichtiger ist diese für das Finden von kürzesten Pfaden.
+Die Wichtigkeit der benutzten Straßen eines kürzesten Pfades steigt im Allgemeinen an, bis etwa eine Autobahn erreicht wird, und nimmt schließlich wieder ab, bis das Ziel erreicht wird.
+
+Eine weitere Eigenschaft dieser hierarchischen Struktur ist, dass hinreichend lange Pfade durch ein vergleichsweise kleines Hitting-Set abgedeckt werden können, etwa durch alle Autobahnkreuze und Anschlussstellen.
+Diese Beobachtung führt zur Definition der Highway Dimension, einem Konzept, das von eingeführt wurde.
+
+Aufgrund der unterschiedlichen Strukturen von Sichtbarkeitsgraphen und Straßengraphen können Algorithmen, die für Straßengraphen gute Laufzeiten aufweisen, zwar auf Sichtbarkeitsgraphen angewendet werden, allerdings ist ihre Rechenzeit häufig zu hoch, um eine effiziente Verarbeitung zu ermöglichen.
+
+
+
+Triangulierung
+
+Um die Distanzen zwischen Knotenpaaren in Sichtbarkeitsgraphen mit einer oberen Schranke abzuschätzen, kann eine Triangulierung des Graphs durchgeführt werden, wie beispielsweise durch eine Delaunay-Triangulierung.
+Dieser Ansatz kann jedoch sehr schmale, lange Dreiecke erzeugen, die im Anschluss beseitigt werden können, um eine bessere obere Schranke zu erhalten.
+Das spezifische Verfahren zur Erstellung der in dieser Arbeit verwendeten Triangulierung wurde ausführlich in beschrieben.
+
+Die Knoten eines triangulierten Graphen  bilden hierbei eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen .
+Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten  nicht verkleinern, aber vergrößern.
+
+
+    [aegaeis-graph] 
+  
+  [aegaeis-visibility] 
+  Hafen von Thessaloniki
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Contraction Hierarchies, Hierarchical Hub Labelings
+Mit dem Aufkommen von Online-Kartendiensten stieg der Bedarf an effizienten Algorithmen zur Berechnung kürzester Pfade in großen Netzwerken stark an.
+ stellte hierfür Contraction Hierarchies vor.
+Diese Methode nutzt ein ähnliches Konzept wie die in graphs:strassengraphen vorgestellte Idee der Wichtigkeit von Kanten und ermöglicht auf Straßengraphen einen Speedup um mehrere Größenordnungen.
+Darauf aufbauend stellte eine Methode (Hierarchical Hub Labelings) vor, welche einen mit Contraction Hierarchies bearbeiteten Graphen als Eingabe erwartet und noch einmal einen Speedup um einige Größenordnungen ermöglicht.
+In diesen Kapitel werden die Grundlagen dieser Ansätze erläutert, und im chapter:kontraktion wird die Anwendbarkeit dieser Methoden auf Sichtbarkeitsgraphen diskutiert.
+
+Contraction Hierarchies
+
+Die Grundidee der Contraction Hierarchies ist es, aus einem Graph zwei Graphen zu erzeugen, in denen die Suche nur einen kleinen Teil aller Knoten betrachtet, wodurch das Suchen in ihnen deutlich effizienter ist.
+Durch die spezielle Konstruktion dieser Graphen ist garantiert, dass die Suche vom Startknoten aus in dem einen und die Suche vom Zielknoten aus in dem anderen Graphen immer einen Knoten findet, der auf dem kürzesten Pfad zwischen dem Startknoten und dem Zielknoten liegt.
+Der kürzeste Pfad kann dann, wie bei einer bidirektionalen Dijkstra-Suche, aus den Teilsuchen erstellt werden.
+
+Während der Vorbereitsungphase werden nacheinander alle Knoten das Graphens kontrahiert, wobei für die jeweils übrigen Knoten die kürzeste Pfad Distanz erhalten bleibt.
+Nachtdem alle Knoten kontrahiert wurden, werden die erwähnten beiden Graphen gebaut, auf denen dann gesucht werden kann.
+
+Knoten-Kontraktion
+
+Der Name Contraction Hierarchies leitet sich aus dem Konzept der Knoten-Kontraktion (Contraction) ab.
+
+[Knoten-Kontraktion]
+  Sei  ein Graph. Sei  der zu kontrahierende Knoten. Die Kontraktion von  erfolgt in zwei Schritten:
+
+  
+    ch:contraction:when_shortcut
+    Für jeden Vorgänger  und jeden Nachfolger  von  wird, wenn  der einzige kürzeste --Pfad ist, eine Abkürzungskante (Shortcut)  zu  hinzugefügt.
+
+              Alle Kanten von und zu  werden entfernt.
+  
+Nach der Kontraktion  ist also isoliert.
+Um die Abkürzungen zu erzeugen, kann von jedem Vorgänger eine modifizierte Dijkstra-Suche zu allen Nachfolgern ausgeführt werden, bei der die Kanten von und zu  nicht begangen werden.
+Ist die Länge der potenziellen Abkürzung kürzer, als die des in der modifizierten Dijkstra-Suche gefundenen Pfades, so liegt  auf allen kürzesten Pfaden zwischen  und .
+Die Knoten-Kontraktion bewahrt daher die kürzesten Pfad Distanzen zwischen den verbleibenden Knoten.
+
+Betrachten wir dies am ungerichteten Beispielgraphen.
+Sei  der zu kontrahierende Knoten, die Nachbarn sind , ,  und .
+Die kürzesten --, --, -- und --Pfade führen nicht durch .
+Der kürzeste --Pfad führt jedoch über .
+Daher wird eine Kante zwischen  und  eingefügt.
+graphs:fig:example_contraction zeigt den Graphen nach der Kontraktion.
+
+
+    [b]0.49
+        
+      
+    
+    Vor der Kontraktion
+      [b]0.49
+        
+      
+    
+    Nach der Kontraktion
+    Kontraktion von 
+  
+Häufig wird die Kontraktionsbedingung abgeschwächt, indem dann eine Kante eingefügt wird, wenn der zu kontrahierende Knoten auf einem kürzesten Pfad liegt.
+Dazu kann eine normale Dijkstra-Suche verwendet werden: Ist die Länge einer potentiellen Abkürzung optimal, dann wird sie eingefügt.
+Dies ist inbesondere dann effektiv, da die Suche, welche  nicht begeht, den gesamten Graph absucht, wenn  der einzige --Pfad ist.
+Weiter kann die Anzahl der Hops der Suche begrenzt werden.
+Dadurch können jedoch auch unnötige Kanten eingefügt werden, die nicht unbedingt für die Erhaltung der kürzesten Pfad Distanz erforderlich sind.
+
+Graphen-Kontraktion
+
+Um die für die Beantwortung von Anfragen benötigte Datenstruktur, den Contracted-Graph, zu erstellen, müssen alle Knoten eines Graphens kontrahiert werden, wobei die Kanten, die in jedem Schritt entfernt werden, gesammelt werden.
+Hierbei hat die Reihenfolge, in der dies geschieht, einen großen Einfluss auf Perfomanz der nachfolgenden Kontraktionen und den mit der Methode erzielte Speedup.
+Die Reihenfolge der Kontraktion wird durch eine vertex-to-level-Funktion angegeben, die bijektiv ist und definiert als  mit ,  und .
+Der Knoten mit dem niedrigsten Level wird dabei zuerst kontrahiert.
+Ihre Umkehrfunktion wird level-to-vertex-Funktion genannt.
+
+[Contrated-Graph]
+  Sei  und  die durch die vollständige Kontraktion von  erhalten Kanten mit der dazugehörigen vertex-to-level-Funktion .
+
+  Ein Contracted-Graph ist dann ein Tupel . Der Upward-Graph ist dabei  mit , der Downward-Graph ist  mit .
+
+Der Name des Upward-Graphen ergibt sich daher, dass die Suche in einem Upward-Graph auf das Level bezogen nur aufwärts geht.
+In transponieren die Autoren die Kanten des Downward-Graphens nicht, daher geht ihre Suche abwärts.
+Die Transposition der Kanten ist hierbei nur ein Trick, damit auf dem Downward-Graphen wie auf dem Upward-Graphen vorwärts gesucht wird.
+
+Der entstandene Graph ist azyklisch, da er nur Kanten enthält, deren Kopf ein größeres Level als der dazugehörige Fuß hat.
+Die Anzahl der in einer Breitensuche gefunden Knoten ist geringer als im Ursprungsgraph.
+Diese Eigenschaften sorgen dafür, dass eine Suche in einem Upward-Graph kostengünstiger sein kann.
+Die in einem Upward-Graph gefundenen kürzesten Pfade bilden eine obere Schranke für die tatsächlichen kürzesten Pfade; sie können jedoch auch länger sein als in .
+graphs:fig:counterexample_optimal_Upward zeigt ein Beispiel hierzu.
+Die Knoten wurden in der Reihenfolge , , ,  kontrahiert, wodurch der dazugehörige Upward-Graph entsteht.
+Der optimale --Pfad in  hat die Distanz zwei, in  hat er jedoch die Distanz drei.
+
+
+    [b]0.49
+        
+    Graph 
+      [b]0.49
+        
+    Upward-Graph  zu 
+    Gegenbeispiel optimale Kosten im 
+  
+Anfragen
+
+Die Suche eines kürzesten Pfades von  nach  auf dem Beispielgraph gestaltet sich nun wie folgt:
+Auf  wird eine Dijkstra-Suche von  und auf  eine Dijkstra-Suche von  durchgeführt.
+Aus den von beiden besuchten Knoten wird derjenige ausgewählt, der die niedrigste Summe beider Distanzen hat.
+fig:ch:beispiel_suche zeigt einen auf diese Weise gefundenen Pfad auf dem Beispielgraph aus graphs:fig:beispielgraph von  nach .
+Die Level der Knoten auf dem Pfad steigen von beiden Seiten an, bis sie den Treffpunkt-Knoten  erreichen.
+Die Kante  ist hierbei eine Abkürzung, sie kürzt  ab, was durch die gestrichelten Pfeile angedeutet wird.
+
+
+    
+  Beispiel einer Suche im Contrated Graph
+  
+Algorithmus  definiert dies formal.
+Wie bei einer bidirektionalen Dijkstra-Suche wird der Pfad, sofern dieser existiert, aus den Teilpfaden beider Suchen erstellt.
+Diese haben die Form  bzw. .
+Um einen gültigen Pfad zu erstellen, muss  aus einem dieser Teilpfade entfernt werden und der Pfad des Downward-Graphen umgekehrt werden.
+Anschließend können beide Pfade verkettet werden und es entsteht ein Pfad auf  der Form .
+Dieser Pfad muss aber kein Pfad auf  sein, da er noch Abkürzungen enthalten kann.
+In ch:subsection:pfad_gewinnung wird darauf eingegangen, wie diese entfernt werden können.
+
+
+
+Die Korrektheit des Algorithmus ist nicht sofort ersichtlich, da nicht alle besuchten Knoten eine optimal Distanz haben sind und nur ein Teil aller Knoten besucht wird.
+Der Beweis hierfür betrachtet einen kürzesten Pfad auf  und argumentiert, warum dieser gefunden wird:
+
+[Korrektheit Contracted-Graph Anfrage]  Der Upward-Graph  und der Downward-Graph  enthalten nur Kanten, die mindestens so lang sind, wie der Abstand in .
+  Daher kann ein --Pfad in  nur dann gefunden werden, wenn auch in  ein --Pfad existiert.
+
+  Nun ist zu zeigen, dass eine Suche auf  die kürzesten Pfad Distanz in  findet
+  Sei  der kürzeste Pfad auf  der unter allen kürzesten Pfaden den Knoten  mit dem höchsten Level enthält.
+  Erstelle aus diesem Pfad  zwei Pfade:  und .
+
+  Betrachte den Teilpfad  mit der Hop-Länge .
+  Aus diesem werden alle Knoten zwischen  und  entfernt, die ein kleineres Level als ihre Vorgänger haben.
+  Dies wird so oft wiederholt, bis keine Knoten mehr entfernt werden.
+
+  Betrachte den entstehenden Pfad als überlappende Tupel der Form .
+  Für diese gilt, dass , da wir uns im Teilpfad des Upward-Graphens befinden.
+  Die Knoten-Kontraktion erhält den Abstand der übrigen Knoten, also gab es zum Zeitpunkt der Kontraktion von  einen optimalen Pfad von  zu .
+  Alle Knoten, die ursprünglich zwischen ihnen lagen und entfernt wuren, haben ein kleineres Level als , waren also zum Zeitpunkt der Kontraktion von  bereits Kontraktiert.
+  Also gab es vor der Kontraktion von  eine direkte Kante zu , diese wurde gesammelt und dazu benutzt den Upward-Graphen zu bauen.
+  Daher wird  von  aus gefunden.
+  Da dies für alle überlappenden Tupel gilt, wird  von  aus mit optimalen Abstand gefunden.
+
+  Analog wird für den Teilpfad  im Downward-Graphen argumentiert.
+  
+Erstellung des Pfades
+Der in  gefundene Pfad kann bisher noch Abkürzungen enthalten.
+Damit der Pfad auch auf  gültig ist, müssen diese ersetzt werden.
+Hierfür ist eine Funktion notwendig, welche diese ersetzt.
+
+Solche eine Abkürzungsfunktion kann etwa durch eine HashMap implementiert werden.
+Da die -Funktion bijektiv ist, gilt für alle Knoten ,  immer entweder  oder .
+Daher reicht es für die Ersetzung der Abkürzungen in Pfaden in  eine HashMap zu benutzen, da keine Kollisionen zwischen Abkürzungen des Upward- und des Downward-Graphen entstehen können.
+
+
+    
+  Beispiel des iterativen Ersetzen von Abkürzungen
+
+Um diese Funktion zu erhalten, müssen die Abkürzungen, welche beim Kontrahieren des Graphens eingefügt werden, mitsamt dem übersprungenen Knoten gesammelt werden.
+Einen möglichen Algorithmus, welcher Abkürzungen in einem Pfad ersetzt, ist in Algorithmus  zu sehen.
+Der Algorithmus betrachtet den Pfad mit Abkürzungen als Stapel und bearbeitet jeweils nur die beiden obersten Knoten, da das Einfügen in ein Array an einer bestimmten Stelle rechenintensiv ist.
+
+
+
+Early stop
+
+Der Algorithmus  ist von theoretischer Bedeutung.
+Implementierungen ähneln der bidirektionalen Dijkstra-Suche, es werden also abwechselnd Knoten der Upward-Suche und der Downward-Suche expandiert.
+Die Expansion einer Suchrichtung kann dabei gestoppt werden, wenn die kleinste Distanz der Vorwärtswarteschlange größer als die bisherige kleinste Treffpunkt-Distanz ist.
+Wenn beide Suchen gestoppt sind, ist ein vorhandener kürzester Pfad gefunden worden.
+
+stall-on-demand
+
+Wie graphs:fig:counterexample_optimal_Upward zeigt, sind manche der im Upward- und Downward-Graphen gefunden Distanzen nicht optimal.
+Für das Finden einen kürzesten Pfades sind jedoch nur die Knoten interessant, deren Distanz optimal ist.
+Mit der von vorgestellten Methode stall-on-demand ist es möglich, den Suchraum der beiden Teilsuchen zu verkleinern.
+Hierfür wird die Expansion eines Knotens abgebrochen, wenn er durch eine Kante des jeweils anderen Graphen günstiger erreicht werden kann.
+
+[stall-on-demand]
+  Sei  ein Contracted-Graph mit  und .
+  Der Knoten  hat keine optimale Distanz in der Dijkstra-Suche von  in , wenn zum Zeitpunkt seiner Expansion es eine Kante , ,  gibt mit .
+  Die Expansion von  kann dann abgebrochen werden, die aus  ausgehenden Kanten müssen nicht betrachtet werden.
+  Gleiches gilt analog für .
+
+Betrachten wird dies an dem Beispiel in fig:ch:stall_example.
+Wir befinden uns in der Suche des Upward-Graphens
+Die blauen Kanten sind dabei Kanten der Upward-Suche, die rote Kante eine von  ausgehende Downward-Kante.
+Bisher wurde  in der Upward-Suche mit einer Distanz von eins expandiert, als Nächstes soll  expandiert werden.
+ hat die Distanz drei in der Upward-Suche, kann aber durch die Verwendung der Upward-Kante mit der Distanz zwei erreicht werden, also ist die Distanz drei nicht optimal und von  ausgehenden Kanten müssen nicht relaxiert werden.
+
+
+    
+  Beispiel stall-on-demand
+  
+Erstellung
+
+Ein Contracted-Graph wird durch die vollständige Kontraktion eines Graphens erstellt.
+Die Reihenfolge, in der die Knoten kontrahiert werden, kann dabei im Voraus feststehen oder es wird iterativ der jeweils unwichtigste Knoten kontrahiert.
+An den Prozess der Erstellung können mehrere Kriterien angelegt werden: So kann die Geschwindigkeit der Erstellung, die Geschwindigkeit der Anfragen oder die Anzahl der hinzugefügten Abkürzungen minimiert werden.
+
+Top-Down
+Bei der Top-Down-Kontraktion ist die level-to-vertex-Funktion  vorgegeben.
+Die Knoten werden in Reihenfolge ihres Levels kontrahiert, wobei mit dem niedrigsten Level begonnen wird.
+Diese Herangehensweise bietet einerseits die Möglichkeit dafür eine optimale Reihenfolge anzuwenden, wobei diese für hinreichend große Graphen nur schwer bestimmbar ist.
+
+Bei der Sortierung nach Grad werden die Knoten werden nach ihrem Grad sortiert, wobei die kleinsten Grade zuerst kontrahiert werden.
+Die Überlegung dahinter ist, dass Knoten mit vielen Nachbarn auch viele neue Kanten einfügen können, was vermieden werden soll.
+Nach größtem Grad ist vielleicht auch spannend.
+
+Die Knoten können auch über ein Hitting-Set sortiert werden: Hierbei wird über eine möglichst große Anzahl an Pfaden ein Hitting-Set gebildet, die Knoten des Hitting-Sets werden dann nach der Anzahl ihrer Hits sortiert.
+Die Knoten die nicht Teil des Hitting-Set sind, werden anschließend die unteren Level zugewiesen, wobei diese wiederum nach einer Metrik sortiert werden können, wie etwa dem Grad.
+
+Bottom-Up
+
+Bei der Bottom-Up-Kontraktion wird die vertex-to-level-Funktion  während der Kontraktion erstellt.
+Dafür wird mit einer Heuristik der jeweils unwichtigste Knoten aus einer Prioritätswarteschlange ausgewählt und kontrahiert.
+Ein unwichtiger Knoten hat hierbei einen niedrigen Heuristikwert.
+Die in der Praxis am meistverwendeten Heuristiken beinhalten die Kanten-Differenz, ziehen jedoch zumeist auch noch weitere Informationen mit ein.
+Sie gibt an, wie sich die Anzahl der Kanten im gesamten Graph durch die Kontraktion verändert.
+Sie wird gebildet, indem die Anzahl der neu hinzugefügten Kanten von der Anzahl der entfernten Kanten subtrahiert wird, wofür eine Kontraktion des Knotens simuliert wird.
+Die Kontraktion eines Knotens kann dabei die Heuristikwerte anderer Knoten verändern.
+Damit jedes Mal der Knoten mit dem niedrigsten Heuristikwert ausgewählt wird, müssen nach jeder Kontraktion alle Heuristikwerte neuberechnet werden.
+Dies ist im Allgemeinen jedoch zu teuer, weshalb in der Praxis sich zwei Methoden als effektiv erwiesen haben:
+
+Beim Lazy-Popping wird davon ausgegangen, dass ein Knoten nur wichtiger werden kann.
+Aus der Warteschlange wird ein Knoten entnommen und geprüft, ob sein Heuristikwert gewachsen ist.
+Wenn er gewachsen ist, dann wird er zurück in die Warteschlange geschoben, wenn nicht, dann wird er kontraktiert.
+Dies wird wiederholt, bis schließlich ein Knoten gefunden wird.
+Beim Neighbor-Update werden nach der Kontraktion eines Knotens die Heuristikwerte der Nachbarn aktualisiert.
+
+Um die zu einem Contracted-Graph dazugehörige Abkürzungsfunktion zu erhalten, muss während der Kontraktion des Graphens eine Liste der Abkürzungen erstellt werden.
+Wird die im vorherigen Absatz erwähnte abgeschwächte Bedingung verwendet, muss darauf geachtet werden, dass sich die Abkürzung zweier Knoten während der Kontraktion des Graphens mehrmals ändern kann, nur die letzte, beste Abkürzung darf dann gespeichert werden.
+
+Hierachical Hub Labeling
+Die Contracted-Graph-Anfrage ohne Stopbedingung erstellt jeweils den vollen Suchbaum für den Start und Zielknoten und sucht aus den expandierten Knoten beider Suchen den Knoten mit geringster Summe der Distanzen in beiden Suchen.
+Die Idee des Labels ist es, den Suchbaum des Upward- bzw. Downward-Graphen zu speichern, eine --Anfrage ist dann nur noch der Vergleich zweier Labels.
+In der in vorgestellten Terminologie wird das Label des Upward-Graphen Forward-Label und das des Downward-Graphen Backward-Label genannt.
+Ein kürzester Pfad wird gefunden, in dem der Knoten mit der geringsten Summe der Distanzen des Forward und Backward-Labels gefunden wird.
+
+[Hub Graph]
+  Sei .
+  Ein Hub Graph ist  und es gilt:
+  Die Forward-Label-Funktion  weist jedem Knoten ein Forward-Label zu.
+  Sei  das Forward-Label des Knotens , dann gibt es für jeden Knoten  höchstens ein  und es gilt .
+  Ein Backward-Label ist ein Forward-Label des Umkehrgraphens .
+
+  Zusammen erfüllen die Forward-Label und die Backward-Label die Abdeckungseigenschaft:
+  Für jedes Knotenpaar  für die es einen kürzesten - Pfad gibt, gibt es einen Knoten  mit ,  und .
+
+Die Definition der Label ähnelt bereits dem Beweis der Korrektheit der Contracted-Graph Query, bei diesem wurde ebenfalls mit dem Treffpunktknoten  argumentiert.
+Aus einem Contracted-Graphen lässt sich ein Hub Graph bauen, indem der Suchbaum des Upward-Graphen als Forward-Label und der des Downward-Graphen als Backward-Label betrachtet wird, denn die Suchbäume treffen sich im Knoten mit dem höchsten Level mit optimalem Abstand.
+Die Erstellung kann auf zwei Wegen geschehen, durch eine Dijkstra-Suche im Upward- bzw. Downward-Graphen pro Knoten oder durch Merging.
+Diese so erstelten Labels sind hierarchisch: Es gibt eine Ordnung der Knoten (die vertex-to-level-Funktion), so dass das Forward und das Backward-Label eines Knotens  nur Knoten  mit höherer Ordnung enthält.
+Es sind auch Label möglich, die diese Eigenschaft nicht erfüllen, weiter können solche für manche Graphen deutlich kleiner sein, als hierarchische.
+Anfrage
+
+Sei  ein Hub-Graph.
+Algorithmus  zeigt, wie wenige Schritte dafür notwendig sind, eine kürzeste Pfad Distanz in  zu finden, nur noch das Finden des Knotens mit der geringsten Summe der Distanzen ist dafür erforderlich.
+Da die Labels den Suchbäumen der Upward- bzw. Downward-Suche entsprechen, ist die Korrektheit der Hub-Graph-Anfrage durch die Korrektheit der Contracted-Graph-Anfrage gegeben.
+
+
+
+Pfaderstellung
+
+Nachdem ein Treffpunkt-Knoten  gefunden wurde, sind noch zusätzliche Informationen notwendig, um einen Pfad in  erstellen zu können, denn zuerst muss ein Pfad in  erstellt werden und anschließend die Abkürzungen ersetzt werden.
+Dafür muss für jeden Knoten in einem Label sein Vorgänger, falls vorhanden, bekannt sein.
+Dafür wird die Definition des Label von einer Teilmenge von  erweitert auf eine Teilmenge von , der zusätzliche Knoten speichert hierbei den Vorgängern.
+Für das Erstellen eines Pfades springt man, beginnend vom Treffpunkt-Knoten durch alle Vorgänger, bis es keinen Vorgänger mehr gibt.
+Durch das Ersetzen der Abkürzungen, etwa mit dem Algorithmus , erhält man so einen gültigen Pfad auf .
+
+Datenstruktur
+
+Gibt es eine Totalordnung der Knoten, dann lässt sich durch eine geschickte Wahl der Datenstruktur zur Speicherung eines Labels der Knoten mit der geringsten Summe der Distanzen in linearer Zeit zur Größe der Label finden:
+Labels sind dann eine Liste und deren Einträge nach dem Knoten sortiert.
+Ähnlich wie bei Merge Sort werden dabei die Einträge paarweise verglichen, wobei der Index des Labels mit dem jeweils kleineren Element inkrementiert wird.
+Dadurch ist garantiert, dass alle Knoten, welche in beiden Labeln vorhanden sind, Zeitgleich betrachtet werden und falls diese einen aktuell besten Treffpunkt-Knoten bilden, diese Information gespeichert werden kann.
+
+Um das Finden der Vorgänger effizienter zu machen, wird nicht der Vorgänger selbst gespeichert, sondern sein Index im Label.
+ch:fig:label zeigt ein Label solcher Art.
+
+
+    
+  Beispiel eines Labels
+  
+Erstellung
+
+Da die Label den expandierten Knoten im Suchbaum des Upward-bzw. Downward-Graph entspricht, können diese naiv dadurch gebildet werden, dass pro Knoten der entsprechende Suchbaum mit einer Dijkstra-Suche erstellt wird und die gefundenen Knoten entsprechend sortiert werden.
+Dies lässt sich gut parallelisieren, jedoch ist das Merging meist effizienter.
+
+Merging
+
+Für jeden Knoten des Graphens  wird ein Label vorbereitet, das zu Beginn nur den Knoten selbst enthält.
+Danach werden die Label in der Reihenfolge der Level, von groß zu klein, wie folgt erstellt:
+Pro Knoten werden die ausgehenden Kanten des Downward bzw. Upward-Graphens betrachtet.
+Die Köpfe dieser Kanten haben ein höheres Level als der Knoten selbst, daher existieren ihren Label bereits.
+Sie werden gemerged, indem sie zusammen ein neues Label bilden und Duplikate mit größerer Distanz entfernt werden.
+Dies erstellt ebenfalls die benötigten Suchbäume des Upward- bzw. Downward-Graph.
+
+Bild
+
+Pruning
+
+Die erstellten Labels enthalten bisher noch Knoten mit nicht-optimaler Distanz in  (siehe graphs:fig:counterexample_optimal_Upward), was einerseits den Speicherbedarf der  Label als auch die Anfrage-Zeiten erhöht.
+Die Einträge mit nicht-optimaler Distanz können dabei entfernt werden, indem die erstellten Hub Label selbst dafür benutzt werden, die Einträge mit nicht-optimaler Distanz zu identifizieren.
+Diese nicht-optimale Einträge können aus dem Label entfernt werden.
+Beim Merging kann dies auch bereits während der Erstellung geschehen, da die Labels von Knoten mit höherem Level bereits existieren.
+
+Kontraktion in Sichtbarkeitsgraphen
+Die zuvor beschriebene Kontraktion von Knoten und Graphen ist bei Graphen mit hohem durchschnittlichen Knotengraden, wie zum Beispiel Sichtbarkeitsgraphen, deutlich rechenintensiver als bei Graphen mit geringeren Knotengraden, wie etwa Straßengraphen.
+Für die Knoten-Kontraktion muss für jeden Vorgänger eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger und Nachfolger ist zu prüfen, ob eine Abkürzung eingefügt werden muss.
+Ein hoher Knotengrad bedeutet somit viele Dijkstra-Suchen und  viele Vergleiche, ob eine Abkürzung notwendig ist.
+
+Bei der Bottom-Up-Kontraktion wird die Kontraktion potenziell mehrfach simuliert, bevor sie wirklich ausgeführt wird:
+Beim Lazy-Popping werden die Knoten oft nicht kontraktiert, sondern mit aktualisiertem Heuristik-Wert in die Warteschlange zurückgeschoben, da durch viele Nachbarn die Wahrscheinlichkeit dafür steigt, dass sich die Knoten-Differenz verändert hat.
+Beim Neighbor-Update sind jeweils sehr viele Nachbarn zu aktualisieren.
+
+Um Graphen mit hohen Knotengraden schneller zu kontrahieren, ist es entscheidend, die Kontraktion einzelner Knoten zu beschleunigen und eine effiziente sowie effizient erstellbare Reihenfolge der Kontraktionen zu finden.
+Auch die zur Repräsentation von Graphen verwendeten Datenstrukturen sollten betrachtet werden, damit das Finden von Nachbarn sowie das Einfügen und Löschen von Kanten effizient und parallel möglich ist.
+
+Kontraktion mit Heuristik
+
+Anstelle einer rechenintensiven Dijkstra-Suche in  pro Vorgänger kann eine Heuristik pro Paar aus Vorgänger und Nachfolger eine obere Schranke für den Abstand geben.
+Eine Kante als Abkürzung wird dann eingefügt, wenn ihre Länge kleiner oder gleich der berechneten oberen Schranke ist.
+Damit dies für die Kontraktion eines einzelnen Knotens effizienter ist, muss die Ermittlung der Heuristikwerte für alle Paare aus Vorgängers und Nachfolger schneller sein als die Dijkstra-Suchen und die anschließenden Abfragen der Distanzen der Dijkstra-Suche.
+Damit die Kontraktion des gesamten Graphen effizienter ist, müssen die Folgekosten unnötigerweise eingefügter Kanten geringer sein, als der Zeitgewinn durch den Einsatz der Heuristik.
+
+Triviale Heuristik
+
+Die Triviale Heuristik setzt die obere Schranke für jedes Knotenpaar auf .
+Dies bedeutet, dass für jedes Paar aus Vorgänger und Nachfolger, unabhängig von der tatsächlichen Distanz, eine Kante als Abkürzung eingefügt wird.
+Unter der Annahme, dass in Graphen mit sehr hohem Knotengrad fast alle Nachbarn bereits mit einer Kante verbunden sind, könnte der Anteil der unnötig eingefügten Abkürzungen im Vergleich zu den notwendigen vernachlässigbar sein.
+
+Vereinfachter Graph
+
+Sei  der zu kontrahierende Graph.
+Lässt sich zu  effizient ein vereinfachter Graph  mit  konstruieren, so kann dieser zur Berechnung der oberen Schranke verwendet werden, etwa indem die Dijkstra -uchen auf ihm ausgeführt werden.
+Alternativ kann zu  auch ein Contracted- oder Hub-Graph erzeugt werden, womit die obere Schranke dann für jedes Vorgänger-Nachfolger-Paar einzelnen berechnet wird.
+
+Für Graphen in der euklidischen Ebene existieren Algorithmen, wie etwa die Delaunay-Triangulierung, die es ermöglichen, leicht einen vereinfachten Graphen zu erstellen.
+
+Dreiecksungleichung
+
+Ähnlich zu ALT kann eine Menge Hubs berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke des Abstands zweier Knoten angeben können.
+Ein Hub ist hierbei ein Knoten , für den die Distanz zu und von allen Knoten bekannt ist.
+Die obere Schranke des Abstandes zweier Knoten  kann dann durch  berechnet werden.
+Liegt  dabei auf einem kürzesten Pfad von  nach , so entspricht der Wert sogar genau dem Abstand.
+Die obere Schranke über mehrere Hubs wird durch die Wahl der kleinsten oberen Schranken bestimmt.
+Hierfür reicht es sogar, eine obere Schranke zu finden, die kleiner als die potenzielle Abkürzung ist, diese Kante kann dann keine optimale Abkürzung sein und die Überprüfung kann abgebrochen werden.
+
+Die Hubs können dabei über die Berechnung eines Hitting-Sets bestimmt werden.
+Durch die Auswahl von Hubs auf diese Art steigt die Genauigkeit der oberen Schranken mit der Hop-Länge der kürzesten Pfade, da die Wahrscheinlichkeit, dass diese durch einen Hub getroffen wird, steigt.
+Durch mehr Hubs steigt allerdings auch der Zeitbedarf der Berechnung der oberen Schranke.
+
+Kombination mehrerer oberer Schranken
+Sind für einen Graphen mehrere Heuristiken bekannt, so kann für eine potenzielle Abkürzung aus allen oberen Schranken die kleinste ausgewählt werden.
+Dies ist besonders dann sinnvoll, wenn die Heuristiken jeweils eine Teilmenge aller Knotenpaare gut abdecken.
+Insbesondere die Kombination von Dreiecksungleichung und vereinfachtem Graph ist hierbei erfolgversprechend, unter der Annahme, dass die erste für große und zweitere für kleine Hop-Abstände gute obere Schranken liefert.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Datenstrukturen
+
+Hash besser als Vec
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PEOPLE: Predetermined Order, Pruned Label
+Wie im chapter:kontraktion diskutiert wurde, ist die Kontraktion von Graphen mit hohem durchschnittlichem Knotengrad aufwendig.
+Vielleicht ist die Kontraktion von ihnen sogar so aufwendig, dass sie sich nicht in sinnvoller Zeit kontrahieren lassen.
+Trotzdem wäre es praktisch, wenn sich die Anfrage-Zeiten von Contraction Hierarchies und Hierarchical Hub Labeling auch auf sie übertragen ließen.
+Hierfür charakterisieren wir den Contracted- und Hub-Graphen neu und stellen anschließend PEOPLE (Predetermined Order, Pruned Label) vor, eine Methode wie Hub- und Contracted-Graphen mit einer vorgegebenen vertex-to-level-Funktion ohne Knoten-Kontraktion erstellt werden können.
+
+Contracted-Graph
+
+Um die nachfolgende Definition vorzubereiten, betrachten wir ein Beispiel.
+Sei  mit  und , ein Produkt einer Kontraktion.
+ enthielt zu Beginn also mehr Kanten und mehr nicht-isolierte Knoten
+Es soll nun  kontrahiert werden.
+Hierfür wird eine Kante  eingefügt und die Kanten  entfernt.
+Daraus können zwei Folgerungen gezogen werden:
+
+
+          Alle Knoten zwischen  und  auf allen kürzesten --Pfaden wurden bereits kontrahiert und haben daher auch ein niedrigeres Level als  und .
+
+           gilt genau dann, wenn  das größte Level auf allen Pfaden von  nach  hat.
+         gilt, wenn  das größte Level hat.
+
+Basierend auf dieser Überlegung, definieren wir den Upward-Graph neu.
+
+[Upward-Graph]  Sei  und  eine vertex-to-level-Funktion dazu.
+  Dann ist  ein Upward-Graph zu , wenn für jeden Knoten  gilt:
+
+  
+               enthält nur Kanten  mit  und , für die es einen --Pfad der Länge  gibt, so dass auf ihm  das größte und  das zweitgrößte Level hat.
+
+               enthält alle Kanten  mit , für die gilt, dass auf allen --Pfaden  das größte und  zweitgrößte Level hat.
+  
+Betrachten wir dies wieder am Beispielgraph.
+Sei  durch die Abbildung in ch::fig::vtl_abbildung definiert.
+Durch Anwendung der neuen Definition des Upward-Graph ergibt sich der in ch::fig::upward_graph gezeigte Graph.
+
+
+    
+   Beispielfunktion
+  
+
+    
+  Upward-Graph des Beispielgraphs
+  
+Die Definition des Downward-Graphens erfolgt nun analog zu der des Upward-Graphens:
+
+[Downward-Graph]
+  Sei  und eine vertex-to-level-Funktion dazu gegeben. Dann ist ein Upward-Graph des transponierten Graphens  ein Downward-Graph zu .
+
+Wenn ein Graph ungerichtet ist, dann ist er äquivalent zu seinem transponierten Graphen und dann ist auch der Upward- und Downward-Graph äquivalent.
+Daher entspricht ch::fig::upward_graph gleichzeitig auch dem Downward-Graph des Beispielgraphens.
+Es ist zu zeigen, dass Anfragen auf einem auf diese Art definiertem Contracted-Graph  ebenfalls Korrekt sind.
+
+[Korrektheit Contracted-Graph Anfrage]
+  Da im Upward- und Downward-Graphen nur Kanten existieren, deren Gewicht mindestens dem kürzesten Pfad Abstand der verbundenen Knoten entspricht, kann in  kein Pfad gefunden werden, der nicht auch in  existiert.
+
+  Sei  der kürzeste --Pfad auf  der, unter allen kürzesten --Pfaden, den Knoten  mit dem höchsten Level enthält.
+  Erstelle aus diesem Pfad  zwei Pfade:  und .
+  Betrachte den Teilpfad  der Hop-Länge .
+  Ist , so ist nichts weiter zu zeigen.
+
+  Finde nun den ersten Knoten  nach , für den gilt, dass sein Level größer als das von  ist und zwischen denen auf allen Pfaden nur Knoten kleiner Level liegen.
+  Für diesen gibt es nach der Definition des Upward-Graphen eine Kante mit optimalem Gewicht in ihm.
+  Wiederhole dies für den Teilpfad , bis .
+  Durch diese Kanten lässt sich  von  aus in  mit optimaler Distanz finden.
+
+  Analog wird für den Teilpfad  im Downward-Graphen argumentiert.
+  
+Dass nur Kanten  erstellt werden müssen, wenn  das größte und  das zweitgrößte Level auf allen --Pfaden hat, ist in fig:people:notwendige_kanten veranschaulicht.
+Die Zahl unter dem Knotennamen entspricht dabei dem Level des Knotens.
+Es muss keine  Kante erstellt werden, da  über  erreicht werden kann.
+
+
+    
+  Beispiel notwendiger Kanten im Upward-Graph
+  
+Kontraktion erfüllt diese Definition
+
+Bei der Knoten-Kontraktion des Knoten  wird für den Pfad  eine Abkürzung eingefügt, wenn dies der einzige kürzeste --Pfad ist.
+Ist dies der Fall, dann wurden die Knoten aller andern kürzesten Pfade zuvor bereits kontrahiert und haben daher ein niedrigeres Level als  und .
+Daher bilden diese Abkürzungen mitsamt den Kanten des ursprünglichen Graphen die Kantenmenge des Upward- und Downward-Graphen, wobei die Zuordnung zu Downward- und Upward-Graph durch die Reihenfolge der Kontraktion von  und  definiert ist.
+
+Wenn die Kontraktionsbedingung abgeschwächt wird, werden nicht notwendige und nicht optimale Kanten eingefügt, dies lässt die Definition aber zu.
+Daher entspricht ein durch Graphen-Kontraktion erzeugter Graph der neuen Definition.
+
+Algorithmus
+
+Das Berechnen aller kürzesten Pfade zwischen zwei Knoten ist aufwändig, daher wird zum Berechnen eines so definierten Contracted-Graphens ein ähnlicher Trick angewendet, wie er bei der Knoten-Kontraktion angewandt wird:
+Wir fügen Kanten ein, sobald wir einen optimalen --Pfad gefunden haben, auf dem  das größte und  das zweitgrößte Level hat.
+Dies ist hinreichend, fügt im Zweifel jedoch mehr Kanten als notwendig ein.
+
+Um einen Upward-Graphen zu berechnen, wird für jeden Knoten  eine angepasste Dijkstra-Suche ausgeführt, bei der für jeden Knoten jeweils notiert wird, was das größte Level auf dem Pfad zur Wurzel ist.
+Diese Information kann mit der max-on-path Funktion  abegrufen werden.
+Ein Knoten ,  ist der Kopf eine Upward-Graph Kante, für die gilt, dass  und .
+Das Gewicht der Kante kann der Dijkstra Suche entnommen werden.
+Die Suche kann abgebrochen werden, wenn ür alle nicht-expandierten Knoten  gilt, dass  ist.
+ch:fig:ch_brute_force_suchbaum zeigt dies für den Knoten  im Beispielgraphen.
+Die linke Zahl steht dabei für das Level des jeweiligen Knotens, die rechte Zahl für das größte Level auf dem Pfad zur Wurzel.
+
+
+    
+  Contracted-Graph PEOPLE Suchbaum
+  
+Die Information des größten Levels auf dem Pfad zur Wurzel kann dabei beim Update eines Knotens übertragen werden, indem das Maximum des bisherigen größten Levels und das Level des upgedateten Knotens gebildet wird.
+
+
+Die Abbruchbedingung kann durch Betrachtung einer Menge an lebendigen Knoten verfolgt werden, sobald diese keine Knoten mehr enthält, kann die Suche abgebrochen werden.
+Zu Beginn ist nur der Startknoten lebendig, die Lebendigkeit wird jeweils an die Kinder vererbt.
+Ein Knoten stirbt, nachdem er expandiert wurde oder wenn er den Kopf einer Kante bildet.
+In dem Beispiel in ch:fig:ch_brute_force_suchbaum wäre dies etwa nach der Expansion von  der Fall.
+Bei einer guten vertex-to-level-Funktion ist die Überlegung, dass viele Suchen früh abgebrochen werden können.
+
+Die Berechnung ist embarrassingly parallel, jeder Knoten kann unabhängig von den anderen berechnet werden.
+Der textuell beschriebene Algorithmus ist im Algorithmus  ausgeschrieben und wird Contracted-Graph PEOPLE Algorithmus genannt.
+
+
+
+Änderung von Kantengewichten
+
+Bei Graphen mit hierarchischer Struktur und einer guten Vertex-to-Level-Funktion ist anzunehmen, dass die Suche nach Algorithmus   in den meisten Fällen früh abbricht.
+Dies ist einerseits für die Effizienz der Berechnung von Vorteil, verdeutlicht aber auch, dass für die Bestimmung der ausgehenden Kanten des Contracted-Graphen für viele Knoten jeweils nur die lokale Umgebung eines Knotens von Bedeutung ist, wobei insbesondere Knoten mit einem hohem Level hierbei eine Ausnahme sind.
+Änderungen der Kantengewichte außerhalb dieser Umgebung haben daher für viele Knoten keinen Einfluss auf den Suchbaum des Algorithmus .
+
+Diese Eigenschaft lässt sich nutzen, um nach einer Änderung der Kantengewichte nicht für jeden Knoten sämtliche ausgehenden Kanten neu berechnen zu müssen.
+Zwei mögliche Ansätze bieten sich hierfür an:
+Zum einen könnte für jeden Knoten gespeichert werden, von welchen Kanten er beeinflusst wird.
+Zum anderen könnte für eine geänderte Kante berechnet werden, welche Knoten von ihr beeinflusst werden.
+
+Das Speichern des Bereichs, der einen Knoten beeinflusst, kann in Graphen der euklidischen Ebene beispielsweise durch Bounding Boxen realisiert werden. Ob es eine effiziente Methode gibt, mit der der Einflussbereich einer Kante bestimmt werden kann, wird in dieser Arbeit nicht behandelt.
+
+Abkürzung Problem
+
+Es liegt nahe, als abgekürzten Knoten den Knoten mit dem dritthöchsten Level auszuwählen und sich darauf zu verlassen, dass die Suche von diesem Knoten aus die nächste Abkürzung findet, da dies der Knoten-Kontraktion entspricht.
+Dies ist praktisch, da dann jeder Shortcut nur einmal erstellt werden muss, dafür muss jedoch gelten, dass die Vorwärtssuche für - den gleichen Pfad findet wie die Rückwärtssuche (die Suche auf dem transponierten Graphen) für -.
+Wird als Graph eine Datenstruktur verwendet, welche die Nachbarn nicht in einer definierten Ordnung ausgibt (etwa eine HashMap), oder eine nicht stabile Prioritätswarteschlange verwendet, ist dies nicht garantiert.
+
+ch:fig:problem_shortcut zeigt eine Situation, in der dies auftreten kann.
+In  wurde der --Pfad  gefunden, dessen Abkürzungen jetzt ersetzt werden sollen.
+Hierfür wird im ersten Schritt für die Abkürzung  der abgekürzte Knoten  gefunden, dadurch ist der Pfad .
+Wir verlassen uns darauf, dass die Suche von  aus die Abkürzung  mit dem Knoten  findet, dies geschieht jedoch nicht, wenn  von  aus über  erreicht wird.
+
+
+    [b]0.49
+        
+    Graph
+      [b]0.49
+        
+    Upward- und Downard-Graph
+    [b]0.49
+        
+    Suchbaum von 
+      [b]0.49
+        
+    Suchbaum von 
+    Problem beim Shortcut erstellen
+  
+Für dieses Problem gibt es zwei Lösungen:
+Die nachfolgenden Abkürzungen, welche benötigt werden, um eine Abkürzung vollständig zu entpacken, werden für jede Abkürzung ebenfalls erstellt.
+Dadurch werden viele Abkürzungen mehrfach erstellt, dies muss daher synchronisiert werden, damit nicht zu viel Speicher genutzt wird.
+Alternativ kann die Prioritätswarteschlange modifiziert werden, indem eine Totalordnung der Knoten bestimmt, in welcher Reihenfolge Knoten gleicher Distanz expandiert werden.
+
+PEOPLE
+
+Analog zur neuen Definition des Contracted-Graph lässt sich auch der Hub-Graph neu definieren.
+Die dafür verwendete Definition des Forward-Labels weicht nur leicht von der des Upward-Graphen ab, lediglich die Anforderung, dass der betrachtete Knoten das zweitgrößte Level hat, entfällt.
+
+[Forward-Label]
+  Sei  und eine vertex-to-level Funktion dazu gegeben.
+  Dann ist  ein Forward-Label für einen Knoten  in , wenn gilt:
+
+  
+               enthält nur Einträge  mit  und , für die es einen - Pfad der Länge  gibt, so dass auf ihm  das größte Level hat.
+
+               enthält alle Einträge  mit , für die gilt, dass auf allen - Pfaden  das größte Level hat.
+  
+
+Hierbei ist ein Backward-Label ein Forward-Label des transponierten Graphen  .
+Die Korrektheit dieser Definition folgt direkt daraus, dass der Knoten mit dem höchsten Level auf einem Pfad im Forward- und Backward-Label liegt.
+
+Algorithmus
+
+Solche Labels können wieder durch Merging aus einem Contracted-Graph erstellt werden, jedoch folgt aus dieser Definition auch die Möglichkeit, das Label eines bestimmten Knotens zu berechnen.
+Der dafür verwendete Algorithmus ist in Algorithmus  gelistet, er erzeugt ein gepruntes Label, da er aus einem Dijkstra-Suchbaum auf  das Label erzeugt und dieser nur optimale Distanzen enthält.
+Da er für eine vorgebene vertex-to-level-Funktion geprunte Label erstellt, wird dieser Algorithmus PEOPLE, für Predetermined Order, Pruned Label, genannt.
+
+Ein Beispiel einer solche Suche ist in ch:fig:hl_brute_force_suchbaum gezeichnet, dieses verwendet den Beispielgraph, aber nicht die gleiche vertex-to-level-Funktion wie in ch::fig::vtl_abbildung.
+Das Label für  enthält ,  und  selbst, da ihr Level das jeweils größte auf dem Pfad zur Wurzel ist.
+
+
+    
+  Hub-Graph People Suchbaum
+  
+
+
+Anwendungsgebiet
+
+Die Berechnung der Graphen-Kontraktion in Straßennetzwerken ist in vertretbarer Zeit möglich, jedoch gilt dies nicht für alle Graphenklassen. Insbesondere bei Graphen mit hohem durchschnittlichen Knotengrad stellt die Dijkstra-Suche für jeden Vorgänger einen signifikanten Kostenfaktor dar, sodass die Berechnung der Labels mittels PEOPLE effizienter sein kann.
+Da die Labels parallel berechnet werden können, ist es durch den Einsatz geeigneter Hardware möglich, die Berechnungszeit für alle Labels deutlich zu reduzieren.
+
+Der Algorithmus kann auch dazu verwendet werden, die Ergebnisse einer --Anfrage effizient zu cachen.
+Falls die Labels von  und  noch nicht vorhanden sind, werden sie generiert.
+Nachfolgende Anfragen von  oder zu  können dann direkt auf die gespeicherten Labels zugreifen.
+
+PEOPLE kann auch dafür benutzt werden, die durch eine vertex-to-level-Funktion induzierte durchschnittliche Label Größe anzugeben, ohne zuerst den Contracted-Graph und anschließend den Hub-Graphen zu berechnen.
+Hierfür wird für  Knoten das Label berechnet und über diese die durchschnittliche Größe der Labels angegeben.
+Da sich dies leicht parallelisieren lässt, könnte in einem zukünftigen Schritt durch Optimierungsalgorithmen die Label Größe verkleinert werden.
+Ergebnisse
+
+Sofern nicht anders erwähnt, beziehen sich die Laufzeiten auf Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von 2.1 Ghz und 180GB RAM.
+Die Ergebnisse wurden auf gleichen System, aber nicht auf demselben erzeugt.
+
+Untersuchung der Graphen
+
+Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitsgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
+Für jeden dieser drei Graphen existiert zusätzlich eine Triangulierung, deren kürzeste Pfade eine untere Schranke zu Sichtbarkeitsgraphen darstellt
+table:input_graphs listet die Graphen auf.
+Die Graphen mit dem Präfix aegaeis beinhalten das Ägäische Meer, mit medi das Mittelmeer und mit pata die Chilenische Fjorde.
+Graphen mit dem Postfix visibility sind Sichtbarkeitsgraphen, mit graph Triangulierungen.
+Die bearbeiteten Graphen sind ungerichtet, werden im folgenden jedoch als gerichtet betrachtet.
+Insbesondere ist die in table:input_graphs aufgelistete Anzahl an Kanten gerichtetet zu interpretieren,
+die ungerichtete Kante  wird also doppelt gezählt als  und .
+
+
+    
+  Bearbeite Graphen
+  
+Dijkstra
+
+Für die Berechnung des Speedups der in dieser Arbeit verwendeten Methoden wurden für jeden Graphen 1000 sequentielle --Dijkstra-Suchen ausgeführt und die durchschnittliche Laufzeit ermittelt.
+Die ermittelten Zeiten für das Finden und Erstellen des kürzesten Pfades sind in Tabelle  dargestellt.
+Aus den Ergebnissen geht hervor, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten aufweisen.
+
+Zusätzlich zur durchschnittlichen Laufzeit wurde die die Durchschnittswerte der Hop-Länge, des Dijsktra-Rank und der Queue pops über 10000 --Dijkstra-Suchen ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
+Dabei zeigte sich, dass die durchschnittliche Hop-Länge in den Sichtbarkeitsgraphen signifikant kürzer ist als in den Triangulierungen.
+Trotz der geringeren Anzahl an Knoten in den Sichtbarkeitsgraphen ist die durchschnittliche Anzahl an Queue Pops jedoch höher.
+Dies deutet darauf hin, dass der Einsatz einer Warteschlange mit einer Decrease-Key-Funktion die Effizienz der Dijkstra-Suche potenziell verbessern könnte.
+Der Versuch, die Suchzeit durch die Verwendung einer solchen Warteschlange zu reduzieren, schlug jedoch fehl.
+
+
+    
+  Durschnitliche Kennwerte der Dijkstra Suchen (über 10000 Suchen)
+  
+Knotengrade
+
+Weiter wurde die Verteilung der Knotengrade untersucht, die enstanden Histogramme sind in ergebnisse:fig:degree_hist erstellt.
+In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90% der Knoten einen Grad von weniger als 2000.
+
+
+  [b]0.5
+    
+      
+    
+    aegaeis-vis
+  
+  [b]0.5
+    
+      
+    
+    medi-vis
+      [b]0.5
+    
+      
+    
+    pata-vis
+    Verteilung der Kantengrade
+  
+Als Indikator dafür, wie sehr sich die Graphen kontrahieren lassen, wurde die Summe der quadratischen Knotengrade berechnet, diese ist in table:sum_quad_degree aufgelistet.
+Diese ist bei den Sichtbarkeitsgraphen jeweils um mehrere Größenordnungen größer als bei ihren Triangulierungen.
+
+
+    
+  Summe quadratische Knotengrade
+  
+Graphen-Kontraktion
+
+Der Ausgangspunkt der Analyse, ob die in dieser Arbeit behandelten Sichtbarkeitsgraphen kontrahiert werden können, war die Anwendung der klassischen Graphen-Kontraktion mit Dijkstra-Suchen.
+Dabei kam ein speziell für diese Arbeit entwickeltes Programm zum Einsatz.
+Die Reihenfolge der Kontraktionen wurde durch die Kanten-Differenz mit Lazy-Popping bestimmt.
+
+Während es für die triangulierten Graphen möglich war, einen Contracted-Graph zu erstellen, wurde diese Erstellung bei den Sichtbarkeitsgraphen nach drei Tagen abgebrochen, da in dieser Zeit noch nicht einmal alle initialen Kanten-Differenzen berechnet werden konnten.
+Die Ergebnisse für die triangulierten Graphen sind in Tabelle fig:ergebnisse:ch_graph_kontraktion_triangulierungen dargestellt.
+
+
+    
+  CH Graphen-Kontraktion
+  
+Bassierend auf den Contracted-Graphen der Triangulierungen wurde jeweils ein Hub-Graph durch Merging erstellt.
+Die Ergebnisse hierfür sind in fig:ergebnisse:hl_graph_kontraktion_triangulierungen aufgelistet.
+
+
+    
+  HL Graphen-Kontraktion
+  
+Als zusätzlicher Referenzpunkt zur Beurteilung der Qualität der erzeugten Contracted-Graphen sowie der dafür benötigten Zeit wurde ein externes Programm verwendet, um ebenfalls Contracted-Graphen zu erstellencite?.
+Die Ergebnisse hierfür sind in fig:ergebnisse:fmi_ch_graph_kontraktion_triangulierungen aufgelistet.
+
+Da dieses Programm ein anderes Speicherformat verwendet, konnten die Anfragezeiten nicht ermittelt werden.
+Es wurden jedoch im Vergleich zu dem in dieser Arbeit verwendeten Programm mehr Abkürzungen eingefügt.
+Das Programm kontrahiert mehrere Knoten gleichzeitig, indem es unabhängige Teilmengen von Knoten identifiziert, was eine effizientere parallele Verarbeitung ermöglicht.cite!
+Aufgrund des hohen Grades der Sichtbarkeitsgraphen ist jedoch davon auszugehen, dass nur wenige und kleine unabhängige Teilmengen existieren.
+Auch dieses Programm lieferte nach drei Tagen Laufzeit auf den Sichtbarkeitsgraphen keine Ergebnisse.
+
+
+    
+  FMI CH Graphen-Kontraktion
+  
+Kontraktion mit oberer Schranke
+
+Die kürzesten Pfaddistanzen in triangulierten Graphen stellen, wie in chapter:kontraktion beschrieben, eine obere Schranke für die Distanzen zwischen Knotenpaaren in den Sichtbarkeitsgraphen dar.
+Um den Fehler dieser Schranke zu quantifizieren, wurden die kürzesten Pfaddistanzen von 1000000 --Paaren in den Sichtbarkeitsgraphen analysiert.
+Der dabei ermittelte durchschnittliche Fehler pro Hop-Länge ist in img:ergebnisse:upper_bound als Datenreihe  dargestellt.
+
+Diese Abbildung zeigt auch den durchschnittlichen Fehler, der durch den Einsatz von  Hubs entsteht, welche mithilfe eines Hitting-Sets bestimmt wurden.
+Zusätzlich wurde der Fehler visualisiert, der sich aus der Wahl der kleinsten oberen Schranke zwischen 80 Hubs und den triangulierten Graphen ergibt.
+
+
+  [b]0.5
+    
+      
+    
+    aegaeis-vis
+  
+  [b]0.5
+    
+      
+    
+    medi-vis
+      [b]0.5
+    
+      
+    
+    pata
+    Fehler der oberen Schranken
+  
+Wie performant ist das?
+
+PEOPLE
+
+Die in chapter:peopel vorgestellte Methode zur Berechnung von Contracted- und Hub-Graphen lies sich auf die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
+Hierbei konnten die Hub-Graphen entweder direkt durch PEOPLE zereugt werden oder indem zuerst ein Contracted-Graph erstellt wurde.
+Die vertex-to-level-Funktion wurde hierbei jeweils durch ein Hitting-Set über 100000 Dijkstra-Pfade ermittelt.
+Der Größe der dem Hitting-Set zugrunde liegenden Menge an Pfaden wurde hierbei bewusst relativ klein gewählt, mit der überelgung, dass wenn dies erfolgreich ist, in einem zweiten Schritt mit den erzeugten Hub-Graphen deutlich mehr Pfade erzeugt werden können.
+
+Contracted-Graph
+
+Durch die Berechnung aller ausgehenden Kanten pro Knoten im Downward- und Upward-Graphen konnte sowohl für die Sichtbarkeitsgraphen als auch für deren Triangulierungen jeweils ein Contracted-Graph erstellt werden.
+Die Kennzahlen der Erzeug und Anfragezeiten sind in table:ergebnisse:people_ch_speedup aufgeführt.
+
+
+    
+  Kennwerte von mit PEOPLE erzeugten Contracted-Graphen
+  
+Der Speedup der auf diese Weise erzeugten Contracted-Graphen der Triangulierungen ist etwa um eine Größenordnung geringer als der der durch Kontraktion erstellten Contracted-Graphen.
+Zudem wurden jweils mehr als dreimal so viele Abkürzungen hinzugefügt.
+
+Auf den Sichtbarkeitsgraphen von aegaeis und medi wurde ein Speedup von nur 1.5 erzielt, auf pata von immerhin 3.5.
+Im Vergleich zu der Rechenzeit, welche in die Erstellung investiert wurde, ist dies jedoch recht wenig.
+
+Hub Graph
+
+Aus den berechneten Contracted-Graphen konnte durch Merging Hub-Graphen erzeugt werden, wobei zu klären war, ob es schneller ist, zuerst einen Contracted-Graphen und dann einen Hub-Graphen zu erstellen, oder ob es schneller ist, direkt einen Hub-Graphen zu erstellen.
+
+Merging
+
+Ein zunächst verwendetes Programm, welches einen Hub-Graph aus einem Contracted-Graphen ohne Parallelisierung erzeugte, war nicht in der Lage, innerhalb von drei Tagen die Hub-Graphen der Sichtbarkeitsgraphen zu erzeugen.
+Der Grund hierfür liegt in der schieren Anzahl an Labels und Einträgen, die dabei gemerged werden müssen:
+Ein Knoten der Contracted-Graphen der Sichtbarkeitsgraphen hat einen drei- bis vierstelligen Grad, und für jeden dieser Nachbarn gibt es ein Label, das ebenfalls gemerged werden muss
+Die Verwendung eines parallelen reduce-Algorithmus zum Mergen der Labels eines Knotens führte zu den Ergebnissen in table:ergebnisse:hl_ch_bruteforce.
+
+
+    
+  Kennwerte von mit Merging erstellter Hub-Graphen. Die zugrundeliegenden Contracted-Graphen wurden mit PEOPLE erzeugt.
+  
+
+PEOPLE
+
+Die Hub-Graphen wurden ebenfalls durch PEOPLE berechnet.
+Die Werte sind in table:ergebnisse:hl_bruteforce zu sehen.
+Die Durchschnittliche Label Größe ist minimal anders.
+
+
+    
+  Kennwerte von mit PEOPLE erstellen Hub-Graphen
+  
+Das Anwenden des des Algorithmus zur Berechnung des Hub GRaphens hat gut funktioniert.
+
+
+Vergleich
+
+
+Da die Hub-Graphen auf zwei Wegen erzeugt werden können, muss geklärt werden, welcher Weg effizienter ist.
+Dazu wurde die Zeit, die für die Erstellung des Contracted-Graphen benötigt wurde, mit der Zeit zum Mergen addiert und anschließend mit der Zeit zur direkten Erstellung eines Hub-Graphen mittels PEOPLE verglichen.
+Die entsprechenden Zahlen sind in Tabelle table:ergebnisse:vergleich_was_schneller aufgeführt.
+
+Interessanterweise ist es bei den Sichtbarkeitsgraphen schneller, direkt einen Hub-Graphen zu berechnen, während es bei den triangulierten Graphen effizienter ist, den Umweg über die Contracted-Graphen zu nehmen.
+
+DIE LABELS SIND MINIMAL UNTERSCHIEDLICH GROß
+
+
+
+    
+  HL  merged
+  
+Performance Overhead
+Die Erzeugung der ausgehenden Kanten im Contracted-Graph sowie der Label im Hub-Graph erfolgen durch modifizierte Dijkstra-Suchen, beinhaltet aber zusätzlich unter anderem auch die Sammlung von Abkürzungen.
+
+Zur Quantifizierung des zusätzlichen Rechenaufwands wurden für jeden Graphen, für jeweils 10000 Knoten, jeweils zwei Dijkstra Suchen zu alle anderen Knoten durchgeführt.
+Die dafür benötigte Rechenzeit wurde anschließend auf die Anzahl der Knoten im Graph skaliert.
+table:ergebnisse:dijkstra_vs_ch_vs_hl zeigt die erforderliche Zeit zur Erstellung eines Contracted- und eines Hub-Graphen im Verhältnis zu dieser skalierten Zeit.
+Es fällt auf, dass die für die Konstruktion eines Contracted-Graphen benötigte Zeit nur geringfügig kürzer ist als die eines Hub-Graphen.
+Dies lässt darauf schließen, dass in den meisten Fällen spät abgebrochen wurde.
+
+
+
+    
+  todo dijkstra vs ch bruteforce vs hl bruteforce
+  
+Für die Triangulierung von Sichtbarkeitsgraphen ist es deutlich effizienter, Contracted-Graphen zu erstellen, anstatt für jeden Knoten zwei vollständige Dijkstra-Suchen durchzuführen und noch effizienter, als einen Hub-Graphen zu erstellen.
+Daher ist davon auszugehen, dass die Dijkstra-Suchen häufiger vorzeitig abgebrochen worden konnten.
+
+Um dieses Verhalten besser zu verstehen, wurde die Suche nach ausgehenden Kanten eines Knotens im aeagaeis-Sichtbarkeitsgraphen näher untersucht.
+fig:ergebnisse:ch_people_suchbaum zeigt einen entsprechenden Suchbaum.
+In der Abbildung repräsentieren schwarze Punkte die Knoten, die als Köpfe für die aus dem weißen Punkt ausgehenden Upward-Kanten fungieren.
+Die dünnen Kanten führen zu Knoten, die zum Zeitpunkt ihrer Expansion nicht mehr lebendig waren, die gestrichelten Kanten gehen zu Knoten, die zwar gesehen, aber nicht mehr expandiert wurden.
+Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt 524881 möglichen Knoten besucht, was die Effizienz dieses Ansatzes unterstreicht.
+
+
+    
+  Suchbaum einer PEOPLE Contracted-Graph Suche auf aegaeis-graph
+  
+Nach der Untersuchung eines einzelenen Suchvorganges wurden für aegaeis-graph für alle Knoten die bei der Contracted-Graph PEOPLE-Suche gesehen Knoten erfasst.
+Die Ergebisse sind hierbei in fig:ergebnisse:efficiency_ch_people gelistet.
+Bei 65% aller Suchen wurden weniger als 1% der 524881 Knoten gesehen.
+Die die zugrunde vertex-to-level-Funktion mit einem Hitting-Set über nur 100000 Pfade erstellt wurde, ist anzunehemen, dass durch ein besseres vertex-to-level-Funktion noch mehr Suchen lokaler werden.
+
+
+    
+  Anteil der pro Suche bei der Erstellung des Contracted-Graph von aegaeis-graph gesehenen Knoten
+  
+
+Vertex-to-level Vergeleich
+
+Wie im chapter:peopel erwähnt, lässt sich durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für  zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
+Diese Methode wurde verwendet, um verschiedene Funktionen zu testen, deren Ergebnisse in table:ergebnisse:vtl_vergleich aufgeführt sind.
+
+Das verwendete Hitting-Set wurde jeweils über 1000000 Pfade gebildet, wobei die Knoten, die nicht im Hitting-Set waren, nach einer weiteren Metrik sortiert wurden.
+Verglichen wurden eine Sortierung nach Grad (von klein nach groß), eine zufällige Sortierung sowie die Übernahme der Vertex-to-Level-Funktion, die durch die Graphen-Kontraktion der triangulierten Graphen entstand.
+Letztere, in der Tabelle als  als notiert, führte zu überraschend kleinen Labels.
+
+
+    
+  Vergleich durch level-to-vertex-Funktionen induzierter durschnitliche Labelgröße
+  
+Hitting-Set über 250M Pfade
+
+Mit den erzeugten Hub-Graphen wurde ein Hitting-Ste über 250 Millionen Pfade gebildet, die Knoten die nicht enthalten waren, wurden nach der Anzahl ihrerer Hits sortiert, da dies nach table:ergebnisse:vtl_vergleich erfolgsversprechend scheint.
+Mit dieser vertex-to-level-Funktion wurde über 10000 die Labelgröße predicted.
+Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durschnitltiche Label Größe kleiner als der ursprüngliche durschnitliche Knotengrad.
+
+
+    
+  todo dijkstra vs ch bruteforce vs hl bruteforce
+
+Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der fig:ergebnisse:efficiency_ch_people zugrunde liegende Experiment wiederholt, wobei diesmal 80.6% aller Suchen weniger als 1% aller Knoten sahen.
+Ausblick
+
+Andere Graphen.
+Gibt es eine Reihenfolge, mit der da kontrahieren effizienter ist?
+Datenstruktur?
+
+Caching?
+
+Optmierungsalgorithmen?
+
+
+
+gobble
+Erklärung
+
+Ich versichere, diese Arbeit selbstständig verfasst zu haben.
+Ich habe keine anderen als die angegebenen Quellen benutzt und alle wörtlich oder sinngemäß aus anderen Werken übernommene Aussagen als solche gekennzeichnet.
+Weder diese Arbeit noch wesentliche Teile daraus waren bisher Gegenstand eines anderen Prüfungsverfahrens.
+Ich habe diese Arbeit bisher weder teilweise noch vollständig veröffentlicht. Das elektronische Exemplar stimmt mit allen eingereichten Druck-Exemplaren überein.
+
+
+
+
+    8. Oktober 2024 [4cm]
+
+

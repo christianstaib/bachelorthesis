@@ -9,6 +9,9 @@
 \usepackage{ellipsis}
 \usepackage[T1]{fontenc}
 
+
+\usepackage[dvipsnames]{xcolor}
+
 % Math packages
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -98,6 +101,9 @@
 
 
 \usepackage[headsepline,footsepline]{scrlayer-scrpage}
+
+\usepackage{etoolbox}
+\newrobustcmd\B{\DeclareFontSeriesDefault[rm]{bf}{b}\bfseries}
 
 
 % Optional packages (commented out)

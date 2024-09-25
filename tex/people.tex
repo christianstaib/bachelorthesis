@@ -248,7 +248,7 @@ Der textuell beschriebene Algorithmus ist im Algorithmus \ref{alg:people:ch} aus
     \State $u \leftarrow{extract\_min}(Q)$\label{graphs:dijkstra:pop}
 
     \State
-    \State // Beende frühzeitig wenn Zielknoten gefunden wurde
+    \State // Baue Kantenmenge
     \If {$u \neq s \land {mop}(u) = {vtl}(u)$}
     \State $E_s \leftarrow E_s \cup \{ (s, u, {dist}(u)) \}$
     \State ${alive} \leftarrow {alive} \setminus \{ s \}$
@@ -264,6 +264,7 @@ Der textuell beschriebene Algorithmus ist im Algorithmus \ref{alg:people:ch} aus
     \State
     \State // setze max\_level\_path
     \State ${mop}(v) \leftarrow \max({mop}(v), {vtl}(v))$
+    \State
     \If {$u \in {alive}$}
     \State ${alive} \leftarrow {alive} \cup \{ s \}$
     \EndIf
@@ -487,7 +488,7 @@ Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils gr
     \State $u \leftarrow{extract\_min}(Q)$
 
     \State
-    \State // Beende frühzeitig wenn Zielknoten gefunden wurde
+    \State // Baue Label
     \If {${mop}(u) = {vtl}(u)$}
     \State $L_f (s) \leftarrow L_f (s) \cup \{ (u, {dist}(u)) \}$
     \EndIf
@@ -512,6 +513,61 @@ Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils gr
   \end{algorithmic}
   \label{alg:people:people}
 \end{algorithm}
+
+\subsection{Größe der Label}\label{subsection:people:label_size}
+
+Die mit PEOPLE erzeugten Label können mitunter kleiner sein, als durch Merging erzeugte Label.
+Insbesondere kann das Merging von Contracted-Graphen, welche durch Graphen-Kontraktion erzeugt wurden, Laben erzeugen, die nicht minimal sind.
+
+\autoref{fig:people:better_label_size} zeigt ein solches Beispiel, die Zahl unter dem Namen des Knotens entspricht hierbei dem Level des Knotens.
+Der Upward-Graph kann hierbei sowohl durch PEOPLE als auch durch Graphen-Kontraktion erstellt worden sein.
+Nach der neuen Definition des Forward-Labels muss das Label von $c$ nur $d$ und $b$ enthalten.
+Wird es aber durch Merging erzeugt, so enthält es auch $a$.
+
+\begin{figure}[h!]
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1]
+      % Nodes
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*1, 2*2) (a) {a\\2};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*2, 2*1) (b) {b\\3};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*1, 2*0) (c) {c\\0};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*0, 2*1) (d) {d\\1};
+
+      \draw[<->] (a) edge node[circle, fill=white] {1} (b);
+      \draw[<->] (b) edge node[circle, fill=white] {1} (c);
+      \draw[<->] (c) edge node[circle, fill=white] {1} (d);
+      \draw[<->] (d) edge node[circle, fill=white] {1} (a);
+    \end{tikzpicture}
+    \caption{Graph}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1]
+      % Nodes
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*1, 2*2) (a) {a\\2};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*2, 2*1) (b) {b\\3};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*1, 2*0) (c) {c\\0};
+      \node[circle, draw, minimum size=1.3cm, inner sep=0pt, align=center] at (2*0, 2*1) (d) {d\\1};
+
+
+      \draw[->] (c) edge node[circle, fill=white] {1} (d);
+      \draw[->] (c) edge node[circle, fill=white] {1} (b);
+
+      \draw[->] (d) edge node[circle, fill=white] {2} (b);
+      \draw[->] (d) edge node[circle, fill=white] {1} (a);
+
+      \draw[->] (a) edge node[circle, fill=white] {1} (b);
+    \end{tikzpicture}
+    \caption{Upward- und Downward-Graph}
+  \end{subfigure}
+  \caption{Problem beim Shortcut erstellen}
+
+
+
+  \label{fig:people:better_label_size}
+\end{figure}
 
 \subsection{Anwendungsgebiet}
 

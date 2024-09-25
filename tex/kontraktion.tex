@@ -69,6 +69,16 @@ Insbesondere die Kombination von Dreiecksungleichung und vereinfachtem Graph ist
 
 \section{Datenstrukturen}
 
+Wenn mit oberer Schranke kontrahiert wird, ist die Performanz der Graphenstruktur für Dijkstra (das schnelle finden ausgehender Kanten) nicht mehr so wichtig.
+Statdessen wichtig:
+Schnelles finden von Vorgänger und Nachfolger.
+Schneller finden einer spezifischen Kante (neuen Kante kleiner als aktuelle?)
+Schnelles einfügen neuer Kanten (idealerweise parallel!)
+Schnelles Löschen von Kanten (disconecten)
+
+Das Speichern der Abkürzungen muss auch effizient erfolgen.
+Hierfür Map ((Vorgänger, Nachfolger), Abgekürzter Knoten)
+
 \todo{Hash besser als Vec}
 
 %
