@@ -1,6 +1,6 @@
 \chapter{Kontraktion in Sichtbarkeitsgraphen}\label{chapter:kontraktion}
 
-Die zuvor beschriebene Kontraktion von Knoten und Graphen ist bei Graphen mit hohem durchschnittlichen Knotengraden, wie zum Beispiel Sichtbarkeitsgraphen, deutlich rechenintensiver als bei Graphen mit geringeren Knotengraden, wie etwa Straßengraphen.
+Die zuvor beschriebene Kontraktion von Knoten und Graphen ist bei Graphen mit hohem durchschnittlichen Knotengrad, wie zum Beispiel Sichtbarkeitsgraphen, deutlich rechenintensiver als bei Graphen mit geringeren Knotengrad, wie etwa Straßengraphen.
 Für die Knoten-Kontraktion muss für jeden Vorgänger eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger und Nachfolger ist zu prüfen, ob eine Abkürzung eingefügt werden muss.
 Ein hoher Knotengrad bedeutet somit viele Dijkstra-Suchen und $\abs{\text{Vorgänger}} \cdot \abs{\text{Nachfolger}}$ viele Vergleiche, ob eine Abkürzung notwendig ist.
 
@@ -28,14 +28,14 @@ Unter der Annahme, dass in Graphen mit sehr hohem Knotengrad fast alle Nachbarn 
 
 Sei $G = (V, E)$ der zu kontrahierende Graph.
 Lässt sich zu $G$ effizient ein vereinfachter Graph $G' = (V, E')$ mit $\forall s, t \in V \colon {spd}_{G'} (s, t) \geq {spd}_{G} (s, t)$ konstruieren, so kann dieser zur Berechnung der oberen Schranke verwendet werden, etwa indem die Dijkstra-Suchen auf ihm ausgeführt werden.
-Alternativ kann zu $G'$ auch ein Contracted- oder Hub-Graph erzeugt werden, womit die obere Schranke dann für jedes Vorgänger-Nachfolger-Paar einzeln berechnet wird.
+Alternativ kann aus $G'$ auch ein Contracted- oder Hub-Graph erzeugt werden, womit die obere Schranke dann für jedes Vorgänger-Nachfolger-Paar einzeln berechnet wird.
 
 Für Graphen in der euklidischen Ebene existieren Algorithmen, wie etwa die Delaunay-Triangulierung, die es ermöglichen, leicht einen vereinfachten Graphen zu erstellen.
 
 \subsection{Dreiecksungleichung}
 
 Ähnlich zu ALT\cite{goldberg2005computing} kann eine Menge \emph{Hubs} berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke des Abstands zweier Knoten angeben können.
-Ein Hub ist hierbei ein Knoten $h \in V$, für den die Distanz zu und von allen Knoten bekannt ist.
+Ein Hub ist hierbei ein Knoten $h \in V$, für den die Distanzen zu und von allen Knoten bekannt sind.
 Die obere Schranke des Abstandes zweier Knoten $s, t \in V$ kann dann durch ${spd}_G (s, h) + {spd}_G (h, t)$ berechnet werden.
 Liegt $h$ dabei auf einem kürzesten Pfad von $s$ nach $t$, so entspricht der Wert sogar genau dem Abstand.
 Die obere Schranke über mehrere Hubs wird durch die Wahl der kleinsten oberen Schranken bestimmt.
@@ -53,11 +53,12 @@ Insbesondere die Kombination von Dreiecksungleichung und vereinfachtem Graph ist
 \section{Datenstruktur}
 
 Werden auf dem zu kontrahierenden Graphen keine Dijkstra-Suchen durchgeführt, ändern sich die Anforderungen an die zur Repräsentation des Graphen verwendete Datenstruktur.
-Während für Dijkstra-Suchen vor allem das schnelle Auffinden ausgehender Kanten wichtig ist, sind bei der Kontraktion mit oberer Schranke das schnelle Auffinden einer $s$-$t$-Kante sowie das Isolieren eines Knotens von wichtig.
+Während für Dijkstra-Suchen vor allem das schnelle Auffinden ausgehender Kanten wichtig ist, sind bei der Kontraktion mit oberer Schranke das schnelle Auffinden einer $s$-$t$-Kante sowie das Isolieren eines Knotens wichtig.
 
 Die Knoten-Kontraktion erfolgt hierbei in zwei Schritten.
 Im ersten Schritt werden alle einzufügenden Kanten berechnet, wobei zwischen neuen und zu aktualisierenden Kanten unterschieden wird.
-Eine Kante wird aktualisiert, wenn bereits eine Kante mit höherem Kantengewicht existiert, das Abfragen des Kantengewichts sollte daher unmittelbar möglich sein.
+Eine Kante wird aktualisiert, wenn bereits eine Kante mit höherem Kantengewicht existiert.
+Das Abfragen des Kantengewichts sollte daher unmittelbar, ohne eine Suche, möglich sein.
 Das Aktualisieren von Kanten kann bei den meisten Datenstrukturen parallel erfolgen, während das Einfügen neuer Kanten nur eingeschränkt parallelisierbar ist.
 Im zweiten Schritt wird der Graph modifiziert, indem die neuen Kanten eingefügt und der zu kontrahierende Knoten isoliert wird.
 

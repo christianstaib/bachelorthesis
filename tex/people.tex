@@ -3,7 +3,7 @@
 Wie im \autoref{chapter:kontraktion} diskutiert wurde, ist die Kontraktion von Graphen mit hohem durchschnittlichem Knotengrad aufwendig.
 Es ist möglich, dass die Kontraktion von ihnen sogar so aufwendig ist, dass sie sich nicht in sinnvoller Zeit kontrahieren lassen.
 Trotzdem wäre es vorteilhaft, wenn sich die Anfrage-Zeiten von Contraction Hierarchies und Hierarchical Hub Labeling auch auf sie übertragen ließen.
-Hierfür geben wir eine neue Charakterisierung des Contracted- und Hub-Graphen und präsentieren anschließend PEOPLE (\textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l), eine Methode, mit der hieriasche Hub-Graphen mit einer vorgegebenen vertex-to-Level-Funktion erstellt werden können, ohne dass eine Knoten-Kontraktion erforderlich ist.
+Hierfür geben wir eine neue Charakterisierung des Contracted- und Hub-Graphen und präsentieren anschließend PEOPLE (\textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l), eine Methode, mit der hierarchische Hub-Graphen mit einer vorgegebenen vertex-to-Level-Funktion erstellt werden können, ohne dass eine Knoten-Kontraktion erforderlich ist.
 
 \section{Contracted-Graph}
 
@@ -106,7 +106,7 @@ Die Definition des Downward-Graphens erfolgt nun analog zu der des Upward-Graphe
   Sei $G = (V, E)$ und eine vertex-to-level-Funktion dazu gegeben. Dann ist ein Upward-Graph des transponierten Graphens $G^T$ ein \emph{Downward-Graph} zu $G$.
 \end{definition}
 
-Wenn ein Graph ungerichtet ist, dann ist er äquivalent zu seinem transponierten Graphen und dann ist auch der Upward- und Downward-Graph äquivalent.
+Wenn ein Graph ungerichtet ist, dann ist er äquivalent zu seinem transponierten Graphen und dann sind auch der Upward- und Downward-Graph äquivalent.
 Daher entspricht \autoref{ch::fig::upward_graph} gleichzeitig auch dem Downward-Graph des Beispielgraphens.
 Es ist zu zeigen, dass Anfragen auf einem auf diese Art definierten Contracted-Graph $C = (G_u, G_d)$ ebenfalls korrekt sind.
 
@@ -163,9 +163,9 @@ Dies ist hinreichend, fügt im Zweifel jedoch mehr Kanten als notwendig ein.
 
 Um einen Upward-Graphen zu berechnen, wird für jeden Knoten $t \in V$ eine angepasste Dijkstra-Suche ausgeführt, bei der für jeden Knoten jeweils notiert wird, was das größte Level auf dem Pfad zur Wurzel ist.
 Diese Information kann mit der \emph{max-on-path} Funktion ${mop}$ abgerufen werden.
-Ein Knoten $h \in V$, $h \neq t$ ist der Kopf eine Upward-Graph Kante, für die gilt, dass ${mop}(h) = {vtl}(h)$ und ${mop}({pre}(h)) = {vtl}(t)$.
+Ein Knoten $h \in V$, $h \neq t$ ist der Kopf einer Upward-Graph Kante, für die gilt, dass ${mop}(h) = {vtl}(h)$ und ${mop}({pre}(h)) = {vtl}(t)$.
 Das Gewicht der Kante kann der Dijkstra Suche entnommen werden.
-Die Suche kann abgebrochen werden, wenn ür alle nicht-expandierten Knoten $h$ gilt, dass ${mop}({pre}(h)) > {vtl}(h)$ ist.
+Die Suche kann abgebrochen werden, wenn für alle nicht-expandierten Knoten $h$ gilt, dass ${mop}({pre}(h)) > {vtl}(h)$ ist.
 \autoref{ch:fig:ch_brute_force_suchbaum} zeigt dies für den Knoten $a$ im Beispielgraphen.
 Die linke Zahl steht dabei für das Level des jeweiligen Knotens, die rechte Zahl für das größte Level auf dem Pfad zur Wurzel.
 
@@ -215,7 +215,7 @@ Die Abbruchbedingung kann durch Betrachtung einer Menge an \emph{lebendigen Knot
 Zu Beginn ist nur der Startknoten lebendig, die Lebendigkeit wird jeweils an die Kinder vererbt.
 Ein Knoten stirbt, nachdem er expandiert wurde oder wenn er den Kopf einer Kante bildet.
 In dem Beispiel in \autoref{ch:fig:ch_brute_force_suchbaum} wäre dies etwa nach der Expansion von $b$ der Fall.
-Bei einer \emph{guten} vertex-to-level-Funktion ist die Überlegung, dass viele Suchen früh abgebrochen werden können.
+Bei einer \emph{guten} vertex-to-level-Funktion kann davon ausgegangen werden, dass viele Suchen früh abgebrochen werden können.
 
 Die Berechnung ist \emph{embarrassingly parallel}, jeder Knoten kann unabhängig von den anderen berechnet werden.
 Der textuell beschriebene Algorithmus ist im Algorithmus \ref{alg:people:ch} dargestellt und wird Contracted-Graph PEOPLE Algorithmus genannt.
@@ -284,7 +284,7 @@ Der textuell beschriebene Algorithmus ist im Algorithmus \ref{alg:people:ch} dar
 \subsection{Änderung von Kantengewichten}
 
 Bei Graphen mit hierarchischer Struktur und einer guten vertex-to-Level-Funktion ist anzunehmen, dass die Suche nach Algorithmus \ref{alg:people:ch}  in den meisten Fällen früh abbricht.
-Dies ist einerseits für die Effizienz der Berechnung von Vorteil, verdeutlicht aber auch, dass für die Bestimmung der ausgehenden Kanten des Contracted-Graphen für viele Knoten jeweils nur die lokale Umgebung eines Knotens von Bedeutung ist, wobei insbesondere Knoten mit einem hohem Level hierbei eine Ausnahme sind.
+Dies ist einerseits für die Effizienz der Berechnung von Vorteil, verdeutlicht aber auch, dass für die Bestimmung der ausgehenden Kanten des Contracted-Graphen für viele Knoten jeweils nur die lokale Umgebung eines Knotens von Bedeutung ist, wobei insbesondere Knoten mit einem hohen Level hierbei eine Ausnahme sind.
 Änderungen der Kantengewichte außerhalb dieser Umgebung haben daher für viele Knoten keinen Einfluss auf den Suchbaum des Algorithmus \ref{alg:people:ch}.
 
 Diese Eigenschaft lässt sich nutzen, um nach einer Änderung der Kantengewichte nicht für jeden Knoten sämtliche ausgehenden Kanten neu berechnen zu müssen.
@@ -405,7 +405,7 @@ Die dafür verwendete Definition des Forward-Labels weicht nur leicht von der de
 
   \begin{itemize}
     \item
-          $L_f (t)$ enthält nur Einträge $(h, d)$ mit $h \in V$ und $d \in \mathbb{R}$, für die es einen $t$-$h$ Pfad der Länge $d \geq {spd}_G (t, g)$ gibt, so dass auf ihm $h$ das größte Level hat.
+          $L_f (t)$ enthält nur Einträge $(h, d)$ mit $h \in V$ und $d \in \mathbb{R}$, für die es einen $t$-$h$ Pfad der Länge $d \geq {spd}_G (t, h)$ gibt, sodass auf ihm $h$ das größte Level hat.
 
     \item
           $L_f (t)$ enthält alle Einträge $(h, {spd}_G (t, h))$ mit $h \in V$, für die gilt, dass auf \emph{allen} $t$-$h$ Pfaden $h$ das größte Level hat.
@@ -422,7 +422,7 @@ Solche Labels können wieder durch Merging aus einem Contracted-Graph erstellt w
 Der dafür verwendete Algorithmus ist in Algorithmus \ref{alg:people:people} gelistet, er erzeugt ein gepruntes Label, da er aus einem Dijkstra-Suchbaum auf $G$ das Label erzeugt und dieser nur optimale Distanzen enthält.
 Da er für eine vorgebene vertex-to-level-Funktion geprunte Label erstellt, wird dieser Algorithmus PEOPLE, für \textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l, genannt.
 
-Ein Beispiel einer solchen Suche ist in \autoref{ch:fig:hl_brute_force_suchbaum} gezeichnet, dieses verwendet den Beispielgraph, aber nicht die gleiche vertex-to-level-Funktion wie in \autoref{ch::fig::vtl_abbildung}.
+Ein Beispiel einer solchen Suche ist in \autoref{ch:fig:hl_brute_force_suchbaum} gezeichnet, dieses verwendet den Beispielgraphen, aber nicht die gleiche vertex-to-level-Funktion wie in \autoref{ch::fig::vtl_abbildung}.
 Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils größte auf dem Pfad zur Wurzel ist.
 
 \begin{figure}[h!]
