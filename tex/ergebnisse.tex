@@ -23,13 +23,13 @@ die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(
       S[table-format = 4.1] % Zeit
     }
     \toprule
-    {Graph}            & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad} \\ \midrule
-    aegaeis-graph      & 524881      & 2795322     & 5.32562999994        \\
-    aegaeis-visibility & 201040      & 310231834   & 1543.13486868        \\
-    medi-graph         & 795606      & 4223566     & 5.30861506826        \\
-    medi-visibility    & 310114      & 730772544   & 2356.46421638        \\
-    pata-graph         & 2240339     & 11632900    & 5.1924731034         \\
-    pata-visibility    & 1002171     & 315653758   & 314.969958221        \\ \bottomrule
+    {Graph}            & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad}       \\ \midrule
+    aegaeis-graph      & 524881      & 2795322     & \fpeval{2795322/524881}    \\
+    aegaeis-visibility & 201040      & 310231834   & \fpeval{310231834/201040}  \\
+    medi-graph         & 795606      & 4223566     & \fpeval{4223566/795606}    \\
+    medi-visibility    & 310116      & 730772548   & \fpeval{730772548/310116}  \\
+    pata-graph         & 2240339     & 11632900    & \fpeval{11632900/2240339}  \\
+    pata-visibility    & 1002235     & 315653892   & \fpeval{315653892/1002235} \\ \bottomrule
   \end{tabular}
   \caption{Bearbeite Graphen}
   \label{table:input_graphs}
@@ -298,7 +298,52 @@ Das Kontrahieren mit trivialer Heuristik funktioniert auf den Graphen nicht, da 
 
 OOM nach 146, 112, 1655 Knoten
 
-\todo{Ergebenisse}
+\begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
+  \begin{subfigure}[b]{0.5\textwidth}
+    \resizebox{\textwidth}{!}{%
+      \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Knoten-Kontraktionen},
+            ylabel={Kanten},
+          ]
+          \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/aegaeis.csv};
+        \end{axis}
+      \end{tikzpicture}
+    }
+    \caption{aegaeis-vis}%
+  \end{subfigure}%
+  \begin{subfigure}[b]{0.5\textwidth}
+    \resizebox{\textwidth}{!}{%
+      \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Knoten-Kontraktionen},
+            ylabel={Kanten},
+          ]
+          \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/medi.csv};
+        \end{axis}
+      \end{tikzpicture}
+    }
+    \caption{medi-vis}%
+  \end{subfigure}%
+  \par\bigskip
+  \begin{subfigure}[b]{0.5\textwidth}%
+    \resizebox{\textwidth}{!}{%
+      \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Knoten-Kontraktionen},
+            ylabel={Kanten},
+          ]
+          \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/pata.csv};
+        \end{axis}
+      \end{tikzpicture}
+    }
+    \caption{pata}
+  \end{subfigure}
+  \caption{Anzahl der Kanten während der Graphen-Kontraktion mit trivialer Heuristik}
+  \label{img:ergebnisse:all_in}
+\end{figure}
+
+\todo{Ergebnisse}
 
 \subsubsection{Hubs, Vereinfachter Graph}
 
@@ -532,7 +577,6 @@ Das Anwenden des des Algorithmus zur Berechnung des Hub GRaphens hat gut funktio
 
 \subsubsection{Vergleich}
 
-
 Da die Hub-Graphen auf zwei Wegen erzeugt werden können, muss geklärt werden, welcher Weg effizienter ist.
 Dazu wurde die Zeit, die für die Erstellung des Contracted-Graphen benötigt wurde, mit der Zeit zum Mergen addiert und anschließend mit der Zeit zur direkten Erstellung eines Hub-Graphen mittels PEOPLE verglichen.
 Die entsprechenden Zahlen sind in Tabelle \autoref{table:ergebnisse:vergleich_was_schneller} aufgeführt.
@@ -623,17 +667,17 @@ Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{52
     \draw[line width=2] (3.7631245777735245, 2.4062629283591264) edge (4.1474929335649335, 2.778701673953776);
     \draw[line width=2] (3.2194560637723413, 2.886617108472933) edge (3.846534022946102, 2.9349334463667276);
 
-    \draw[line width=1.25] (4.716279893465014, 3.6306879162957273) edge (4.555467757087328, 3.413754167559091);
-    \draw[line width=1.25] (4.391620967473386, 2.443260777703671) edge (4.46260040552211, 2.6534343050634845);
-    \draw[line width=1.25] (4.675476662781719, 2.4429315389880912) edge (4.46260040552211, 2.6534343050634845);
-    \draw[line width=1.25] (4.331246054122673, 3.7480404128842792) edge (4.555467757087328, 3.413754167559091);
-    \draw[line width=1.25] (4.805591520916153, 3.3906551281084774) edge (4.716279893465014, 3.6306879162957273);
-    \draw[line width=1.25] (5.080161044919507, 3.3717017518306136) edge (4.716279893465014, 3.6306879162957273);
-    \draw[line width=1.25] (4.007883808656132, 3.987747576108802) edge (4.05516128339265, 3.390271423153024);
-    \draw[line width=1.25] (5.199329852951351, 3.9242600178816645) edge (4.716279893465014, 3.6306879162957273);
-    \draw[line width=1.25] (4.5328890621807005, 1.8742850719746684) edge (4.391620967473386, 2.443260777703671);
-    \draw[line width=1.25] (5.112877843259156, 2.1060471378532952) edge (4.675476662781719, 2.4429315389880912);
-    \draw[line width=1.25] (5.385844366594839, 3.3906551281084774) edge (5.080161044919507, 3.3717017518306136);
+    \draw[dashed,line width=1.25] (4.716279893465014, 3.6306879162957273) edge (4.555467757087328, 3.413754167559091);
+    \draw[dashed,line width=1.25] (4.391620967473386, 2.443260777703671) edge (4.46260040552211, 2.6534343050634845);
+    \draw[dashed,line width=1.25] (4.675476662781719, 2.4429315389880912) edge (4.46260040552211, 2.6534343050634845);
+    \draw[dashed,line width=1.25] (4.331246054122673, 3.7480404128842792) edge (4.555467757087328, 3.413754167559091);
+    \draw[dashed,line width=1.25] (4.805591520916153, 3.3906551281084774) edge (4.716279893465014, 3.6306879162957273);
+    \draw[dashed,line width=1.25] (5.080161044919507, 3.3717017518306136) edge (4.716279893465014, 3.6306879162957273);
+    \draw[dashed,line width=1.25] (4.007883808656132, 3.987747576108802) edge (4.05516128339265, 3.390271423153024);
+    \draw[dashed,line width=1.25] (5.199329852951351, 3.9242600178816645) edge (4.716279893465014, 3.6306879162957273);
+    \draw[dashed,line width=1.25] (4.5328890621807005, 1.8742850719746684) edge (4.391620967473386, 2.443260777703671);
+    \draw[dashed,line width=1.25] (5.112877843259156, 2.1060471378532952) edge (4.675476662781719, 2.4429315389880912);
+    \draw[dashed,line width=1.25] (5.385844366594839, 3.3906551281084774) edge (5.080161044919507, 3.3717017518306136);
 
     \draw[dashed,line width=1.25] (5.113512787335495, 1.7932534850537252) edge (5.112877843259156, 2.1060471378532952);
     \draw[dashed,line width=1.25] (5.3852877691412, 1.9481038374912885) edge (5.112877843259156, 2.1060471378532952);
@@ -797,7 +841,7 @@ Die die zugrunde vertex-to-level-Funktion mit einem Hitting-Set über nur \num{1
 \subsection{Vertex-to-level Vergeleich}
 
 Wie im \autoref{chapter:peopel} erwähnt, lässt sich durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n$ zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
-Diese Methode wurde verwendet, um verschiedene Funktionen zu testen, deren Ergebnisse in \autoref{table:ergebnisse:vtl_vergleich} aufgeführt sind.
+Diese Methode wurde verwendet, um verschiedene Funktionen zu testen, die Ergebnisse sind in \autoref{table:ergebnisse:vtl_vergleich} aufgeführt.
 
 Das verwendete Hitting-Set wurde jeweils über \num{1000000} Pfade gebildet, wobei die Knoten, die nicht im Hitting-Set waren, nach einer weiteren Metrik sortiert wurden.
 Verglichen wurden eine Sortierung nach Grad (von klein nach groß), eine zufällige Sortierung sowie die Übernahme der Vertex-to-Level-Funktion, die durch die Graphen-Kontraktion der triangulierten Graphen entstand.
@@ -822,7 +866,7 @@ Letztere, in der Tabelle als $\triangle$ als notiert, führte zu überraschend k
     pata-visibility    & 1100.42    & \B 478.80  & 806.95  & 552.90        & 23690.52   & 10174.37 \\
     \bottomrule
   \end{tabular}
-  \caption{Vergleich durch level-to-vertex-Funktionen induzierter durschnitliche Labelgröße}
+  \caption{Vorhergesagt durschnitliche Labelgröße für verschiedene vertex-to-level-Funktion}
   \label{table:ergebnisse:vtl_vergleich}
 \end{table}
 
@@ -848,7 +892,7 @@ Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durschnitltiche Label
     pata-graph         & 2d 10h 37m   & 99.3         \\
     pata-visibility    & 9h 29m       & 424.1        \\  \bottomrule
   \end{tabular}
-  \caption{todo dijkstra vs ch bruteforce vs hl bruteforce}
+  \caption{Vorhergesagt durschnitliche Labelgröße für eine vertex-to-level-Funktion welche durch ein Hitting-Set über 250M Pfade induziert wurde}
 \end{table}
 
 Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der \autoref{fig:ergebnisse:efficiency_ch_people} zugrunde liegende Experiment wiederholt, wobei diesmal \num{80.6}\% aller Suchen weniger als 1\% aller Knoten sahen.

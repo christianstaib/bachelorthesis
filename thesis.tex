@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,oneside,parskip]{scrbook}
+\documentclass[12pt,a4paper,parskip]{scrbook}
 \usepackage{mystyle}
 
 % faster tikz. Needs to be here because of overleaf
@@ -23,7 +23,6 @@
 \cleardoublepage
 
 \include{tex/abstract}
-\include{tex/acknowledgement}
 \cleardoublepage
 
 \tableofcontents
@@ -38,11 +37,12 @@
 \include{tex/people}
 \include{tex/ergebnisse}
 \include{tex/ausblick}
+\include{tex/acknowledgement}
 
 
 \printbibliography
 
-\clearpage
+\cleardoublepage
 \thispagestyle{empty}
 \pagenumbering{gobble}
 \include{tex/erklearung}

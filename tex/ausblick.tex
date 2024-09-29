@@ -1,9 +1,12 @@
 \chapter{Ausblick}
 
-Andere Graphen.
-Gibt es eine Reihenfolge, mit der da kontrahieren effizienter ist?
-Datenstruktur?
+Mit der Kontraktion durch eine obere Schranke wurde eine Mathode gefunden, welche theoretisch die Top-Down Graphen-Kontraktion von Graphen mit hohen durschnitlichen Knotengraden ermöglicht.
+Praktisch hat sich gezeigt, dass dies der erzielte Speedup für bearbeiteten Sichtbarkeitsgraphen nicht groß genug ist, um die Kontraktion in angemesser Zeit zu ermöglichen.
+Bottom-Up ist hierbei noch zu erkunden.
 
-Caching?
+MIt PEOPLE wurde eine Methode gefunden, mit der zu den bearbeiteten Sichtbarkeitsgraphen zu Contracted- und Hub-Graphen erstellt wurden.
+Diese könnne für weitere Analysen der Graphen genutzt werden.
 
-Optmierungsalgorithmen?
+Die vertex-to-level-Funktion war dabei nur recht einfach berechnete worden.
+Mit einer besser Funktion lässt sich vielleicht noch besser Anfrage-Zeiten oder kleiner Suchbäume bei der PEOPLE CH raussholen.
+Da sich die Qualität der vertex-to-level-Funktion schnell annähern lässt, ist kann dies nachfolgend weiter untersucht werden.
