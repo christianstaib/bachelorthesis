@@ -53,7 +53,7 @@ Graphen und insbesondere kürzeste Pfade spielen darüber hinaus eine wichtige R
 
     \draw[<->]  (j) edge node[circle, fill=white] {1} (k);
   \end{tikzpicture}
-  \caption{Beispielgraph}
+  \caption{Graph}
   \label{graphs:fig:beispielgraph}
 \end{figure}
 
@@ -249,13 +249,11 @@ Diese Beobachtung führt zur Definition der \emph{Highway Dimension}, einem Konz
 
 Aufgrund der unterschiedlichen Strukturen von Sichtbarkeitsgraphen und Straßengraphen können Algorithmen, die für Straßengraphen gute Laufzeiten aufweisen, zwar auf Sichtbarkeitsgraphen angewendet werden, allerdings ist ihre Rechenzeit häufig zu hoch, um eine effiziente Verarbeitung zu ermöglichen.
 
-
-
 \subsection{Triangulierung}
 
 Um die Distanzen zwischen Knotenpaaren in Sichtbarkeitsgraphen mit einer oberen Schranke abzuschätzen, kann eine \emph{Triangulierung} des Graphs durchgeführt werden, wie beispielsweise durch eine Delaunay-Triangulierung.
 Dieser Ansatz kann jedoch sehr schmale, lange Dreiecke erzeugen, die im Anschluss beseitigt werden können, um eine bessere obere Schranke zu erhalten.
-Das spezifische Verfahren zur Erstellung der in dieser Arbeit verwendeten Triangulierung wurde ausführlich in \cite{funkescalable} beschrieben.
+Das Verfahren zur Erstellung der in dieser Arbeit verwendeten Triangulierung wurde ausführlich von Funke et al. \cite{funkescalable} beschrieben.
 
 Die Knoten eines triangulierten Graphen $G_g$ bilden hierbei eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
 Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.

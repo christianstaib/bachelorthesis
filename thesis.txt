@@ -1031,7 +1031,7 @@ Wie performant ist das?
 
 PEOPLE
 
-Die in chapter:peopel vorgestellte Methode zur Berechnung von Contracted- und Hub-Graphen lies sich auf die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
+Die in chapter:people vorgestellte Methode zur Berechnung von Contracted- und Hub-Graphen lies sich auf die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
 Hierbei konnten die Hub-Graphen entweder direkt durch PEOPLE zereugt werden oder indem zuerst ein Contracted-Graph erstellt wurde.
 Die vertex-to-level-Funktion wurde hierbei jeweils durch ein Hitting-Set über 100000 Dijkstra-Pfade ermittelt.
 Der Größe der dem Hitting-Set zugrunde liegenden Menge an Pfaden wurde hierbei bewusst relativ klein gewählt, mit der überelgung, dass wenn dies erfolgreich ist, in einem zweiten Schritt mit den erzeugten Hub-Graphen deutlich mehr Pfade erzeugt werden können.
@@ -1135,7 +1135,7 @@ Die die zugrunde vertex-to-level-Funktion mit einem Hitting-Set über nur 100000
 
 Vertex-to-level Vergeleich
 
-Wie im chapter:peopel erwähnt, lässt sich durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für  zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
+Wie im chapter:people erwähnt, lässt sich durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für  zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
 Diese Methode wurde verwendet, um verschiedene Funktionen zu testen, deren Ergebnisse in table:ergebnisse:vtl_vergleich aufgeführt sind.
 
 Das verwendete Hitting-Set wurde jeweils über 1000000 Pfade gebildet, wobei die Knoten, die nicht im Hitting-Set waren, nach einer weiteren Metrik sortiert wurden.

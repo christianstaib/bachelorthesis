@@ -1,11 +1,11 @@
 \chapter{Kontraktion in Sichtbarkeitsgraphen}\label{chapter:kontraktion}
 
 Die zuvor beschriebene Kontraktion von Knoten und Graphen ist bei Graphen mit hohem durchschnittlichen Knotengrad, wie zum Beispiel Sichtbarkeitsgraphen, deutlich rechenintensiver als bei Graphen mit geringeren Knotengrad, wie etwa Straßengraphen.
-Für die Knoten-Kontraktion muss für jeden Vorgänger eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger und Nachfolger ist zu prüfen, ob eine Abkürzung eingefügt werden muss.
+Für die Knoten-Kontraktion muss für jeden Vorgänger eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger und Nachfolger ist zu prüfen, ob eine Abkürzung einzufügen ist.
 Ein hoher Knotengrad bedeutet somit viele Dijkstra-Suchen und $\abs{\text{Vorgänger}} \cdot \abs{\text{Nachfolger}}$ viele Vergleiche, ob eine Abkürzung notwendig ist.
 
 Bei der Bottom-Up-Kontraktion wird die Kontraktion potenziell mehrfach simuliert, bevor sie wirklich ausgeführt wird:
-Beim Lazy-Popping werden die Knoten oft nicht kontraktiert, sondern mit aktualisiertem Heuristik-Wert in die Warteschlange zurückgeschoben, da durch viele Nachbarn die Wahrscheinlichkeit dafür steigt, dass sich die Knoten-Differenz verändert hat.
+Beim Lazy-Popping werden die Knoten oft nicht kontrahiert, sondern mit aktualisiertem Heuristik-Wert in die Warteschlange zurückgeschoben, da durch viele Nachbarn die Wahrscheinlichkeit dafür steigt, dass sich die Knoten-Differenz verändert.
 Beim Neighbor-Update sind jeweils sehr viele Nachbarn zu aktualisieren.
 
 Um Graphen mit hohen Knotengraden schneller zu kontrahieren, ist es entscheidend, die Kontraktion einzelner Knoten zu beschleunigen und eine effiziente sowie effizient erstellbare Reihenfolge der Kontraktionen zu finden.
@@ -27,7 +27,7 @@ Unter der Annahme, dass in Graphen mit sehr hohem Knotengrad fast alle Nachbarn 
 \subsection{Vereinfachter Graph}
 
 Sei $G = (V, E)$ der zu kontrahierende Graph.
-Lässt sich zu $G$ effizient ein vereinfachter Graph $G' = (V', E')$ mit $V \subset V'$ und $\forall s, t \in V \colon {spd}_{G'} (s, t) \geq {spd}_{G} (s, t)$ konstruieren, so kann dieser zur Berechnung der oberen Schranke verwendet werden, etwa indem die Dijkstra-Suchen auf ihm ausgeführt werden.
+Lässt sich zu $G$ effizient ein vereinfachter Graph $G' = (V', E')$ mit $V \subset V'$ und $\forall s, t \in V \colon {spd}_{G'} (s, t) \geq {spd}_{G} (s, t)$ konstruieren, so kann dieser zur Berechnung der oberen Schranke verwendet werden, indem die Dijkstra-Suchen auf ihm ausgeführt werden.
 Alternativ kann aus $G'$ auch ein Contracted- oder Hub-Graph erzeugt werden, womit die obere Schranke dann für jedes Vorgänger-Nachfolger-Paar einzeln berechnet wird.
 
 Für Graphen in der euklidischen Ebene existieren Algorithmen, wie etwa die Delaunay-Triangulierung, die es ermöglichen, leicht einen vereinfachten Graphen zu erstellen.
@@ -39,20 +39,20 @@ Ein Hub ist hierbei ein Knoten $h \in V$, für den die Distanzen zu und von alle
 Die obere Schranke des Abstandes zweier Knoten $s, t \in V$ kann dann durch ${spd}_G (s, h) + {spd}_G (h, t)$ berechnet werden.
 Liegt $h$ dabei auf einem kürzesten Pfad von $s$ nach $t$, so entspricht der Wert sogar genau dem Abstand.
 Die obere Schranke über mehrere Hubs wird durch die Wahl der kleinsten oberen Schranken bestimmt.
-Es reicht sogar, eine obere Schranke zu finden, die kleiner ist als die potenzielle Abkürzung; in diesem Fall kann die Kante keine optimale Abkürzung sein, und die Überprüfung kann abgebrochen werden.
+Es reicht sogar, eine obere Schranke zu finden, die kleiner ist als die potenzielle Abkürzung, denn dann kann die Kante keine optimale Abkürzung sein und die Überprüfung kann abgebrochen werden.
 
 \begin{figure}[h!]
-    \centering
-    \begin{tikzpicture}[scale=1]
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.0, 0.0)  (s)    {s};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (4.0, 0.0)  (t)    {t};
-        \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (2.0, 1.0)  (h)    {h};
-        \draw[->]  (s) edge node {} (t);
-        \draw[->]  (s) edge node {} (h);
-        \draw[->]  (h) edge node {} (t);
-    \end{tikzpicture}
+  \centering
+  \begin{tikzpicture}[scale=1]
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (0.0, 0.0)  (s)    {s};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (4.0, 0.0)  (t)    {t};
+    \node[circle, draw, minimum size=0.6cm, inner sep=0pt] at (2.0, 1.0)  (h)    {h};
+    \draw[->]  (s) edge node {} (t);
+    \draw[->]  (s) edge node {} (h);
+    \draw[->]  (h) edge node {} (t);
+  \end{tikzpicture}
 
-    \caption{Beispiel eines Hubs}
+  \caption{Beispiel eines Hubs}
 \end{figure}
 
 Die Hubs können dabei über die Berechnung eines Hitting-Sets bestimmt werden.

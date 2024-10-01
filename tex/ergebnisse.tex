@@ -5,14 +5,15 @@ Die Ergebnisse wurden auf verschiedenen, aber identisch ausgestatteten Systemen 
 
 \section{Untersuchung der Graphen}
 
-Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitsgraphen, welche jeweils einen Ausschnitt des Globus beinhalten.
-Für jeden dieser drei Graphen existiert zusätzlich eine Triangulierung, deren kürzeste Pfade eine untere Schranke zu Sichtbarkeitsgraphen darstellt
-\autoref{table:input_graphs} listet die Graphen auf.
-Die Graphen mit dem Präfix \emph{aegaeis} beinhalten das Ägäische Meer, mit \emph{medi} das Mittelmeer und mit \emph{pata} die Chilenische Fjorde.
-Graphen mit dem Postfix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulierungen.
-Die bearbeiteten Graphen sind ungerichtet, werden im folgenden jedoch als gerichtet betrachtet.
-Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kanten gerichtetet zu interpretieren,
-die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(b, a)$.
+Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitsgraphen, die jeweils einen Ausschnitt der Ozeane repräsentieren.
+Ihre Knoten liegen dabei auf den Küsten.
+Für jeden dieser drei Sichtbarkeitsgraphen existiert zusätzlich eine Triangulierung, deren Abstände eine untere Schranke zu den Abständen der jeweiligen Sichtbarkeitsgraphen darstellen.
+\autoref{table:input_graphs} listet die Anzahl der Kanten und Knoten der Graphen auf.
+Die Graphen mit dem Präfix \emph{aegaeis} umfassen das Ägäische Meer, diejenigen mit \emph{medi} decken das Mittelmeer ab, und die mit \emph{pata} repräsentieren die Chilenischen Fjorde.
+Graphen mit dem Suffix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulierungen.
+
+Die untersuchten Graphen sind ungerichtet, werden jedoch im weiteren Verlauf dieser Arbeit als gerichtet betrachtet.
+Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kanten gerichtet zu interpretieren, die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(b, a)$.
 
 \begin{table}[h!]
   \centering
@@ -37,15 +38,13 @@ die ungerichtete Kante $\{a, b\}$ wird also doppelt gezählt als $(a, b)$ und $(
 
 \subsection{Dijkstra}
 
-Für die Berechnung des Speedups der in dieser Arbeit verwendeten Methoden wurden für jeden Graphen \num{1000} sequentielle $s$-$t$-Dijkstra-Suchen ausgeführt und die durchschnittliche Laufzeit ermittelt.
-Die ermittelten Zeiten für das Finden und Erstellen des kürzesten Pfades sind in Tabelle \ref{fig:ergebnisse:dijkstra} dargestellt.
+Für die Berechnung des Speedups der angewendeten Methoden wurden für jeden Graphen eintausend sequentielle $s$-$t$-Dijkstra-Suchen ausgeführt und die durchschnittliche Laufzeit ermittelt.
+Die ermittelten Zeiten für das Finden des $s$-$t$-Abstands sind in Tabelle \ref{fig:ergebnisse:dijkstra} dargestellt.
 Aus den Ergebnissen geht hervor, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten aufweisen.
 
-Zusätzlich zur durchschnittlichen Laufzeit wurde die die Durchschnittswerte der Hop-Länge, des Dijsktra-Rank und der Queue pops über \num{10000} $s$-$t$-Dijkstra-Suchen ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
+Zusätzlich zur durchschnittlichen Laufzeit wurden die Durchschnittswerte der Hop-Längen, des Dijkstra-Ranks und der Queue-Pops über zehntausend parallele $s$-$t$-Dijkstra-Suchen ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
 Dabei zeigte sich, dass die durchschnittliche Hop-Länge in den Sichtbarkeitsgraphen signifikant kürzer ist als in den Triangulierungen.
-Trotz der geringeren Anzahl an Knoten in den Sichtbarkeitsgraphen ist die durchschnittliche Anzahl an Queue Pops jedoch höher.
-Dies deutet darauf hin, dass der Einsatz einer Warteschlange mit einer \emph{Decrease-Key}-Funktion die Effizienz der Dijkstra-Suche potenziell verbessern könnte.
-Der Versuch, die Suchzeit durch die Verwendung einer solchen Warteschlange zu reduzieren, schlug jedoch fehl.
+Obwohl die Sichtbarkeitsgraphen weniger Knoten aufweisen, ist die durchschnittliche Anzahl der Queue-Pops dennoch höher.
 
 \begin{table}[h!]
   \centering
@@ -67,14 +66,14 @@ Der Versuch, die Suchzeit durch die Verwendung einer solchen Warteschlange zu re
     pata-graph         & 265.825771                 & 883.979                    & 1120841.9                     & 1387047.8                  \\
     pata-visibility    & 1017.695977                & 63.817                     & 498570.2                      & 2429689.8                  \\ \bottomrule
   \end{tabular}
-  \caption{Durschnitliche Kennwerte der Dijkstra Suchen (über \num{10000} Suchen)}
+  \caption{Kennwerte der Dijkstra Suchen}
   \label{fig:ergebnisse:dijkstra}
 \end{table}
 
 \subsection{Knotengrade}
 
-Weiter wurde die Verteilung der Knotengrade untersucht, die enstanden Histogramme sind in \autoref{ergebnisse:fig:degree_hist} erstellt.
-In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten einen Grad von weniger als \num{2000}.
+Zudem wurde die Verteilung der Knotengrade untersucht, die resultierenden Histogramme sind in \autoref{ergebnisse:fig:degree_hist} dargestellt.
+In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten einen Grad von weniger als zweitausend.
 
 \begin{figure}[p]
   \begin{subfigure}[b]{0.5\textwidth}
@@ -176,8 +175,8 @@ In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten eine
   \label{ergebnisse:fig:degree_hist}
 \end{figure}
 
-Als Indikator dafür, wie sehr sich die Graphen kontrahieren lassen, wurde die Summe der quadratischen Knotengrade berechnet, diese ist in \autoref{table:sum_quad_degree} aufgelistet.
-Diese ist bei den Sichtbarkeitsgraphen jeweils um mehrere Größenordnungen größer als bei ihren Triangulierungen.
+Als Indikator dafür, wie stark sich die Graphen kontrahieren lassen, wurde die Summe der quadratischen Knotengrade berechnet; diese ist in \autoref{table:sum_quad_degree} aufgelistet.
+Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen größer als bei ihren Triangulierungen, was darauf hindeutet, dass die Kontraktion dieser Graphen ebenfalls deutlich schwieriger sein dürfte.
 
 \begin{table}[ht]
   \centering
@@ -196,18 +195,17 @@ Diese ist bei den Sichtbarkeitsgraphen jeweils um mehrere Größenordnungen grö
     pata-visibility    & 426189267238                          \\
     \bottomrule
   \end{tabular}
-  \caption{Summe quadratische Knotengrade}
+  \caption{Summe quadratischer Knotengrade}
   \label{table:sum_quad_degree}
 \end{table}
 
 \section{Graphen-Kontraktion}
 
-Der Ausgangspunkt der Analyse, ob die in dieser Arbeit behandelten Sichtbarkeitsgraphen kontrahiert werden können, war die Anwendung der klassischen Graphen-Kontraktion mit Dijkstra-Suchen.
-Dabei kam ein für diese Arbeit entwickeltes Programm zum Einsatz.
+Es wurde versucht, die bearbeiteten Graphen mit einem eigens für die Arbeit entwickelten Programm zu kontrahieren.
 Die Reihenfolge der Kontraktionen wurde durch die Kanten-Differenz mit Lazy-Popping bestimmt.
 
-Während es für die triangulierten Graphen möglich war, einen Contracted-Graph zu erstellen, wurde diese Erstellung bei den Sichtbarkeitsgraphen nach drei Tagen abgebrochen, da in dieser Zeit noch nicht einmal alle initialen Kanten-Differenzen berechnet werden konnten.
-Die Ergebnisse für die triangulierten Graphen sind in Tabelle \autoref{fig:ergebnisse:ch_graph_kontraktion_triangulierungen} dargestellt.
+Während es bei den triangulierten Graphen möglich war, einen Contracted-Graph zu erstellen, musste der Prozess bei den Sichtbarkeitsgraphen nach drei Tagen abgebrochen werden, da in diesem Zeitraum nicht einmal alle initialen Kanten-Differenzen berechnet werden konnten.
+Die Ergebnisse für die triangulierten Graphen sind in Tabelle \autoref{fig:ergebnisse:ch_graph_kontraktion_triangulierungen} dargestellt, die Zeiten wurden über einhundertausend sequentielle $s$-$t$-Anfragen ermittelt.
 
 \begin{table}[h!]
   \centering
@@ -226,12 +224,12 @@ Die Ergebnisse für die triangulierten Graphen sind in Tabelle \autoref{fig:erge
     medi-graph    & 3m 17s       & \fpeval{4845458/4223566}                             & 400.372                    & \fpeval{(87.08376*1000)/400.372}   \\
     pata-graph    & 9m 54s       & \fpeval{14187336/11632900}                           & 439.855                    & \fpeval{(265.825771*1000)/439.855} \\  \bottomrule
   \end{tabular}
-  \caption{CH Graphen-Kontraktion, 100K runs}
+  \caption{Kennwerte der Graphen-Kontraktion der Triangulierten Graphen}
   \label{fig:ergebnisse:ch_graph_kontraktion_triangulierungen}
 \end{table}
 
-Bassierend auf den Contracted-Graphen der Triangulierungen wurde jeweils ein Hub-Graph durch Merging erstellt.
-Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:hl_graph_kontraktion_triangulierungen} aufgelistet.
+Basierend auf den Contracted-Graphen der Triangulierungen wurde für diese jeweils ein Hub-Graph durch Merging erstellt.
+Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:hl_graph_kontraktion_triangulierungen} aufgelistet, die Zeiten wurden über zehn Millionen sequentielle $s$-$t$-Anfragen gebildet.
 
 \begin{table}[h!]
   \centering
@@ -252,18 +250,18 @@ Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:hl_graph_kontraktion_tri
     pata-graph    & 29m 45s          & 133.48887779929734                   & 1.451                      & \fpeval{(265.825771*1000)/1.451} & 209.984                    \\
     \bottomrule
   \end{tabular}
-  \caption{HL Graphen-Kontraktion, 10M runs}
+  \caption{Kennwerte des Hierarchical Hub Labeling der Triangulierten Graphen}
   \label{fig:ergebnisse:hl_graph_kontraktion_triangulierungen}
 \end{table}
 
-Als zusätzlicher Referenzpunkt zur Beurteilung der Qualität der erzeugten Contracted-Graphen sowie der dafür benötigten Zeit wurde ein externes Programm verwendet, um ebenfalls Contracted-Graphen zu erstellen\todo{cite?}.
+Als zusätzlicher Referenzpunkt zur Beurteilung der Qualität der erzeugten Contracted-Graphen sowie der dafür benötigten Zeit wurde ein externes Programm verwendet, um ebenfalls Contracted-Graphen zu erstellen.
 Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:fmi_ch_graph_kontraktion_triangulierungen} aufgelistet.
 
 Da dieses Programm ein anderes Speicherformat verwendet, konnten die Anfragezeiten nicht ermittelt werden.
-Es wurden jedoch im Vergleich zu dem in dieser Arbeit verwendeten Programm mehr Abkürzungen eingefügt.
-Das Programm kontrahiert mehrere Knoten gleichzeitig, indem es \emph{unabhängige Teilmengen} von Knoten identifiziert, was eine effizientere parallele Verarbeitung ermöglicht.\todo{cite!}
-Aufgrund des hohen Grades der Sichtbarkeitsgraphen ist jedoch davon auszugehen, dass nur wenige und kleine unabhängige Teilmengen existieren.
-Auch dieses Programm lieferte nach drei Tagen Laufzeit auf den Sichtbarkeitsgraphen keine Ergebnisse.
+Im Vergleich zum in dieser Arbeit verwendeten Programm wurden jedoch mehr Abkürzungen eingefügt.
+Das Programm kontrahiert mehrere Knoten gleichzeitig, indem es \emph{unabhängige Teilmengen} von Knoten identifiziert, was eine effizientere parallele Verarbeitung ermöglicht \cite{vetter2009parallel}.
+Angesichts des hohen durchschnittlichen Knotengrades der Sichtbarkeitsgraphen ist anzunehmen, dass nur wenige und kleine unabhängige Teilmengen existieren.
+Selbst nach drei Tagen Laufzeit auf den Sichtbarkeitsgraphen konnte auch dieses Programm keine Ergebnisse liefern.
 
 \begin{table}[h!]
   \centering
@@ -282,196 +280,260 @@ Auch dieses Programm lieferte nach drei Tagen Laufzeit auf den Sichtbarkeitsgrap
     medi-graph    & 34s          & \fpeval{(8156314-(4223566/2))/4223566}               \\
     pata-graph    & 1m 48s       & \fpeval{(23557322-(11632900/2))/11632900}            \\  \bottomrule
   \end{tabular}
-  \caption{FMI CH Graphen-Kontraktion}
+  \caption{Kennwerte der Graphen-Kontraktion mit einem anderen Programm}
   \label{fig:ergebnisse:fmi_ch_graph_kontraktion_triangulierungen}
 \end{table}
 
-\subsection{Kontraktion mit oberer Schranke}
+\subsection{Kontraktion mit oberer Schranke}\label{subsection:kontraktion_oberere_schranke}
 
-Für jeden der Graphen wurde ein Hitting-Set über 100k erstellt, die Knoten die nicht im Hitting-Set waren wurden danach sortiert, wie oft sie insgesammt getroffen wurden.
-Dies wurde als level-to-vertex Funktion genutzt, wobei die am wenigst getroffen Knoten zuerst kontrahiert wurden.
-Es wurde von vorne herein nur Top-Down Kontraktion erprobt, da Bottom-Up zu teuer erscheint.
+Für die Untersuchung, ob sich die Kontraktion mit oberer Schranke auf die Graphen anwenden lässt, wurde von vornherein nur die Top-Down-Kontraktion untersucht, da die Bottom-Up-Kontraktion als zu rechenintensiv erschien.
+Falls die Top-Down-Kontraktion anwendbar ist, könnte im nächsten Schritt die Bottom-Up-Kontraktion untersucht werden.
+
+Für jeden Graphen wurde ein Hitting-Set aus einhunderttausend zufällig generierten Pfaden erstellt.
+Die Knoten, die Teil des Hitting-Sets waren, wurden nach der Iteration, in der sie ausgewählt wurden, sortiert.
+Die übrigen Knoten wurden angehängt und danach entsprechend der Anzahl der kürzesten Pfade, auf denen sie lagen, sortiert.
+Diese Anordnung wurde als level-to-vertex-Funktion verwendet:
+Zuerst werden die Knoten, die nicht Teil des Hitting-Sets sind, kontrahiert und anschließend die des Hitting-Sets.
 
 \subsubsection{Triviale Heuristik}
 
-Das Kontrahieren mit trivialer Heuristik funktioniert auf den Graphen nicht, da zu viele Kanten eingefügt wurden und die erstellung OOM ging.
+Die Kontraktion mit der trivialen Heuristik als oberer Schranke ließ sich nicht auf die Sichtbarkeitsgraphen anwenden, da zu viele Abkürzungen eingefügt wurden und das Programm bereits nach wenigen Knoten-Kontraktionen aufgrund eines Speichermangel auf mit \SI{180}{\giga\byte} RAM ausgestatteten Computern abbrach.
+Der Verlauf der Anzahl der Kanten des Graphs während der Kontraktion ist in \autoref{img:ergebnisse:all_in} abgebildet.
 
-OOM nach 146, 112, 1655 Knoten
+Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügung standen, wurde das Experiment auf diesen nicht wiederholt, da die Anzahl der Kanten zu stark anstieg, um sinnvolle Ergebnisse erwarten zu können.
 
 \begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
   \begin{subfigure}[b]{0.5\textwidth}
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            xlabel={Knoten-Kontraktionen},
-            ylabel={Kanten},
-          ]
-          \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/aegaeis.csv};
-        \end{axis}
-      \end{tikzpicture}
-    }
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          xlabel={Knoten-Kontraktionen},
+          ylabel={Kanten},
+        ]
+        \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/aegaeis.csv};
+      \end{axis}
+    \end{tikzpicture}
     \caption{aegaeis-vis}%
   \end{subfigure}%
-  \begin{subfigure}[b]{0.5\textwidth}
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            xlabel={Knoten-Kontraktionen},
-            ylabel={Kanten},
-          ]
-          \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/medi.csv};
-        \end{axis}
-      \end{tikzpicture}
-    }
+  \begin{subfigure}[b]{0.5\textwidth}%
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          xlabel={Knoten-Kontraktionen},
+          ylabel={Kanten},
+        ]
+        \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/medi.csv};
+      \end{axis}
+    \end{tikzpicture}
     \caption{medi-vis}%
   \end{subfigure}%
-  \par\bigskip
+  \par%
   \begin{subfigure}[b]{0.5\textwidth}%
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            xlabel={Knoten-Kontraktionen},
-            ylabel={Kanten},
-          ]
-          \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/pata.csv};
-        \end{axis}
-      \end{tikzpicture}
-    }
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          xlabel={Knoten-Kontraktionen},
+          ylabel={Kanten},
+        ]
+        \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/pata.csv};
+      \end{axis}
+    \end{tikzpicture}
     \caption{pata}
   \end{subfigure}
-  \caption{Anzahl der Kanten während der Graphen-Kontraktion mit trivialer Heuristik}
+  \caption{Graphen-Kontraktion mit oberer Schrank durch Triviale Heuristik}
   \label{img:ergebnisse:all_in}
 \end{figure}
 
-\todo{Ergebnisse}
-
 \subsubsection{Hubs, Vereinfachter Graph}
 
-Die kürzesten Pfaddistanzen in triangulierten Graphen stellen, wie in \autoref{chapter:kontraktion} beschrieben, eine obere Schranke für die Distanzen zwischen Knotenpaaren in den Sichtbarkeitsgraphen dar.
-Um den Fehler dieser Schranke zu quantifizieren, wurden die kürzesten Pfaddistanzen von \num{1000000} $s$-$t$-Paaren in den Sichtbarkeitsgraphen analysiert.
+
+Die Abstände in triangulierten Graphen stellen, wie in \autoref{chapter:kontraktion} beschrieben, eine obere Schranke für die Abstände in Sichtbarkeitsgraphen dar.
+Um den Fehler dieser Schranke zu quantifizieren, wurden die Abstände von einer Million $s$-$t$-Paaren in den Sichtbarkeitsgraphen analysiert.
 Der dabei ermittelte durchschnittliche Fehler pro Hop-Länge ist in \autoref{img:ergebnisse:upper_bound} als Datenreihe $\triangle$ dargestellt.
 
 Diese Abbildung zeigt auch den durchschnittlichen Fehler, der durch den Einsatz von $n$ Hubs entsteht, welche mithilfe eines Hitting-Sets bestimmt wurden.
+Hierfür wurde die Erstellung des Hitting-Sets nach $n$ Iterationen vorzeitig abgebrochen.
 Zusätzlich wurde der Fehler visualisiert, der sich aus der Wahl der kleinsten oberen Schranke zwischen 80 Hubs und den triangulierten Graphen ergibt.
+Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr erfolgreich; insbesondere bei größeren Hop-Längen ist der Fehler oberen Schranke sehr gering.
 
 \begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
   \begin{subfigure}[b]{0.5\textwidth}
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            ymax=6,
-            xlabel={Hop-Länge},
-            ylabel={Fehler (\%)},
-            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
-          ]
-          \addplot+[mark repeat=9] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{$\triangle$};
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          ymax=6,
+          xlabel={Hop-Länge},
+          ylabel={Fehler (\%)},
+          legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+        ]
+        \addplot+[mark repeat=9] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/aegaeis.csv};
+        \addlegendentry{$\triangle$};
 
-          \addplot+[mark repeat=9] table [x=hops, y=10, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{10 Hubs};
+        \addplot+[mark repeat=9] table [x=hops, y=10, col sep=comma] {data/bounds/aegaeis.csv};
+        \addlegendentry{10 Hubs};
 
-          \addplot+[mark repeat=9] table [x=hops, y=20, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{20 Hubs};
+        \addplot+[mark repeat=9] table [x=hops, y=20, col sep=comma] {data/bounds/aegaeis.csv};
+        \addlegendentry{20 Hubs};
 
-          \addplot+[mark repeat=9] table [x=hops, y=40, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{40 Hubs};
+        \addplot+[mark repeat=9] table [x=hops, y=40, col sep=comma] {data/bounds/aegaeis.csv};
+        \addlegendentry{40 Hubs};
 
-          \addplot+[mark repeat=9] table [x=hops, y=80, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{80 Hubs};
+        \addplot+[mark repeat=9] table [x=hops, y=80, col sep=comma] {data/bounds/aegaeis.csv};
+        \addlegendentry{80 Hubs};
 
-          \addplot+[mark repeat=9] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/aegaeis.csv};
-          \addlegendentry{$\triangle$, 80 Hubs};
-        \end{axis}
-      \end{tikzpicture}
-    }
+        \addplot+[mark repeat=9] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/aegaeis.csv};
+        \addlegendentry{$\triangle$, 80 Hubs};
+      \end{axis}
+    \end{tikzpicture}
     \caption{aegaeis-vis}
   \end{subfigure}%
   \begin{subfigure}[b]{0.5\textwidth}
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            ymax=6,
-            xlabel={Hop-Länge},
-            ylabel={Fehler (\%)},
-            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
-          ]
-          \addplot+[mark repeat=12] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{$\triangle$};
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          ymax=6,
+          xlabel={Hop-Länge},
+          ylabel={Fehler (\%)},
+          legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+        ]
+        \addplot+[mark repeat=12] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/medi.csv};
+        \addlegendentry{$\triangle$};
 
-          \addplot+[mark repeat=12] table [x=hops, y=10, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{10 Hubs};
+        \addplot+[mark repeat=12] table [x=hops, y=10, col sep=comma] {data/bounds/medi.csv};
+        \addlegendentry{10 Hubs};
 
-          \addplot+[mark repeat=12] table [x=hops, y=20, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{20 Hubs};
+        \addplot+[mark repeat=12] table [x=hops, y=20, col sep=comma] {data/bounds/medi.csv};
+        \addlegendentry{20 Hubs};
 
-          \addplot+[mark repeat=12] table [x=hops, y=40, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{40 Hubs};
+        \addplot+[mark repeat=12] table [x=hops, y=40, col sep=comma] {data/bounds/medi.csv};
+        \addlegendentry{40 Hubs};
 
-          \addplot+[mark repeat=12] table [x=hops, y=80, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{80 Hubs};
+        \addplot+[mark repeat=12] table [x=hops, y=80, col sep=comma] {data/bounds/medi.csv};
+        \addlegendentry{80 Hubs};
 
-          \addplot+[mark repeat=12] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/medi.csv};
-          \addlegendentry{$\triangle$, 80 Hubs};
-        \end{axis}
-      \end{tikzpicture}
-    }
+        \addplot+[mark repeat=12] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/medi.csv};
+        \addlegendentry{$\triangle$, 80 Hubs};
+      \end{axis}
+    \end{tikzpicture}
     \caption{medi-vis}
   \end{subfigure}
   \par\bigskip
   \begin{subfigure}[b]{0.5\textwidth}
-    \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
-        \begin{axis}[
-            ymax=6,
-            xlabel={Hop-Länge},
-            ylabel={Fehler (\%)},
-            legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
-          ]
-          \addplot+[mark repeat=25] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{$\triangle$};
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          ymax=6,
+          xlabel={Hop-Länge},
+          ylabel={Fehler (\%)},
+          legend style={at={(1,0.475)},anchor=east, nodes={scale=0.8, transform shape}}
+        ]
+        \addplot+[mark repeat=25] table [x=hops, y=simple_graph_upper_bound, col sep=comma] {data/bounds/pata.csv};
+        \addlegendentry{$\triangle$};
 
-          \addplot+[mark repeat=25] table [x=hops, y=10, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{10 Hubs};
+        \addplot+[mark repeat=25] table [x=hops, y=10, col sep=comma] {data/bounds/pata.csv};
+        \addlegendentry{10 Hubs};
 
-          \addplot+[mark repeat=25] table [x=hops, y=20, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{20 Hubs};
+        \addplot+[mark repeat=25] table [x=hops, y=20, col sep=comma] {data/bounds/pata.csv};
+        \addlegendentry{20 Hubs};
 
-          \addplot+[mark repeat=25] table [x=hops, y=40, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{40 Hubs};
+        \addplot+[mark repeat=25] table [x=hops, y=40, col sep=comma] {data/bounds/pata.csv};
+        \addlegendentry{40 Hubs};
 
-          \addplot+[mark repeat=25] table [x=hops, y=80, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{80 Hubs};
+        \addplot+[mark repeat=25] table [x=hops, y=80, col sep=comma] {data/bounds/pata.csv};
+        \addlegendentry{80 Hubs};
 
-          \addplot+[mark repeat=25] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/pata.csv};
-          \addlegendentry{$\triangle$, 80 Hubs};
-        \end{axis}
-      \end{tikzpicture}
-    }
-    \caption{pata}
+        \addplot+[mark repeat=25] table [x=hops, y=min_80_simple, col sep=comma] {data/bounds/pata.csv};
+        \addlegendentry{$\triangle$, 80 Hubs};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{pata-vis}
   \end{subfigure}
   \caption{Fehler der oberen Schranken}
   \label{img:ergebnisse:upper_bound}
 \end{figure}
 
-Für die obere Schranke durch den vereinfachten Graph wurden die zuvor erstellen Hub-Graphen der Triangulierungen verwendet.
+Basierend auf dieser Untersuchung wurde versucht, die Sichtbarkeitsgraphen zu kontrahieren, wobei als obere Schranke ein Hub-Graph der Triangulierungen und 80 Hubs gewählt wurden.
+Obwohl nach der vorhergehenden Analyse der Fehler der oberen Schranke als sehr klein betrachtet werden kann, war die Kontraktion nicht erfolgreich.
 
+\autoref{fig:ergebnisse:hl_and_hubs} zeigt den Verlauf der Anzahl der Kanten während der Kontraktion.
+Nach drei Tagen Rechenzeit waren die Graphen noch immer nicht kontrahiert, weshalb das Experiment abgebrochen wurde.
+Die Anzahl der Kanten stieg wieder an, wenn auch langsamer als bei der trivialen Heuristik, wobei aegaeis-vis und medi-vis den Höhepunkt der Anzahl der Kanten erreicht hatten.
 
+Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der oberen Schranke noch weiter reduziert werden, wobei dies nicht Teil dieser Arbeit ist.
 
-\todo{Wie performant ist das?}
-
-\todo{Wie weit gekommen, HL alleine, HL \& Hubs}
+\begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          xlabel={Knoten-Kontraktionen (\%)},
+          ylabel={Kanten},
+        ]
+        \addplot+[mark=none] table [x=x, y=matches, col sep=comma] {data/hlandhubs/aegaeis.csv};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{aegaeis-vis}
+  \end{subfigure}%
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          xlabel={Knoten-Kontraktionen (\%)},
+          ylabel={Kanten},
+        ]
+        \addplot+[mark=none] table [x=x, y=matches, col sep=comma] {data/hlandhubs/medi.csv};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{medi-vis}
+  \end{subfigure}
+  \par\bigskip
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[
+          scale only axis, % The height and width argument only apply to the actual axis
+          height=5cm,
+          width=6cm,
+          xlabel={Knoten-Kontraktionen (\%)},
+          ylabel={Kanten},
+        ]
+        \addplot+[mark=none] table [x=x, y=matches, col sep=comma] {data/hlandhubs/pata.csv};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{pata}
+  \end{subfigure}
+  \caption{Graphen-Kontraktion mit oberer Schranke durch Triangulations und Hubs}
+  \label{fig:ergebnisse:hl_and_hubs}
+\end{figure}
 
 \section{PEOPLE}
 
-Die in \autoref{chapter:peopel} vorgestellte Methode zur Berechnung von Contracted- und Hub-Graphen lies sich auf die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
-Hierbei konnten die Hub-Graphen entweder direkt durch PEOPLE zereugt werden oder indem zuerst ein Contracted-Graph erstellt wurde.
-Die vertex-to-level-Funktion wurde hierbei jeweils durch ein Hitting-Set über \num{100000} Dijkstra-Pfade ermittelt.
-Der Größe der dem Hitting-Set zugrunde liegenden Menge an Pfaden wurde hierbei bewusst relativ klein gewählt, mit der überelgung, dass wenn dies erfolgreich ist, in einem zweiten Schritt mit den erzeugten Hub-Graphen deutlich mehr Pfade erzeugt werden können.
+Die in \autoref{chapter:people} vorgestellte Methode zur Berechnung von Contracted- und Hub-Graphen ließ sich auf die Sichtbarkeitsgraphen und ihre Triangulierungen anwenden.
+Dabei konnten die Hub-Graphen entweder direkt durch PEOPLE erzeugt werden oder durch Merging eines mit CH-PEOPLE erstellten Contracted-Graphen.
+Die vertex-to-level-Funktion wurde hierbei aus \autoref{subsection:kontraktion_oberere_schranke} übernommen.
 
 \subsection{Contracted-Graph}
 
-Durch die Berechnung aller ausgehenden Kanten pro Knoten im Downward- und Upward-Graphen konnte sowohl für die Sichtbarkeitsgraphen als auch für deren Triangulierungen jeweils ein Contracted-Graph erstellt werden.
-Die Kennzahlen der Erzeug und Anfragezeiten sind in \autoref{table:ergebnisse:people_ch_speedup} aufgeführt.
+Durch die Berechnung aller Kanten, die von jedem Knoten im Downward- und Upward-Graphen ausgehen, konnte mit CH-PEOPLE sowohl für die Sichtbarkeitsgraphen als auch für deren Triangulierungen jeweils ein Contracted-Graph erstellt werden
+Die Kennzahlen zur Erzeugungs- und Abfragezeit sind in \autoref{table:ergebnisse:people_ch_speedup} aufgeführt.
 
 \begin{table}[h!]
   \centering
@@ -496,22 +558,25 @@ Die Kennzahlen der Erzeug und Anfragezeiten sind in \autoref{table:ergebnisse:pe
   \label{table:ergebnisse:people_ch_speedup}
 \end{table}
 
-Der Speedup der auf diese Weise erzeugten Contracted-Graphen der Triangulierungen ist etwa um eine Größenordnung geringer als der der durch Kontraktion erstellten Contracted-Graphen.
-Zudem wurden jweils mehr als dreimal so viele Abkürzungen hinzugefügt.
+Der Speedup der auf diese Weise für die Triangulierungen erzeugten Contracted-Graphen ist um Größenordnungen geringer als bei den durch Kontraktion erstellten Contracted-Graphen.
+Zudem wurden jeweils mehr als dreimal so viele Abkürzungen hinzugefügt.
 
-Auf den Sichtbarkeitsgraphen von aegaeis und medi wurde ein Speedup von nur \num{1.5} erzielt, auf pata von immerhin \num{3.5}.
-Im Vergleich zu der Rechenzeit, welche in die Erstellung investiert wurde, ist dies jedoch recht wenig.
+Bei den Sichtbarkeitsgraphen der Instanzen aegaeis und medi konnte lediglich ein Speedup von \num{1.5} erzielt werden, während für pata ein Speedup von \num{3.5} erreicht wurde. Im Verhältnis zur in die Erstellung der Contracted-Graphen investierten Rechenzeit erscheint dieser Geschwindigkeitszuwachs jedoch relativ gering.
+
+Die zugrunde liegende vertex-to-level-Funktion weist jedoch eine begrenzte Qualität auf.
+Es ist anzunehmen, dass durch den Einsatz einer besseren Funktion, welche durch ein Hitting-Set über mehr Pfade erstellt wurde, ein höherer Speedup hätte erzielt werden können.
 
 \subsection{Hub Graph}
 
-Aus den berechneten Contracted-Graphen konnte durch Merging Hub-Graphen erzeugt werden, wobei zu klären war, ob es schneller ist, zuerst einen Contracted-Graphen und dann einen Hub-Graphen zu erstellen, oder ob es schneller ist, direkt einen Hub-Graphen zu erstellen.
+Aus den berechneten Contracted-Graphen konnten durch Merging als auch direkt durch PEOPLE Hub-Graphen erstellt werden.
+Beide Wege erstellten nahezu identische Label und erreichten einen fünf- bis sechstelltigen Speedup.
+Es galt zu klären, wie sich diese beiden Ansätze vergleichen lassen.
 
 \subsubsection{Merging}
 
-Ein zunächst verwendetes Programm, welches einen Hub-Graph aus einem Contracted-Graphen ohne Parallelisierung erzeugte, war nicht in der Lage, innerhalb von drei Tagen die Hub-Graphen der Sichtbarkeitsgraphen zu erzeugen.
-Der Grund hierfür liegt in der schieren Anzahl an Labels und Einträgen, die dabei gemerged werden müssen:
-Ein Knoten der Contracted-Graphen der Sichtbarkeitsgraphen hat einen drei- bis vierstelligen Grad, und für jeden dieser Nachbarn gibt es ein Label, das ebenfalls gemerged werden muss
-Die Verwendung eines parallelen \emph{reduce}-Algorithmus zum Mergen der Labels eines Knotens führte zu den Ergebnissen in \autoref{table:ergebnisse:hl_ch_bruteforce}.
+Ein zunächst verwendetes Programm, das einen Hub-Graphen aus einem Contracted-Graphen ohne Parallelisierung erzeugte, war nicht in der Lage, innerhalb von drei Tagen die Hub-Graphen der Sichtbarkeitsgraphen zu berechnen.
+Der Grund hierfür liegt in der enormen Anzahl an Labels und Einträgen, die dabei zusammengeführt werden müssen: Ein Knoten der Contracted-Graphen der Sichtbarkeitsgraphen weist einen Grad im drei- bis vierstelligen Bereich auf, und für jeden dieser Nachbarn existiert ein Label, das gemerged werden muss.
+Die Verwendung eines parallelen \emph{reduce}-Algorithmus zum Mergen führte zu den Ergebnissen in \autoref{table:ergebnisse:hl_ch_bruteforce}.
 
 \begin{table}[h!]
   \centering
@@ -535,7 +600,7 @@ Die Verwendung eines parallelen \emph{reduce}-Algorithmus zum Mergen der Labels 
     pata-visibility    & 14h \phantom{0}7m & 1823.062327697596                    & 16.862                     & \fpeval{(1017.695977*1000)/16.862} & 26.942                    \\
     \bottomrule
   \end{tabular}
-  \caption{Kennwerte von mit Merging erstellter Hub-Graphen. Die zugrundeliegenden Contracted-Graphen wurden mit PEOPLE erzeugt.}
+  \caption{Kennwerte von mit Merging erstellter Hub-Graphen. Die zugrundeliegenden Contracted-Graphen wurden mit CH-PEOPLE erzeugt.}
   \label{table:ergebnisse:hl_ch_bruteforce}
 \end{table}
 
@@ -543,8 +608,7 @@ Die Verwendung eines parallelen \emph{reduce}-Algorithmus zum Mergen der Labels 
 \subsubsection{PEOPLE}
 
 Die Hub-Graphen wurden ebenfalls durch PEOPLE berechnet.
-Die Werte sind in \autoref{table:ergebnisse:hl_bruteforce} zu sehen.
-Die Durchschnittliche Label Größe ist minimal anders.
+Die entsprechenden Werte sind in \autoref{table:ergebnisse:hl_bruteforce} aufgeführt.
 
 \begin{table}[h!]
   \centering
@@ -572,16 +636,14 @@ Die Durchschnittliche Label Größe ist minimal anders.
   \label{table:ergebnisse:hl_bruteforce}
 \end{table}
 
-Das Anwenden des des Algorithmus zur Berechnung des Hub GRaphens hat gut funktioniert.
-
-
 \subsubsection{Vergleich}
 
-Da die Hub-Graphen auf zwei Wegen erzeugt werden können, muss geklärt werden, welcher Weg effizienter ist.
-Dazu wurde die Zeit, die für die Erstellung des Contracted-Graphen benötigt wurde, mit der Zeit zum Mergen addiert und anschließend mit der Zeit zur direkten Erstellung eines Hub-Graphen mittels PEOPLE verglichen.
-Die entsprechenden Zahlen sind in Tabelle \autoref{table:ergebnisse:vergleich_was_schneller} aufgeführt.
 
-Interessanterweise ist es bei den Sichtbarkeitsgraphen schneller, direkt einen Hub-Graphen zu berechnen, während es bei den triangulierten Graphen effizienter ist, den Umweg über die Contracted-Graphen zu nehmen.
+Da Hub-Graphen auf zwei Wegen erzeugt werden können, muss geklärt werden, welcher effizienter ist.
+Dafür wurde die Zeit für die Erstellung des Contracted-Graphen mit der Zeit für das Mergen addiert und anschließend mit der Zeit für die direkte Erstellung eines Hub-Graphen mittels PEOPLE verglichen.
+Die entsprechenden Werte sind in \autoref{table:ergebnisse:vergleich_was_schneller} dargestellt.
+
+Es zeigt sich, dass es bei den Sichtbarkeitsgraphen schneller ist, direkt einen Hub-Graphen zu berechnen, während bei den triangulierten Graphen der Umweg über die Contracted-Graphen effizienter ist.
 
 \begin{table}[h!]
   \centering
@@ -591,31 +653,31 @@ Interessanterweise ist es bei den Sichtbarkeitsgraphen schneller, direkt einen H
       r
     }
     \toprule
-    {Graph}            & {Contracted-Graph \& Merging} & {Hub-Graph}             \\
+    {Graph}            & {Contracted-Graph \& Merging} & {Hub-Graph}          \\
     \midrule
-    aegaeis-graph      & 32m                           & \B 1h 26m               \\
-    aegaeis-visibility & \B 13h 28m                    & 5h 57m                  \\
-    medi-graph         & 57 m                          & \B 3h 11m               \\
-    medi-visibility    & \B 1d 19h 10m                 & 21h 57m                 \\
-    pata-graph         & 7h \phantom{0} 4m             & \B 1d \phantom{0}4h 26m \\
-    pata-visibility    & \B 2d 10h 52m                 & 1d 20h 17m              \\  \bottomrule
+    aegaeis-graph      & \B 32m                        & 1h 26m               \\
+    aegaeis-visibility & 13h 28m                       & \B 5h 57m            \\
+    medi-graph         & \B 57 m                       & 3h 11m               \\
+    medi-visibility    & 1d 19h 10m                    & \B 21h 57m           \\
+    pata-graph         & \B 7h \phantom{0} 4m          & 1d \phantom{0}4h 26m \\
+    pata-visibility    & 2d 10h 52m                    & \B 1d 20h 17m        \\  \bottomrule
   \end{tabular}
   \caption{HL  merged}
   \label{table:ergebnisse:vergleich_was_schneller}
 \end{table}
 
-Wie in \autoref{subsection:people:label_size} erwähnt können mit PEOPLE erzeugte Label kleiner sein, als durch Merging erzeugte, was auch hier der Fall ist.
-Der Unterschied ist hierbei ein Relation zur Label-Größe nicht besonders groß, aber trotzdem wahrnehmbar.
+Wie in \autoref{subsection:people:label_size} erwähnt, können die durch PEOPLE erzeugten Labels kleiner sein als die durch Merging erzeugten, was auch hier der Fall ist.
+Der Unterschied in Bezug auf die Label-Größe ist zwar nicht besonders groß, aber dennoch erkennbar.
 
 \subsection{Performance Overhead}
-Die Erzeugung der ausgehenden Kanten im Contracted-Graph sowie der Label im Hub-Graph erfolgen durch modifizierte Dijkstra-Suchen, beinhaltet aber zusätzlich unter anderem auch die Sammlung von Abkürzungen.
 
-Zur Quantifizierung des zusätzlichen Rechenaufwands wurden für jeden Graphen, für jeweils \emph{10000} Knoten, jeweils zwei Dijkstra Suchen zu alle anderen Knoten durchgeführt.
-Die dafür benötigte Rechenzeit wurde anschließend auf die Anzahl der Knoten im Graph skaliert.
+Die Erzeugung der ausgehenden Kanten im Contracted-Graph sowie der Labels im Hub-Graph erfolgt durch modifizierte Dijkstra-Suchen und beinhaltet zusätzlich unter anderem die Sammlung von Abkürzungen.
+Zur Quantifizierung des zusätzlichen Rechenaufwands im Vergleich zu Dijkstra-Suchen wurden für jeden Graphen, bei jeweils \emph{10000} Knoten, zwei Dijkstra-Suchen zu allen anderen Knoten durchgeführt.
+Die dafür benötigte Rechenzeit wurde anschließend auf die Gesamtzahl der Knoten im Graphen skaliert.
 \autoref{table:ergebnisse:dijkstra_vs_ch_vs_hl} zeigt die erforderliche Zeit zur Erstellung eines Contracted- und eines Hub-Graphen im Verhältnis zu dieser skalierten Zeit.
-Es fällt auf, dass die für die Konstruktion eines Contracted-Graphen benötigte Zeit nur geringfügig kürzer ist als die eines Hub-Graphen.
-Dies lässt darauf schließen, dass in den meisten Fällen spät abgebrochen wurde.
 
+Auffällig ist, dass die Zeit für die Konstruktion eines Contracted-Graphen nur geringfügig kürzer ist als die für einen Hub-Graphen.
+Dies deutet darauf hin, dass in den meisten Fällen die Suche nur spät gestoppt wurde.
 
 \begin{table}[h!]
   \centering
@@ -626,22 +688,22 @@ Dies lässt darauf schließen, dass in den meisten Fällen spät abgebrochen wur
       S[table-format = 1.3] % average time
     }
     \toprule
-    {Graph}            & {Dijkstra} & {$\frac{\text{Contracted-Graph}}{\text{Dijkstra}}$} & {$\frac{\text{Hub-Graph}}{\text{Dijkstra}}$}   \\ \midrule
-    aegaeis-graph      & 46m        & \fpeval{(20)/(46)}                                  & \fpeval{(1*60+26)/(46)}                        \\
-    aegaeis-visibility & 5h 19m     & \fpeval{(5*60+53)/(5*60+19)}                        & \fpeval{(5*60+57)/(5*60+19)}                   \\
-    medi-graph         & 1h 46m     & \fpeval{(38)/(1*60+46)}                             & \fpeval{(3*60+11)/(1*60+46)}                   \\
-    medi-visibility    & 19h 51m    & \fpeval{(20*60+52)/(19*60+51)}                      & \fpeval{(21*60+57)/(19*60+51)}                 \\
-    pata-graph         & 14h 55m    & \fpeval{(5*60+42)/(14*60+55)}                       & \fpeval{(1*24*60+4*60+26)/(14*60+55)}          \\
-    pata-visibility    & 1d 12h 32m & \fpeval{(1*24*60+20*60+45)/(1*24*60+12*60+32)}      & \fpeval{(1*24*60+20*60+17)/(1*24*60+12*60+32)} \\  \bottomrule
+    {Graph}            & {Dijkstra} & {$\frac{\text{CH-PEOPLE}}{\text{Dijkstra}}$}   & {$\frac{\text{PEOPLE}}{\text{Dijkstra}}$}      \\ \midrule
+    aegaeis-graph      & 46m        & \fpeval{(20)/(46)}                             & \fpeval{(1*60+26)/(46)}                        \\
+    aegaeis-visibility & 5h 19m     & \fpeval{(5*60+53)/(5*60+19)}                   & \fpeval{(5*60+57)/(5*60+19)}                   \\
+    medi-graph         & 1h 46m     & \fpeval{(38)/(1*60+46)}                        & \fpeval{(3*60+11)/(1*60+46)}                   \\
+    medi-visibility    & 19h 51m    & \fpeval{(20*60+52)/(19*60+51)}                 & \fpeval{(21*60+57)/(19*60+51)}                 \\
+    pata-graph         & 14h 55m    & \fpeval{(5*60+42)/(14*60+55)}                  & \fpeval{(1*24*60+4*60+26)/(14*60+55)}          \\
+    pata-visibility    & 1d 12h 32m & \fpeval{(1*24*60+20*60+45)/(1*24*60+12*60+32)} & \fpeval{(1*24*60+20*60+17)/(1*24*60+12*60+32)} \\  \bottomrule
   \end{tabular}
-  \caption{todo dijkstra vs ch bruteforce vs hl bruteforce}
+  \caption{Vergleich Performance Overhead}
   \label{table:ergebnisse:dijkstra_vs_ch_vs_hl}
 \end{table}
 
 Für die Triangulierung von Sichtbarkeitsgraphen ist es deutlich effizienter, Contracted-Graphen zu erstellen, anstatt für jeden Knoten zwei vollständige Dijkstra-Suchen durchzuführen und noch effizienter, als einen Hub-Graphen zu erstellen.
-Daher ist davon auszugehen, dass die Dijkstra-Suchen häufiger vorzeitig abgebrochen worden konnten.
+Daher ist davon auszugehen, dass die Dijkstra-Suchen häufiger vorzeitig abgebrochen werden konnten.
 
-Um dieses Verhalten besser zu verstehen, wurde die Suche nach ausgehenden Kanten eines Knotens im aeagaeis-Sichtbarkeitsgraphen näher untersucht.
+Um dieses Verhalten besser zu verstehen, wurde die Suche nach ausgehenden Kanten eines Knotens im aegaeis-Sichtbarkeitsgraphen näher untersucht.
 \autoref{fig:ergebnisse:ch_people_suchbaum} zeigt einen entsprechenden Suchbaum.
 In der Abbildung repräsentieren schwarze Punkte die Knoten, die als Köpfe für die aus dem weißen Punkt ausgehenden Upward-Kanten fungieren.
 Die dünnen Kanten führen zu Knoten, die zum Zeitpunkt ihrer Expansion nicht mehr lebendig waren, die gestrichelten Kanten gehen zu Knoten, die zwar gesehen, aber nicht mehr expandiert wurden.
@@ -840,7 +902,7 @@ Die die zugrunde vertex-to-level-Funktion mit einem Hitting-Set über nur \num{1
 
 \subsection{Vertex-to-level Vergeleich}
 
-Wie im \autoref{chapter:peopel} erwähnt, lässt sich durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n$ zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
+Wie im \autoref{chapter:people} erwähnt, lässt sich durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n$ zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
 Diese Methode wurde verwendet, um verschiedene Funktionen zu testen, die Ergebnisse sind in \autoref{table:ergebnisse:vtl_vergleich} aufgeführt.
 
 Das verwendete Hitting-Set wurde jeweils über \num{1000000} Pfade gebildet, wobei die Knoten, die nicht im Hitting-Set waren, nach einer weiteren Metrik sortiert wurden.
