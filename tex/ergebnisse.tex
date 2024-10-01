@@ -199,7 +199,7 @@ Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen 
   \label{table:sum_quad_degree}
 \end{table}
 
-\section{Graphen-Kontraktion}
+\section{Graphen-Kontraktion}\label{section:ch_graph_kontraktion}
 
 Es wurde versucht, die bearbeiteten Graphen mit einem eigens für die Arbeit entwickelten Programm zu kontrahieren.
 Die Reihenfolge der Kontraktionen wurde durch die Kanten-Differenz mit Lazy-Popping bestimmt.
@@ -700,14 +700,14 @@ Dies deutet darauf hin, dass in den meisten Fällen die Suche nur spät gestoppt
   \label{table:ergebnisse:dijkstra_vs_ch_vs_hl}
 \end{table}
 
-Für die Triangulierung von Sichtbarkeitsgraphen ist es deutlich effizienter, Contracted-Graphen zu erstellen, anstatt für jeden Knoten zwei vollständige Dijkstra-Suchen durchzuführen und noch effizienter, als einen Hub-Graphen zu erstellen.
-Daher ist davon auszugehen, dass die Dijkstra-Suchen häufiger vorzeitig abgebrochen werden konnten.
+Für die Triangulierungen der Sichtbarkeitsgraphen ist es deutlich effizienter, Contracted-Graphen zu erstellen, anstatt für jeden Knoten jeweils zwei Dijkstra-Suchen durchzuführen.
+Das deutet darauf hin, dass die Dijkstra-Suchen häufig vorzeitig abgebrochen werden konnten.
 
-Um dieses Verhalten besser zu verstehen, wurde die Suche nach ausgehenden Kanten eines Knotens im aegaeis-Sichtbarkeitsgraphen näher untersucht.
+Um dieses Verhalten besser zu verstehen, wurde die CH-PEOPLE Suche in aegaeis-graph näher untersucht.
 \autoref{fig:ergebnisse:ch_people_suchbaum} zeigt einen entsprechenden Suchbaum.
-In der Abbildung repräsentieren schwarze Punkte die Knoten, die als Köpfe für die aus dem weißen Punkt ausgehenden Upward-Kanten fungieren.
-Die dünnen Kanten führen zu Knoten, die zum Zeitpunkt ihrer Expansion nicht mehr lebendig waren, die gestrichelten Kanten gehen zu Knoten, die zwar gesehen, aber nicht mehr expandiert wurden.
-Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{524881} möglichen Knoten besucht, was die Effizienz dieses Ansatzes unterstreicht.
+In der Abbildung repräsentieren schwarze Punkte die Köpfe von Upward-Kanten, deren Fuß sich im weißen Punkt befindet.
+Die durchgezogenen Linien stellen Kanten zu \emph{lebendigen} Knoten dar, während die gestrichelten Linien Kanten zu Knoten zeigen, die nicht mehr lebendig sind.
+Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{524881} möglichen Knoten besucht, was die Effizienz der CH-PEOPLE verdeutlicht.
 
 \begin{figure}[h!]
   \centering
@@ -764,14 +764,14 @@ Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{52
     %\filldraw (4.456048319873318, 3.0900255391060227) circle (2pt);
     \node[circle,draw=black, fill=white, inner sep=0pt, minimum size=5pt] at (4.456048319873318, 3.0900255391060227) {};
   \end{tikzpicture}
-  \caption{Suchbaum einer PEOPLE Contracted-Graph Suche auf aegaeis-graph}
+  \caption{CH-PEOPLE Suchbaum auf aegaeis-graph}
   \label{fig:ergebnisse:ch_people_suchbaum}
 \end{figure}
 
-Nach der Untersuchung eines einzelenen Suchvorganges wurden für aegaeis-graph für alle Knoten die bei der Contracted-Graph PEOPLE-Suche gesehen Knoten erfasst.
-Die Ergebisse sind hierbei in \autoref{fig:ergebnisse:efficiency_ch_people} gelistet.
+Nach der Untersuchung des einzelnen Suchvorganges wurden für aegaeis-graph für alle Knoten die bei der CH-PEOPLE-Suche gesehen Knoten erfasst.
+Die Ergebnisse sind hierbei in \autoref{fig:ergebnisse:efficiency_ch_people} gelistet.
 Bei \num{65}\% aller Suchen wurden weniger als \num{1}\% der \num{524881} Knoten gesehen.
-Die die zugrunde vertex-to-level-Funktion mit einem Hitting-Set über nur \num{100000} Pfade erstellt wurde, ist anzunehemen, dass durch ein besseres vertex-to-level-Funktion noch mehr Suchen lokaler werden.
+Da die zugrunde vertex-to-level-Funktion auf einem einem Hitting-Set über nur einhundertausend Pfaden basiert, ist anzunehmen, dass durch eine bessere vertex-to-level-Funktion noch mehr Suchen lokaler werden.
 
 \begin{figure}[h!]%
   \centering
@@ -899,15 +899,16 @@ Die die zugrunde vertex-to-level-Funktion mit einem Hitting-Set über nur \num{1
   \label{fig:ergebnisse:efficiency_ch_people}
 \end{figure}
 
+\subsection{Vergleich verschiedener vertex-to-level-Funktionen}
 
-\subsection{Vertex-to-level Vergeleich}
 
-Wie im \autoref{chapter:people} erwähnt, lässt sich durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n$ zufällig ausgewählte Knoten die Labels berechnet und daraus die durchschnittliche Labelgröße bestimmt werden.
-Diese Methode wurde verwendet, um verschiedene Funktionen zu testen, die Ergebnisse sind in \autoref{table:ergebnisse:vtl_vergleich} aufgeführt.
+Wie im  \autoref{chapter:people} erwähnt, lässt sich die durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n$ zufällig ausgewählte Knoten die Labels berechnet und von diesen die durchschnittliche Labelgröße bestimmt wird.
+Diese Methode wurde verwendet, um verschiedene Funktionen zu vergleichen, die Ergebnisse sind in \autoref{table:ergebnisse:vtl_vergleich} gelistet.
 
-Das verwendete Hitting-Set wurde jeweils über \num{1000000} Pfade gebildet, wobei die Knoten, die nicht im Hitting-Set waren, nach einer weiteren Metrik sortiert wurden.
-Verglichen wurden eine Sortierung nach Grad (von klein nach groß), eine zufällige Sortierung sowie die Übernahme der Vertex-to-Level-Funktion, die durch die Graphen-Kontraktion der triangulierten Graphen entstand.
-Letztere, in der Tabelle als $\triangle$ als notiert, führte zu überraschend kleinen Labels.
+Es wurden sechs vertex-to-level-Funktionen verglichen. Drei davon basierten auf einem Hitting-Set über \num{1000000}, wobei Knoten, die nicht im Hitting-Set enthalten waren, nach einer weiteren Metrik sortiert wurden. Diese war entweder eine zufällige Sortierung, eine Sortierung nach Grad (von klein nach groß) oder eine Sortierung danach, auf wie vielen kürzesten Pfaden die Knoten liegen.
+
+Die anderen drei Funktionen waren eine zufällige Sortierung, eine Sortierung nach Grad (von klein nach groß) sowie die Übernahme der vertex-to-Level-Funktion, die durch die Graphen-Kontraktion der triangulierten Graphen entstand.
+Letztere, in der Tabelle als $\triangle$ notiert, führte zu überraschend kleinen Labels.
 
 \begin{table}[h!]
   \centering
@@ -932,11 +933,16 @@ Letztere, in der Tabelle als $\triangle$ als notiert, führte zu überraschend k
   \label{table:ergebnisse:vtl_vergleich}
 \end{table}
 
-\subsection{Hitting-Set über 250M Pfade}
+\subsection{Große Hitting-Sets}
 
-Mit den erzeugten Hub-Graphen wurde ein Hitting-Ste über 250 Millionen Pfade gebildet, die Knoten die nicht enthalten waren, wurden nach der Anzahl ihrerer Hits sortiert, da dies nach \autoref{table:ergebnisse:vtl_vergleich} erfolgsversprechend scheint.
+Mit den erzeugten Hub-Graphen wurde ein Hitting-Set über 250 Millionen Pfade gebildet, die Knoten die nicht enthalten waren, wurden nach der Anzahl ihrerer Hits sortiert, da dies nach \autoref{table:ergebnisse:vtl_vergleich} erfolgsversprechend scheint.
 Mit dieser vertex-to-level-Funktion wurde über \num{10000} die Labelgröße predicted.
 Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durschnitltiche Label Größe kleiner als der ursprüngliche durschnitliche Knotengrad.
+
+Mit den erzeugten Hub-Graphen wurde ein Hitting-Set über 250 Millionen Pfade gebildet.
+Die Knoten, die nicht enthalten waren, wurden danach sortiert, wie oft sie auf kürzsten Pfaden lagen, da dies nach \autoref{table:ergebnisse:vtl_vergleich} am Erfolgversprechenden erscheint.
+Mit dieser vertex-to-level-Funktion wurde über \num{10000} Labels die durchschnittliche Labelgröße vorhergesagt, die Ergebnisse sind in \autoref{fig:ergebnisse:250_paths} aufgelistet.
+Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durchschnittliche Labelgröße kleiner als der ursprüngliche durchschnittliche Knotengrad.
 
 \begin{table}[h!]
   \centering
@@ -955,6 +961,9 @@ Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durschnitltiche Label
     pata-visibility    & 9h 29m       & 424.1        \\  \bottomrule
   \end{tabular}
   \caption{Vorhergesagt durschnitliche Labelgröße für eine vertex-to-level-Funktion welche durch ein Hitting-Set über 250M Pfade induziert wurde}
+  \label{fig:ergebnisse:250_paths}
 \end{table}
 
-Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der \autoref{fig:ergebnisse:efficiency_ch_people} zugrunde liegende Experiment wiederholt, wobei diesmal \num{80.6}\% aller Suchen weniger als 1\% aller Knoten sahen.
+\todo{Hitting-Set mit auffüllen}
+
+Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der \autoref{fig:ergebnisse:efficiency_ch_people} zugrunde liegende Experiment wiederholt, wobei diesmal \num{86.6}\% aller Suchen weniger als 1\% aller Knoten sahen.
