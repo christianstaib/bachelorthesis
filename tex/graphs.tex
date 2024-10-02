@@ -58,7 +58,7 @@ Graphen und insbesondere kürzeste Pfade spielen darüber hinaus eine wichtige R
 \end{figure}
 
 \section{Definitionen}
-Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, führen wir ein einige grundlegende Begriffe ein.
+Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, werden einige grundlegende Begriffe eingeführt.
 
 \begin{definition}[Graph]
   Sofern nicht anders angegeben, bezeichnet Graph im Folgenden einen endlichen, gerichteten Graphen mit Kantengewichten, ohne Mehrfachkanten und Schleifen.
@@ -69,7 +69,6 @@ Damit in den nachfolgenden Kapiteln sinnvoll argumentiert werden kann, führen w
 \end{definition}
 
 Das Gewicht der Kanten ist hierbei auf positive reelle Zahlen begrenzt, da das Verwenden eines Kantengewichtes $0$ dazu führen kann, dass ein kürzester Pfad mehrfach einen Teilpfad der Länge 0 durchläuft.
-Negative Kantengewichte erschweren die Definition und Argumentation, sodass hier auf diese nicht weiter eingegangen wird.
 
 \begin{definition}[Nachbar]
   Sei $G = (V, E)$. Ein Knoten $u \in V$ heißt \emph{Vorgänger} eines Knotens $v \in V$ wenn $(u, v) \in E$. $v$ ist dann ein \emph{Nachfolger} von $u$.
@@ -80,7 +79,7 @@ Die Anzahl der Nachbarn eines Knotens wird als sein \emph{Grad} bezeichnet, wobe
 Hat ein Knoten keine Vorgänger oder Nachfolger, so nennt man ihn \emph{isoliert}.
 
 \begin{definition}[Pfad]
-  Ein Pfad $p$ in einem Graphen $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, wobei für alle $i \in {1, \dotsc, n-1}$ gilt, dass $(v_i, v_{i+1}) \in E$
+  Ein Pfad $p$ in einem Graphen $G = (V, E)$ ist eine Folge von Knoten $(v_1, \dotsc, v_n)$, wobei für alle $i \in {1, \dotsc, n-1}$ gilt, dass $(v_i, v_{i+1}) \in E$.
   Der Knoten $v_1$ wird Startknoten, $v_n$ Zielknoten genannt.
   Die Summe der Kantengewichte aller Kanten $(v_i, v_{i + 1})$ wird seine \emph{Länge}, die Anzahl der Kantennutzungen ($n - 1$) seine \emph{Hop-Länge}, genannt.
 \end{definition}
@@ -92,14 +91,14 @@ Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zu
   Ein Pfad $p = (v_1 , \dotsc , v_n)$ ist \emph{ein kürzester Pfad}, wenn die Länge von $p$ unter allen Pfaden von $v_1$ nach $v_n$ minimal ist.
   Die Länge des kürzesten Pfades wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet.
 
-  Die Funktion ${spd}_G \colon V \times V \to \mathbb{R}^+ \cup \{ \infty \} $ (Shortest Path Distance) weist einem Knotenpaar den Abstand zu, wobei dieser unendlich ist, wenn kein Pfad zwischen ihnen existiert.
+  Die Funktion ${spd}_G \colon V \times V \to \mathbb{R}^+_0 \cup \{ \infty \} $ (Shortest Path Distance) weist einem Knotenpaar den Abstand zu, wobei dieser unendlich ist, wenn kein Pfad zwischen ihnen existiert.
   Dann bezeichnet ${sp}_{G} (s, t)$ (Shortest Path) einen kürzesten Pfad zwischen $s$ und $t$.
 \end{definition}
 
 Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und was der Abstand der Knoten ist, bezeichnet man auch als $s$-$t$-Anfrage (Query) und einen gefundenen Pfad als $s$-$t$-Pfad.
 Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig, die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu bestimmen.
-Auch die Umkehrung dieses Problem ist Interessant, also die kürzesten Pfade von allen Knoten zu einem Anderen zu bestimmen.
-Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade von einem Knoten auf dem Transponierten Graph $G^T$ entspricht.
+Auch die Umkehrung dieses Problem ist interessant, also die kürzesten Pfade von allen Knoten zu einem Anderen zu bestimmen.
+Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade von diesem Knoten auf dem Transponierten Graph $G^T$ entspricht.
 
 \begin{definition}[Transponierter Graph]
   Sei $G = (V, E)$ ein Graph. Dann ist $G^T \coloneq (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{transponierte Graph} von $G$.
@@ -139,7 +138,7 @@ Der Greedy-Algorithmus \ref{graphs:alg:greedy-hitting-set} bietet jedoch eine Ap
   \label{graphs:alg:greedy-hitting-set}
 \end{algorithm}
 
-Zusätzlich zum Hitting-Set als Menge kann die Information, welcher Knoten in der wievielten Iteration des Greedy-Algorithmus ausgewählt wurde, von Bedeutung sein, daher wird das Hitting-Set im folgenden als geordnete Menge betrachtet.
+Zusätzlich zum Hitting-Set als Menge kann die Information, welcher Knoten in der wievielten Iteration des Greedy-Algorithmus ausgewählt wurde, von Bedeutung sein, daher wird das Hitting-Set im Folgenden als geordnete Menge betrachtet.
 
 \todo{Beispiel Hitting Set}
 
@@ -153,7 +152,7 @@ Sie sind eine Möglichkeit das Euclidean Shortest Path Problem zu lösen.
 
 \begin{definition}[Euclidean Shortest Path Problem]
   Sei $P$ eine Menge von Polygonen in $\mathbb{R}^2$ und $s, t$ Eckpunkte dieser Polygone.
-  Was ist kürzeste Pfad von $s$ nach $t$, so dass dieser kein Polygon schneidet?
+  Was ist der kürzeste Pfad von $s$ nach $t$, so dass dieser kein Polygon schneidet?
 \end{definition}
 
 \autoref{fig:graphs:eulcidian_shotest_path_problem} zeigt eine solche Situation.
@@ -252,11 +251,12 @@ Aufgrund der unterschiedlichen Strukturen von Sichtbarkeitsgraphen und Straßeng
 \subsection{Triangulierung}
 
 Um die Distanzen zwischen Knotenpaaren in Sichtbarkeitsgraphen mit einer oberen Schranke abzuschätzen, kann eine \emph{Triangulierung} des Graphs durchgeführt werden, wie beispielsweise durch eine Delaunay-Triangulierung.
-Dieser Ansatz kann jedoch sehr schmale, lange Dreiecke erzeugen, die im Anschluss beseitigt werden können, um eine bessere obere Schranke zu erhalten.
+Dieser Ansatz kann jedoch lange, schmale Dreiecke erzeugen, die anschließend beseitigt werden können, um eine bessere obere Schranke zu erhalten.
 Das Verfahren zur Erstellung der in dieser Arbeit verwendeten Triangulierung wurde ausführlich von Funke et al. \cite{funkescalable} beschrieben.
 
 Die Knoten eines triangulierten Graphen $G_g$ bilden hierbei eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
 Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.
+\autoref{fig:thessaloniki_comparison} vergleicht einen Sichtbarkeitsgraphen und dessen Triangulierung anhand eines Ausschnitts.
 
 \begin{figure}[h!]%
   \centering
@@ -266,93 +266,3 @@ Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht ve
   \caption{Hafen von Thessaloniki}%
   \label{fig:thessaloniki_comparison}%
 \end{figure}
-
-% TODO rauswerfen?
-% \section{Dijkstra Algorithmus}
-%
-% Die Angabe wie aufwändig die Suche eines kürzesten $(s, t)$ Pfades für einen Computer ist, lässt sich schwer in einer Metrik ausdrücken, denn die Zeit, welche für die Suche benötigt wird, ist von der verwendeten Hardware abhängig.
-% Ein Möglichkeit diese Aufwändigkeit zu beziffern, ist der \emph{Dijkstra Rank}.
-% Dieser gibt an, wieviele Knoten in einer Dijsktra-Suche von $s$ aus expandiert werden müssen, bis man von $t$ erreicht.
-%
-% Ebenfalls interesannt sind die Warteschlagen (Queue) Operationen, diese können auch Hinweise darauf geben, was genau die Suche in einem Graph so teuer macht.
-% Hierbei sind die \emph{Queue Pops} die Anzahl, wie oft Knoten aus der Warteschlange entommen wurde.
-% Wenn eine Warteschlange mit \emph{Decrease-Key} Funktion benutzt wird, unterscheidet sie sich nicht vom Dijsktra Rank.
-% Die \emph{Queue Pushs} geben an, wie oft Knoten aus der Warteschlange entommen werden.
-%
-%
-% \todo{Dijkstra Algorithmus erklären und Dijkstra Paper zitieren}
-% \begin{algorithm}[ht]
-%     \caption{Dijkstra Algorithmus}
-%     \begin{algorithmic}[1]
-%         \Require Graph $G = (V, E)$, Startknoten $s \in V$, Zielknoten $t \in V$
-%         \Ensure ${dist}$, ${pre}$
-%         \State // Initialisiere Distanz- und Vorgänger-Funktion
-%         \ForAll{$v \in V$}
-%         \State ${dist}(v) \leftarrow \infty$
-%         \State ${pre}(v) \leftarrow {none}$
-%         \EndFor
-%
-%
-%         \State
-%         \State // Initialisiere Vorrangwarteschlange
-%         \State ${dist}(s) \leftarrow 0$
-%         \State $Q\leftarrow \{ s \}$
-%
-%         \State
-%         \While{$Q \neq \emptyset$}
-%         \State $u \leftarrow{extract\_min}(Q)$\label{graphs:dijkstra:pop}
-%
-%         \State
-%         \State // Beende frühzeitig wenn Zielknoten gefunden wurde
-%         \If {$u = t$}
-%         \State \textbf{break}
-%         \EndIf
-%
-%         \State
-%         \State // Aktualisiere Nachbarn
-%         \ForAll{$(u, v, w) \in E$}
-%         \If {${dist}(u) + w < {dist}(v)$}
-%         \State ${dist}(v) \leftarrow {dist}(u) + w$
-%         \State ${pre}(u) \leftarrow v$
-%         \State $Q = Q \cup \{ v \}$
-%         \EndIf
-%         \EndFor
-%
-%         \EndWhile
-%
-%         \State
-%         \State \Return ${dist}$, ${pre}$
-%     \end{algorithmic}
-% \end{algorithm}
-
-% Soll das wirklich rein?
-% \section{Dateiformat}
-%
-% Die in dieser Arbeit verwendeten Graphen sind im \emph{.fmi} Dateiformat gespeichert, welches wie folgt definiert ist:
-%
-% \begin{definition}[FMI Dateiformat]
-%     Eine Datei im .fmi Format besteht aus den folgenden Zeilen (in der angegebenen Reihenfolge):
-%     \begin{enumerate}
-%         \item
-%               Beliebig viele Kommentarzeilen, die mit einem \# beginnen.
-%
-%         \item
-%               Eine leere Zeile.
-%
-%         \item
-%               Eine Zeile, die die Anzahl der Knoten enthält.
-%
-%         \item
-%               Eine Zeile, die die Anzahl der Kanten enthält.
-%
-%         \item
-%               Knoten-Zeilen im Format:
-%               \texttt{KnotenId1 KnotenId2 Breitengrad Längengrad Höhe}
-%
-%         \item
-%               Kanten-Zeilen im Format:
-%               \texttt{FußId1 KopfId2 Gewicht Typ Geschwindigkeit}
-%
-%     \end{enumerate}
-% \end{definition}
-%

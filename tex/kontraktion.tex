@@ -1,6 +1,6 @@
 \chapter{Kontraktion in Sichtbarkeitsgraphen}\label{chapter:kontraktion}
 
-Die zuvor beschriebene Kontraktion von Knoten und Graphen ist bei Graphen mit hohem durchschnittlichen Knotengrad, wie zum Beispiel Sichtbarkeitsgraphen, deutlich rechenintensiver als bei Graphen mit geringeren Knotengrad, wie etwa Straßengraphen.
+Die zuvor beschriebene Kontraktion von Knoten und Graphen ist bei Graphen mit hohem durchschnittlichem Knotengrad, wie zum Beispiel Sichtbarkeitsgraphen, deutlich rechenintensiver als bei Graphen mit geringerem Knotengrad, wie etwa Straßengraphen.
 Für die Knoten-Kontraktion muss für jeden Vorgänger eine Dijkstra-Suche durchgeführt werden, und für jedes Paar aus Vorgänger und Nachfolger ist zu prüfen, ob eine Abkürzung einzufügen ist.
 Ein hoher Knotengrad bedeutet somit viele Dijkstra-Suchen und $\abs{\text{Vorgänger}} \cdot \abs{\text{Nachfolger}}$ viele Vergleiche, ob eine Abkürzung notwendig ist.
 
@@ -9,13 +9,13 @@ Beim Lazy-Popping werden die Knoten oft nicht kontrahiert, sondern mit aktualisi
 Beim Neighbor-Update sind jeweils sehr viele Nachbarn zu aktualisieren.
 
 Um Graphen mit hohen Knotengraden schneller zu kontrahieren, ist es entscheidend, die Kontraktion einzelner Knoten zu beschleunigen und eine effiziente sowie effizient erstellbare Reihenfolge der Kontraktionen zu finden.
-Auch die zur Repräsentation von Graphen verwendeten Datenstrukturen sollten optimiert werden, sodass das Finden von Nachbarn sowie das Einfügen und Löschen von Kanten effizient und parallel möglich ist.
+Auch die zur Repräsentation von Graphen verwendeten Datenstrukturen sollten optimiert werden, damit das Finden von Nachbarn sowie das Einfügen und Löschen von Kanten effizient und parallel möglich ist.
 
 \section{Kontraktion mit Heuristik}
 
 Anstelle einer rechenintensiven Dijkstra-Suche in $G$ pro Vorgänger kann eine Heuristik pro Paar aus Vorgänger und Nachfolger eine obere Schranke für den Abstand geben.
 Eine Kante als Abkürzung wird dann eingefügt, wenn ihre Länge kleiner oder gleich der berechneten oberen Schranke ist.
-Damit dies für die Kontraktion eines einzelnen Knotens effizienter ist, muss die Ermittlung der Heuristikwerte für alle Paare aus Vorgänger und Nachfolger schneller sein als die Dijkstra-Suchen und die anschließenden Abfragen der Distanzen der Dijkstra-Suche.
+Damit dies für die Kontraktion eines einzelnen Knotens effizienter ist, muss die Ermittlung der Heuristikwerte für alle Paare aus Vorgänger und Nachfolger schneller sein als die Dijkstra-Suchen und das anschließende Abfragen der Distanzen der Dijkstra-Suche.
 Damit die Kontraktion des gesamten Graphen effizienter ist, müssen die Folgekosten unnötigerweise eingefügter Kanten geringer sein als der Zeitgewinn durch den Einsatz der Heuristik.
 
 \subsection{Triviale Heuristik}
