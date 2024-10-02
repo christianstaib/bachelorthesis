@@ -1,8 +1,12 @@
 \chapter*{Kurzfassung}
 
-Diese Arbeit untersucht die Anwendung von Contraction Hierarchies und Hierarchical Hub Labeling, zwei effizienten Algorithmen zur schnellen Berechnung von kürzesten Pfaden, auf Sichtbarkeitsgraphen.
-Aufgrund des hohen Knotengrads erweist sich die klassische Graphen-Kontraktion als äußerst rechenaufwendig.
-Um diese zu Beschleunigen werden verschiedene Heuristiken diskutiert, die die Kontraktion beschleunigen sollen, auch wenn es diese letztlich nicht ermöglichten, eine Graphen-Kontraktion zu berechnen.
+Während Contraction Hierarchies (CH) auf Straßengraphen erfolgreich eingesetzt werden und hohe Speedups bei der Berechnung von kürzesten Pfaden ermöglichen, ist ihre Anwendung auf große Sichtbarkeitsgraphen in angemessener Zeit nicht möglich.
+Da bisher keine Contraction Hierarchies für die bearbeiteten Sichtbarkeitsgraphen erstellt werden konnten, war auch die Erzeugung von Hierarchical Hub Labelings (HHL) nicht realisierbar.
 
-Darüber hinaus wird mit PEOPLE (\textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l) eine Methode vorgestellt, die es ermöglicht, Contraction Hierarchies und Hierarchical Hub Labelings ohne eine Graphen-Kontraktion zu erstellen.
-Die durchgeführten Experimente zeigen, dass PEOPLE effektiv auf die in der Arbeit behandelten Sichtbarkeitsgraphen angewendet werden kann und einen füngstelligen Speedup erzielt.
+Diese Arbeit untersucht die Hindernisse bei der Anwendung von Contraction Hierarchies auf Sichtbarkeitsgraphen und prüft, ob sich die Kontraktion durch den Einsatz von Heuristiken anstelle der Witness-Suche beschleunigen lässt.
+Trotz der Anwendung dieser Heuristiken konnte keine Contraction Hierarchie erstellt werden.
+
+Basierend auf bestehenden Charakterisierungen werden mit PEOPLE und CH-PEOPLE (\textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l) zwei Algorithmen vorgestellt, die es ermöglichen, ohne Kontraktion sowohl Hierarchical Hub Labelings als auch die für CH-Anfragen benötigte Datenstruktur zu erstellen.
+Beide Algorithmen sind trivial parallelisierbar und wurden erfolgreich auf die bearbeiteten Graphen angewendet.
+Während CH-Anfragen nur einen geringen Speedup erzielten, zeigte sich bei HHL-Anfragen ein deutlicher Performance-Gewinn.
+Zudem war die durchschnittliche Labelgröße der Sichtbarkeitsgraphen vergleichbar mit ihrem durchschnittlichen Knotengrad.
