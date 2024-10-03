@@ -140,20 +140,26 @@ Der Greedy-Algorithmus \ref{graphs:alg:greedy-hitting-set} bietet jedoch eine Ap
 
 Zusätzlich zum Hitting-Set als Menge kann die Information, welcher Knoten in der wievielten Iteration des Greedy-Algorithmus ausgewählt wurde, von Bedeutung sein, daher wird das Hitting-Set im Folgenden als geordnete Menge betrachtet.
 
-\todo{Beispiel Hitting Set}
+\section{Euclidean Shortest Path Problem}
 
-\section{Sichtbarkeitsgraphen}
+Das Euclidean Shortest Path Problem (ESPP) besteht darin, den kürzesten Pfad zwischen zwei Punkten im euklidischen Raum $\mathbb{R}^n$ zu bestimmen, wobei Hindernisse umgangen werden müssen.
+Diese Problemstellung ist in vielen praktischen Anwendungen von Bedeutung, wie etwa in der Robotik und Computergrafik.
+Für höhere Dimensionen $\mathbb{R}^n$, mit $n \geq 3$, ist das Problem NP-schwer, während für den Fall $n = 2$ Algorithmen existieren, die es in polynomieller Zeit lösen können.
+Im Folgenden wird ausschließlich der Fall $n = 2$ betrachtet.
+Eine formale Definition des Problems findet sich in Definition \ref{def:espp}.
 
-Sichtbarkeitsgraphen sind Graphen, die Punkte in der euklidischen Ebene miteinander verbinden, die sich direkt \emph{sehen} können, das heißt, zwischen denen keine Hindernisse liegen.
-Sie können zum Beispiel dazu verwendet werden, um den optimalen Pfad eines Roboters durch eine Umgebung mit Hindernissen zu bestimmen oder um die Platzierung von Mobilfunkmasten zu optimieren, sodass sie eine möglichst große Fläche abdecken.
-Sichtbarkeitsgraphen können in höheren Dimensionen $\mathbb{R}^n$ mit $n \geq 2$ konstruiert werden, diese Arbeit konzentriert sich jedoch auf die euklidische Ebene $\mathbb{R}^2$.
-Die Anzahl der Kanten ist dabei, abhängig von der Form und Platzierung der Polygone, im schlimmsten Fall quadratisch zu der Anzahl der Eckpunkte.
-Sie sind eine Möglichkeit das Euclidean Shortest Path Problem zu lösen.
-
-\begin{definition}[Euclidean Shortest Path Problem]
+\begin{definition}[Euclidean Shortest Path Problem]\label{def:espp}
   Sei $P$ eine Menge von Polygonen in $\mathbb{R}^2$ und $s, t$ Eckpunkte dieser Polygone.
   Was ist der kürzeste Pfad von $s$ nach $t$, so dass dieser kein Polygon schneidet?
 \end{definition}
+
+\subsection{Sichtbarkeitsgraphen}
+
+Sichtbarkeitsgraphen sind eine Möglichkeit das Euclidean Shortest Path Problem zu lösen.
+Sie sind Graphen, die Punkte in der euklidischen Ebene miteinander verbinden, die sich direkt \emph{sehen} können, das heißt, zwischen denen keine Hindernisse liegen.
+Sie können zum Beispiel dazu verwendet werden, um den optimalen Pfad eines Roboters durch eine Umgebung mit Hindernissen zu bestimmen oder um die Platzierung von Mobilfunkmasten zu optimieren, sodass sie eine möglichst große Fläche abdecken.
+Sichtbarkeitsgraphen können in höheren Dimensionen $\mathbb{R}^n$ mit $n \geq 2$ konstruiert werden, diese Arbeit konzentriert sich jedoch auf die euklidische Ebene $\mathbb{R}^2$.
+Die Anzahl der Kanten ist dabei, abhängig von der Form und Platzierung der Polygone, im schlimmsten Fall quadratisch zu der Anzahl der Eckpunkte.
 
 \autoref{fig:graphs:eulcidian_shotest_path_problem} zeigt eine solche Situation.
 Die gestrichelten Linien sind dabei Kanten des Sichtbarkeitsgraphen.
@@ -227,13 +233,13 @@ Die gestrichelten Linien sind dabei Kanten des Sichtbarkeitsgraphen.
   \label{fig:graphs:eulcidian_shotest_path_problem}
 \end{figure}
 
-\subsection{Eigenschaften}
+\subsubsection{Eigenschaften}
 
 Sichtbarkeitsgraphen sind im Allgemeinen \emph{nicht planar}.
 Sie sind \emph{ungerichtet}, da die Sichtbarkeit zwischen zwei Punkten in beide Richtungen gilt.
 Da die Gewichte der Kanten dem euklidischen Abstand zwischen den verbundenen Punkten entsprechen, bildet dieser eine untere Schranke des Abstandes für alle Knotenpaare, da ein kürzester Pfad durch das Umgehen von Hindernissen nur länger werden kann.
 
-\subsection{Abgrenzung zu Straßengraphen}\label{graphs:strassengraphen}
+\subsubsection{Abgrenzung zu Straßengraphen}\label{graphs:strassengraphen}
 
 Straßengraphen stellen eine spezielle Klasse von Graphen dar.
 Eines ihrer auffälligsten Merkmale ist, dass sie nahezu planar sind, wobei Ausnahmen in Form von Brücken und Tunneln existieren.
@@ -248,11 +254,11 @@ Diese Beobachtung führt zur Definition der \emph{Highway Dimension}, einem Konz
 
 Aufgrund der unterschiedlichen Strukturen von Sichtbarkeitsgraphen und Straßengraphen können Algorithmen, die für Straßengraphen gute Laufzeiten aufweisen, zwar auf Sichtbarkeitsgraphen angewendet werden, allerdings ist ihre Rechenzeit häufig zu hoch, um eine effiziente Verarbeitung zu ermöglichen.
 
-\subsection{Triangulierung}
+\subsubsection{Triangulierung}
 
 Um die Distanzen zwischen Knotenpaaren in Sichtbarkeitsgraphen mit einer oberen Schranke abzuschätzen, kann eine \emph{Triangulierung} des Graphs durchgeführt werden, wie beispielsweise durch eine Delaunay-Triangulierung.
 Dieser Ansatz kann jedoch lange, schmale Dreiecke erzeugen, die anschließend beseitigt werden können, um eine bessere obere Schranke zu erhalten.
-Das Verfahren zur Erstellung der in dieser Arbeit verwendeten Triangulierung wurde ausführlich von Funke et al. \cite{funkescalable} beschrieben.
+Das Verfahren zur Erstellung der in dieser Arbeit verwendeten Triangulierung wird ausführlich von Funke et al. \cite{funkescalable} beschrieben.
 
 Die Knoten eines triangulierten Graphen $G_g$ bilden hierbei eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
 Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.

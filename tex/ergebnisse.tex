@@ -1,7 +1,7 @@
 \chapter{Ergebnisse}
 
 Sofern nicht anders erwähnt, beziehen sich die Laufzeiten auf Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von 2.1 Ghz und 180GB RAM.
-Die Ergebnisse wurden auf verschiedenen, aber identisch ausgestatteten Systemen erzeugt.
+Die Ergebnisse wurden auf verschiedenen, aber identisch ausgestatteten Systemen des BwUniCluster2.0 erzeugt.
 
 \section{Untersuchung der Graphen}
 
@@ -38,12 +38,13 @@ Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kant
 
 \subsection{Dijkstra}
 
-Für die Berechnung des Speedups der angewendeten Methoden wurden für jeden Graphen eintausend sequentielle $s$-$t$-Dijkstra-Suchen ausgeführt und die durchschnittliche Laufzeit ermittelt.
+Für die Berechnung des Speedups der angewendeten Methoden wurden für jeden Graphen \num{1000} sequentielle $s$-$t$-Dijkstra-Suchen ausgeführt und die durchschnittliche Laufzeit ermittelt.
 Die ermittelten Zeiten für das Finden des $s$-$t$-Abstands sind in Tabelle \ref{fig:ergebnisse:dijkstra} dargestellt.
-Aus den Ergebnissen geht hervor, dass die Sichtbarkeitsgraphen im Vergleich zu ihren Triangulierungen deutlich höhere Laufzeiten aufweisen.
+Aus den Ergebnissen geht hervor, dass die Dijkstra-Suchen auf den Sichtbarkeitsgraphen im Vergleich zu auf ihren Triangulierungen deutlich höhere Laufzeiten aufweisen.
 
-Zusätzlich zur durchschnittlichen Laufzeit wurden die Durchschnittswerte der Hop-Längen, des Dijkstra-Ranks und der Queue-Pops über zehntausend parallele $s$-$t$-Dijkstra-Suchen ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
-Dabei zeigte sich, dass die durchschnittliche Hop-Länge in den Sichtbarkeitsgraphen signifikant kürzer ist als in den Triangulierungen.
+Zusätzlich zur durchschnittlichen Dijkstra-Laufzeit wurden die Durchschnittswerte der Hop-Längen, des Dijkstra-Ranks und der Queue-Pops über \num{10000} parallele $s$-$t$-Dijkstra-Suchen ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
+Der Dijkstra-Rank ist die Anzahl der expaniderten Knoten zum Zeitpunkt der Expansion des Zielknoten, die Queue-Pops die Anzahl der aus der Prioritätswarteschlange der Dijkstra-Suche entnommen Knoten.
+Es zeigte sich, dass die durchschnittliche Hop-Länge in den Sichtbarkeitsgraphen signifikant kürzer ist als in den Triangulierungen.
 Obwohl die Sichtbarkeitsgraphen weniger Knoten aufweisen, ist die durchschnittliche Anzahl der Queue-Pops dennoch höher.
 
 \begin{table}[h!]
@@ -72,8 +73,8 @@ Obwohl die Sichtbarkeitsgraphen weniger Knoten aufweisen, ist die durchschnittli
 
 \subsection{Knotengrade}
 
-Zudem wurde die Verteilung der Knotengrade untersucht, die resultierenden Histogramme sind in \autoref{ergebnisse:fig:degree_hist} dargestellt.
-In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten einen Grad von weniger als zweitausend.
+Es wurde die Verteilung der Knotengrade untersucht, die resultierenden Histogramme sind in \autoref{ergebnisse:fig:degree_hist} dargestellt.
+In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten einen Grad von weniger als \num{2000}.
 
 \begin{figure}[p]
   \begin{subfigure}[b]{0.5\textwidth}
@@ -102,7 +103,7 @@ In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten eine
         \end{axis}
       \end{tikzpicture}
     }
-    \caption{aegaeis-vis}
+    \caption{aegaeis-visibility}
   \end{subfigure}%
   \begin{subfigure}[b]{0.5\textwidth}
     \resizebox{\textwidth}{!}{%
@@ -135,7 +136,7 @@ In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten eine
         \end{axis}
       \end{tikzpicture}
     }
-    \caption{medi-vis}
+    \caption{medi-visibility}
   \end{subfigure}
   \par\bigskip
   \begin{subfigure}[b]{0.5\textwidth}
@@ -169,14 +170,14 @@ In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten eine
 
       \end{tikzpicture}
     }
-    \caption{pata-vis}
+    \caption{pata-visibility}
   \end{subfigure}
   \caption{Verteilung der Kantengrade}
   \label{ergebnisse:fig:degree_hist}
 \end{figure}
 
-Als Indikator dafür, wie stark sich die Graphen kontrahieren lassen, wurde die Summe der quadratischen Knotengrade berechnet; diese ist in \autoref{table:sum_quad_degree} aufgelistet.
-Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen größer als bei ihren Triangulierungen, was darauf hindeutet, dass die Kontraktion dieser Graphen ebenfalls deutlich schwieriger sein dürfte.
+Als Indikator dafür, wie stark sich die Graphen kontrahieren lassen, wurde die Summe der quadratischen Knotengrade berechnet, diese sind in \autoref{table:sum_quad_degree} aufgelistet.
+Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen größer als bei ihren Triangulierungen, was darauf hindeutet, dass die Kontraktion dieser Graphen deutlich rechenintensiver sein dürfte.
 
 \begin{table}[ht]
   \centering
@@ -202,10 +203,10 @@ Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen 
 \section{Graphen-Kontraktion}\label{section:ch_graph_kontraktion}
 
 Es wurde versucht, die bearbeiteten Graphen mit einem eigens für die Arbeit entwickelten Programm zu kontrahieren.
-Die Reihenfolge der Kontraktionen wurde durch die Kanten-Differenz mit Lazy-Popping bestimmt.
+Die Reihenfolge der Knoten-Kontraktionen wurde durch die Kanten-Differenz mit Lazy-Popping bestimmt.
 
-Während es bei den triangulierten Graphen möglich war, einen Contracted-Graph zu erstellen, musste der Prozess bei den Sichtbarkeitsgraphen nach drei Tagen abgebrochen werden, da in diesem Zeitraum nicht einmal alle initialen Kanten-Differenzen berechnet werden konnten.
-Die Ergebnisse für die triangulierten Graphen sind in Tabelle \autoref{fig:ergebnisse:ch_graph_kontraktion_triangulierungen} dargestellt, die Zeiten wurden über einhundertausend sequentielle $s$-$t$-Anfragen ermittelt.
+Während es bei den triangulierten Graphen möglich war, einen Contracted-Graph zu erstellen, musste die Erstellung bei den Sichtbarkeitsgraphen nach drei Tagen abgebrochen werden, da in diesem Zeitraum nicht einmal alle initialen Kanten-Differenzen berechnet werden konnten.
+Die Ergebnisse für die triangulierten Graphen sind in \autoref{fig:ergebnisse:ch_graph_kontraktion_triangulierungen} dargestellt, die Zeiten wurden über \num{100000} sequentielle $s$-$t$-Anfragen ermittelt.
 
 \begin{table}[h!]
   \centering
@@ -224,12 +225,12 @@ Die Ergebnisse für die triangulierten Graphen sind in Tabelle \autoref{fig:erge
     medi-graph    & 3m 17s       & \fpeval{4845458/4223566}                             & 400.372                    & \fpeval{(87.08376*1000)/400.372}   \\
     pata-graph    & 9m 54s       & \fpeval{14187336/11632900}                           & 439.855                    & \fpeval{(265.825771*1000)/439.855} \\  \bottomrule
   \end{tabular}
-  \caption{Kennwerte der Graphen-Kontraktion der Triangulierten Graphen}
+  \caption{Kennwerte der Graphen-Kontraktion der triangulierten Graphen}
   \label{fig:ergebnisse:ch_graph_kontraktion_triangulierungen}
 \end{table}
 
 Basierend auf den Contracted-Graphen der Triangulierungen wurde für diese jeweils ein Hub-Graph durch Merging erstellt.
-Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:hl_graph_kontraktion_triangulierungen} aufgelistet, die Zeiten wurden über zehn Millionen sequentielle $s$-$t$-Anfragen gebildet.
+Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:hl_graph_kontraktion_triangulierungen} aufgelistet, die Zeiten wurden über \num{10000000} sequentielle $s$-$t$-Anfragen gebildet.
 
 \begin{table}[h!]
   \centering
@@ -250,7 +251,7 @@ Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:hl_graph_kontraktion_tri
     pata-graph    & 29m 45s          & 133.48887779929734                   & 1.451                      & \fpeval{(265.825771*1000)/1.451} & 209.984                    \\
     \bottomrule
   \end{tabular}
-  \caption{Kennwerte des Hierarchical Hub Labeling der Triangulierten Graphen}
+  \caption{Kennwerte des Hierarchical Hub Labeling der triangulierten Graphen}
   \label{fig:ergebnisse:hl_graph_kontraktion_triangulierungen}
 \end{table}
 
@@ -258,10 +259,10 @@ Als zusätzlicher Referenzpunkt zur Beurteilung der Qualität der erzeugten Cont
 Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:fmi_ch_graph_kontraktion_triangulierungen} aufgelistet.
 
 Da dieses Programm ein anderes Speicherformat verwendet, konnten die Anfragezeiten nicht ermittelt werden.
-Im Vergleich zum in dieser Arbeit verwendeten Programm wurden jedoch mehr Abkürzungen eingefügt.
+Es kontrahierte im Vergleich zum in dieser Arbeit verwendeten Programm schneller, fügte jedoch mehr Abkürzungen ein.
 Das Programm kontrahiert mehrere Knoten gleichzeitig, indem es \emph{unabhängige Teilmengen} von Knoten identifiziert, was eine effizientere parallele Verarbeitung ermöglicht \cite{vetter2009parallel}.
 Angesichts des hohen durchschnittlichen Knotengrades der Sichtbarkeitsgraphen ist anzunehmen, dass nur wenige und kleine unabhängige Teilmengen existieren.
-Selbst nach drei Tagen Laufzeit auf den Sichtbarkeitsgraphen konnte auch dieses Programm keine Ergebnisse liefern.
+Auch dieses Programm konnte nach drei Tagen Laufzeit keine Ergebnisse liefern.
 
 \begin{table}[h!]
   \centering
@@ -289,11 +290,11 @@ Selbst nach drei Tagen Laufzeit auf den Sichtbarkeitsgraphen konnte auch dieses 
 Für die Untersuchung, ob sich die Kontraktion mit oberer Schranke auf die Graphen anwenden lässt, wurde von vornherein nur die Top-Down-Kontraktion untersucht, da die Bottom-Up-Kontraktion als zu rechenintensiv erschien.
 Falls die Top-Down-Kontraktion anwendbar ist, könnte im nächsten Schritt die Bottom-Up-Kontraktion untersucht werden.
 
-Für jeden Graphen wurde ein Hitting-Set aus einhunderttausend zufällig generierten Pfaden erstellt.
+Für jeden Graphen wurde ein Hitting-Set aus \num{100000} zufällig generierten Pfaden erstellt.
 Die Knoten, die Teil des Hitting-Sets waren, wurden nach der Iteration, in der sie ausgewählt wurden, sortiert.
-Die übrigen Knoten wurden angehängt und danach entsprechend der Anzahl der kürzesten Pfade, auf denen sie lagen, sortiert.
+Die übrigen Knoten wurden angehängt und entsprechend der Anzahl der kürzesten Pfade, auf denen sie lagen, sortiert.
 Diese Anordnung wurde als level-to-vertex-Funktion verwendet:
-Zuerst werden die Knoten, die nicht Teil des Hitting-Sets sind, kontrahiert und anschließend die des Hitting-Sets.
+Zuerst wurden die Knoten, die nicht Teil des Hitting-Sets sind, kontrahiert und anschließend die des Hitting-Sets.
 
 \subsubsection{Triviale Heuristik}
 
@@ -315,7 +316,7 @@ Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügun
         \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/aegaeis.csv};
       \end{axis}
     \end{tikzpicture}
-    \caption{aegaeis-vis}%
+    \caption{aegaeis-visibility}%
   \end{subfigure}%
   \begin{subfigure}[b]{0.5\textwidth}%
     \begin{tikzpicture}
@@ -329,7 +330,7 @@ Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügun
         \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/medi.csv};
       \end{axis}
     \end{tikzpicture}
-    \caption{medi-vis}%
+    \caption{medi-visibility}%
   \end{subfigure}%
   \par%
   \begin{subfigure}[b]{0.5\textwidth}%
@@ -344,7 +345,7 @@ Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügun
         \addplot+[mark=none] table [x expr=\coordindex, y=Kanten, col sep=comma] {data/trivialheuristic/pata.csv};
       \end{axis}
     \end{tikzpicture}
-    \caption{pata}
+    \caption{pata-visibility}
   \end{subfigure}
   \caption{Graphen-Kontraktion mit oberer Schrank durch Triviale Heuristik}
   \label{img:ergebnisse:all_in}
@@ -354,10 +355,10 @@ Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügun
 
 
 Die Abstände in triangulierten Graphen stellen, wie in \autoref{chapter:kontraktion} beschrieben, eine obere Schranke für die Abstände in Sichtbarkeitsgraphen dar.
-Um den Fehler dieser Schranke zu quantifizieren, wurden die Abstände von einer Million $s$-$t$-Paaren in den Sichtbarkeitsgraphen analysiert.
+Um den Fehler dieser Schranke zu quantifizieren, wurden die Abstände von einer \num{1000000} $s$-$t$-Paaren in den Sichtbarkeitsgraphen analysiert.
 Der dabei ermittelte durchschnittliche Fehler pro Hop-Länge ist in \autoref{img:ergebnisse:upper_bound} als Datenreihe $\triangle$ dargestellt.
 
-Diese Abbildung zeigt auch den durchschnittlichen Fehler, der durch den Einsatz von $n$ Hubs entsteht, welche mithilfe eines Hitting-Sets bestimmt wurden.
+Diese Abbildung zeigt auch den durchschnittlichen Fehler, der durch den Einsatz von $n \in \mathbb{N}$ Hubs entsteht, welche mithilfe eines Hitting-Sets über \num{100000} Pfade bestimmt wurden.
 Hierfür wurde die Erstellung des Hitting-Sets nach $n$ Iterationen vorzeitig abgebrochen.
 Zusätzlich wurde der Fehler visualisiert, der sich aus der Wahl der kleinsten oberen Schranke zwischen 80 Hubs und den triangulierten Graphen ergibt.
 Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr erfolgreich; insbesondere bei größeren Hop-Längen ist der Fehler oberen Schranke sehr gering.
@@ -393,7 +394,7 @@ Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr er
         \addlegendentry{$\triangle$, 80 Hubs};
       \end{axis}
     \end{tikzpicture}
-    \caption{aegaeis-vis}
+    \caption{aegaeis-visibility}
   \end{subfigure}%
   \begin{subfigure}[b]{0.5\textwidth}
     \begin{tikzpicture}
@@ -425,7 +426,7 @@ Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr er
         \addlegendentry{$\triangle$, 80 Hubs};
       \end{axis}
     \end{tikzpicture}
-    \caption{medi-vis}
+    \caption{medi-visibility}
   \end{subfigure}
   \par\bigskip
   \begin{subfigure}[b]{0.5\textwidth}
@@ -458,7 +459,7 @@ Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr er
         \addlegendentry{$\triangle$, 80 Hubs};
       \end{axis}
     \end{tikzpicture}
-    \caption{pata-vis}
+    \caption{pata-visibility}
   \end{subfigure}
   \caption{Fehler der oberen Schranken}
   \label{img:ergebnisse:upper_bound}
@@ -468,8 +469,8 @@ Basierend auf dieser Untersuchung wurde versucht, die Sichtbarkeitsgraphen zu ko
 Obwohl nach der vorhergehenden Analyse der Fehler der oberen Schranke als sehr klein betrachtet werden kann, war die Kontraktion nicht erfolgreich.
 
 \autoref{fig:ergebnisse:hl_and_hubs} zeigt den Verlauf der Anzahl der Kanten während der Kontraktion.
-Nach drei Tagen Rechenzeit waren die Graphen noch immer nicht kontrahiert, weshalb das Experiment abgebrochen wurde.
-Die Anzahl der Kanten stieg wieder an, wenn auch langsamer als bei der trivialen Heuristik, wobei aegaeis-vis und medi-vis den Höhepunkt der Anzahl der Kanten erreicht hatten.
+Nach drei Tagen Rechenzeit waren die Graphen immer noch nicht kontrahiert, weshalb das Experiment abgebrochen wurde.
+Die Anzahl der Kanten stieg während der Kontraktion wieder an, wenn auch langsamer als bei der trivialen Heuristik, wobei aegaeis-visibility und medi-visibility zum Zeitpunkt des Abbruchs den Höhepunkt der Anzahl der Kanten bereits erreicht hatten.
 
 Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der oberen Schranke noch weiter reduziert werden, wobei dies nicht Teil dieser Arbeit ist.
 
@@ -487,7 +488,7 @@ Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der
         \addplot+[mark=none] table [x=x, y=matches, col sep=comma] {data/hlandhubs/aegaeis.csv};
       \end{axis}
     \end{tikzpicture}
-    \caption{aegaeis-vis}
+    \caption{aegaeis-visibility}
   \end{subfigure}%
   \begin{subfigure}[b]{0.5\textwidth}
     \centering
@@ -502,7 +503,7 @@ Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der
         \addplot+[mark=none] table [x=x, y=matches, col sep=comma] {data/hlandhubs/medi.csv};
       \end{axis}
     \end{tikzpicture}
-    \caption{medi-vis}
+    \caption{medi-visibility}
   \end{subfigure}
   \par\bigskip
   \begin{subfigure}[b]{0.5\textwidth}
@@ -518,7 +519,7 @@ Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der
         \addplot+[mark=none] table [x=x, y=matches, col sep=comma] {data/hlandhubs/pata.csv};
       \end{axis}
     \end{tikzpicture}
-    \caption{pata}
+    \caption{pata-visibility}
   \end{subfigure}
   \caption{Graphen-Kontraktion mit oberer Schranke durch Triangulations und Hubs}
   \label{fig:ergebnisse:hl_and_hubs}
@@ -533,7 +534,7 @@ Die vertex-to-level-Funktion wurde hierbei aus \autoref{subsection:kontraktion_o
 \subsection{Contracted-Graph}
 
 Durch die Berechnung aller Kanten, die von jedem Knoten im Downward- und Upward-Graphen ausgehen, konnte mit CH-PEOPLE sowohl für die Sichtbarkeitsgraphen als auch für deren Triangulierungen jeweils ein Contracted-Graph erstellt werden
-Die Kennzahlen zur Erzeugungs- und Abfragezeit sind in \autoref{table:ergebnisse:people_ch_speedup} aufgeführt.
+Die Kennzahlen zur Erzeugungs- und Anfragezeit sind in \autoref{table:ergebnisse:people_ch_speedup} aufgeführt.
 
 \begin{table}[h!]
   \centering
@@ -554,14 +555,13 @@ Die Kennzahlen zur Erzeugungs- und Abfragezeit sind in \autoref{table:ergebnisse
     pata-graph         & 5h 42m       & \fpeval{70624466/11632900}                           & 10.16729                   & \fpeval{265.825771/10.16729}    \\
     pata-visibility    & 1d 20h 45m   & \fpeval{613324174/315653758}                         & 288.514849                 & \fpeval{1017.695977/288.514849} \\  \bottomrule
   \end{tabular}
-  \caption{Kennwerte von mit PEOPLE erzeugten Contracted-Graphen}
+  \caption{Kennwerte von mit CH-PEOPLE erzeugten Contracted-Graphen}
   \label{table:ergebnisse:people_ch_speedup}
 \end{table}
 
 Der Speedup der auf diese Weise für die Triangulierungen erzeugten Contracted-Graphen ist um Größenordnungen geringer als bei den durch Kontraktion erstellten Contracted-Graphen.
 Zudem wurden jeweils mehr als dreimal so viele Abkürzungen hinzugefügt.
-
-Bei den Sichtbarkeitsgraphen der Instanzen aegaeis und medi konnte lediglich ein Speedup von \num{1.5} erzielt werden, während für pata ein Speedup von \num{3.5} erreicht wurde. Im Verhältnis zur in die Erstellung der Contracted-Graphen investierten Rechenzeit erscheint dieser Geschwindigkeitszuwachs jedoch relativ gering.
+Im Verhältnis zur in die Erstellung der Contracted-Graphen investierten Rechenzeit erscheint der erzielte Speedup sehr gering.
 
 Die zugrunde liegende vertex-to-level-Funktion weist jedoch eine begrenzte Qualität auf.
 Es ist anzunehmen, dass durch den Einsatz einer besseren Funktion, welche durch ein Hitting-Set über mehr Pfade erstellt wurde, ein höherer Speedup hätte erzielt werden können.
@@ -640,7 +640,7 @@ Die entsprechenden Werte sind in \autoref{table:ergebnisse:hl_bruteforce} aufgef
 
 
 Da Hub-Graphen auf zwei Wegen erzeugt werden können, muss geklärt werden, welcher effizienter ist.
-Dafür wurde die Zeit für die Erstellung des Contracted-Graphen mit der Zeit für das Mergen addiert und anschließend mit der Zeit für die direkte Erstellung eines Hub-Graphen mittels PEOPLE verglichen.
+Dafür wurde die Zeit für die Erstellung des Contracted-Graphen mit CH-PEOPLE zu der Zeit für das Mergen addiert und anschließend mit der Zeit für die direkte Erstellung eines Hub-Graphen mittels PEOPLE verglichen.
 Die entsprechenden Werte sind in \autoref{table:ergebnisse:vergleich_was_schneller} dargestellt.
 
 Es zeigt sich, dass es bei den Sichtbarkeitsgraphen schneller ist, direkt einen Hub-Graphen zu berechnen, während bei den triangulierten Graphen der Umweg über die Contracted-Graphen effizienter ist.
@@ -653,16 +653,16 @@ Es zeigt sich, dass es bei den Sichtbarkeitsgraphen schneller ist, direkt einen 
       r
     }
     \toprule
-    {Graph}            & {Contracted-Graph \& Merging} & {Hub-Graph}          \\
+    {Graph}            & {CH-PEOPLE \& Merging} & {PEOPLE}             \\
     \midrule
-    aegaeis-graph      & \B 32m                        & 1h 26m               \\
-    aegaeis-visibility & 13h 28m                       & \B 5h 57m            \\
-    medi-graph         & \B 57 m                       & 3h 11m               \\
-    medi-visibility    & 1d 19h 10m                    & \B 21h 57m           \\
-    pata-graph         & \B 7h \phantom{0} 4m          & 1d \phantom{0}4h 26m \\
-    pata-visibility    & 2d 10h 52m                    & \B 1d 20h 17m        \\  \bottomrule
+    aegaeis-graph      & \B 32m                 & 1h 26m               \\
+    aegaeis-visibility & 13h 28m                & \B 5h 57m            \\
+    medi-graph         & \B 57m                 & 3h 11m               \\
+    medi-visibility    & 1d 19h 10m             & \B 21h 57m           \\
+    pata-graph         & \B 7h \phantom{0}4m    & 1d \phantom{0}4h 26m \\
+    pata-visibility    & 2d 10h 52m             & \B 1d 20h 17m        \\  \bottomrule
   \end{tabular}
-  \caption{HL  merged}
+  \caption{Vergeleich der benötigten Zeit zum Erstellen von Hub-Graphen}
   \label{table:ergebnisse:vergleich_was_schneller}
 \end{table}
 
@@ -676,7 +676,7 @@ Zur Quantifizierung des zusätzlichen Rechenaufwands im Vergleich zu Dijkstra-Su
 Die dafür benötigte Rechenzeit wurde anschließend auf die Gesamtzahl der Knoten im Graphen skaliert.
 \autoref{table:ergebnisse:dijkstra_vs_ch_vs_hl} zeigt die erforderliche Zeit zur Erstellung eines Contracted- und eines Hub-Graphen im Verhältnis zu dieser skalierten Zeit.
 
-Auffällig ist, dass die Zeit für die Konstruktion eines Contracted-Graphen nur geringfügig kürzer ist als die für einen Hub-Graphen.
+Auffällig ist, dass die Zeit für die Konstruktion eines Contracted-Graphen für die Triangulierungen nur geringfügig kürzer ist als die für einen Hub-Graphen.
 Dies deutet darauf hin, dass in den meisten Fällen die Suche nur spät gestoppt wurde.
 
 \begin{table}[h!]
@@ -696,7 +696,7 @@ Dies deutet darauf hin, dass in den meisten Fällen die Suche nur spät gestoppt
     pata-graph         & 14h 55m    & \fpeval{(5*60+42)/(14*60+55)}                  & \fpeval{(1*24*60+4*60+26)/(14*60+55)}          \\
     pata-visibility    & 1d 12h 32m & \fpeval{(1*24*60+20*60+45)/(1*24*60+12*60+32)} & \fpeval{(1*24*60+20*60+17)/(1*24*60+12*60+32)} \\  \bottomrule
   \end{tabular}
-  \caption{Vergleich Performance Overhead}
+  \caption{Vergleich Performance Overhead von CH-PEOPLE und PEOPLE}
   \label{table:ergebnisse:dijkstra_vs_ch_vs_hl}
 \end{table}
 
@@ -704,7 +704,7 @@ Für die Triangulierungen der Sichtbarkeitsgraphen ist es deutlich effizienter, 
 Das deutet darauf hin, dass die Dijkstra-Suchen häufig vorzeitig abgebrochen werden konnten.
 
 Um dieses Verhalten besser zu verstehen, wurde die CH-PEOPLE Suche in aegaeis-graph näher untersucht.
-\autoref{fig:ergebnisse:ch_people_suchbaum} zeigt einen entsprechenden Suchbaum.
+\autoref{fig:ergebnisse:ch_people_suchbaum} zeigt einen Suchbaum der CH-PEOPLE Suche.
 In der Abbildung repräsentieren schwarze Punkte die Köpfe von Upward-Kanten, deren Fuß sich im weißen Punkt befindet.
 Die durchgezogenen Linien stellen Kanten zu \emph{lebendigen} Knoten dar, während die gestrichelten Linien Kanten zu Knoten zeigen, die nicht mehr lebendig sind.
 Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{524881} möglichen Knoten besucht, was die Effizienz der CH-PEOPLE verdeutlicht.
@@ -771,12 +771,11 @@ Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{52
 Nach der Untersuchung des einzelnen Suchvorganges wurden für aegaeis-graph für alle Knoten die bei der CH-PEOPLE-Suche gesehen Knoten erfasst.
 Die Ergebnisse sind hierbei in \autoref{fig:ergebnisse:efficiency_ch_people} gelistet.
 Bei \num{65}\% aller Suchen wurden weniger als \num{1}\% der \num{524881} Knoten gesehen.
-Da die zugrunde vertex-to-level-Funktion auf einem einem Hitting-Set über nur einhundertausend Pfaden basiert, ist anzunehmen, dass durch eine bessere vertex-to-level-Funktion noch mehr Suchen lokaler werden.
+Da die zugrunde vertex-to-level-Funktion auf einem einem Hitting-Set über nur \num{100000} Pfaden basiert, ist anzunehmen, dass durch eine bessere vertex-to-level-Funktion noch mehr Suchen \emph{lokaler} werden.
 
 \begin{figure}[h!]%
   \centering
   \begin{tikzpicture}
-
     \begin{axis}[
         tick align=outside,
         tick pos=left,
@@ -895,14 +894,14 @@ Da die zugrunde vertex-to-level-Funktion auf einem einem Hitting-Set über nur e
       \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:99,0) rectangle (axis cs:100,0.0650433145799436);
     \end{axis}
   \end{tikzpicture}
-  \caption{Anteil der pro Suche bei der Erstellung des Contracted-Graph von aegaeis-graph gesehenen Knoten}
+  \caption{Anteil der pro CH-PEOPLE Suche auf aegaeis-graph gesehenen Knoten}
   \label{fig:ergebnisse:efficiency_ch_people}
 \end{figure}
 
 \subsection{Vergleich verschiedener vertex-to-level-Funktionen}
 
 
-Wie im  \autoref{chapter:people} erwähnt, lässt sich die durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n$ zufällig ausgewählte Knoten die Labels berechnet und von diesen die durchschnittliche Labelgröße bestimmt wird.
+Wie im  \autoref{chapter:people} erwähnt, lässt sich die durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n \in \mathbb{N}$ zufällig ausgewählte Knoten die Labels berechnet und von diesen die durchschnittliche Labelgröße bestimmt wird.
 Diese Methode wurde verwendet, um verschiedene Funktionen zu vergleichen, die Ergebnisse sind in \autoref{table:ergebnisse:vtl_vergleich} gelistet.
 
 Es wurden sechs vertex-to-level-Funktionen verglichen. Drei davon basierten auf einem Hitting-Set über \num{1000000}, wobei Knoten, die nicht im Hitting-Set enthalten waren, nach einer weiteren Metrik sortiert wurden. Diese war entweder eine zufällige Sortierung, eine Sortierung nach Grad (von klein nach groß) oder eine Sortierung danach, auf wie vielen kürzesten Pfaden die Knoten liegen.
@@ -935,11 +934,7 @@ Letztere, in der Tabelle als $\triangle$ notiert, führte zu überraschend klein
 
 \subsection{Große Hitting-Sets}
 
-Mit den erzeugten Hub-Graphen wurde ein Hitting-Set über 250 Millionen Pfade gebildet, die Knoten die nicht enthalten waren, wurden nach der Anzahl ihrerer Hits sortiert, da dies nach \autoref{table:ergebnisse:vtl_vergleich} erfolgsversprechend scheint.
-Mit dieser vertex-to-level-Funktion wurde über \num{10000} Label die Labelgröße vorhergesagt.
-Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durschnitltiche Label Größe kleiner als der ursprüngliche durschnitliche Knotengrad.
-
-Mit den erzeugten Hub-Graphen wurde ein Hitting-Set über 250 Millionen Pfade gebildet.
+Mit den erzeugten Hub-Graphen wurden jeweils Hitting-Sets über \num{250000000} Pfade gebildet.
 Die Knoten, die nicht enthalten waren, wurden danach sortiert, wie oft sie auf kürzsten Pfaden lagen, da dies nach \autoref{table:ergebnisse:vtl_vergleich} am Erfolgversprechenden erscheint.
 Mit dieser vertex-to-level-Funktion wurde über \num{10000} Labels die durchschnittliche Labelgröße vorhergesagt, die Ergebnisse sind in \autoref{fig:ergebnisse:250_paths} aufgelistet.
 Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durchschnittliche Labelgröße kleiner als der ursprüngliche durchschnittliche Knotengrad.
@@ -960,10 +955,134 @@ Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durchschnittliche Lab
     pata-graph         & 2d 10h 37m   & 99.3         \\
     pata-visibility    & 9h 29m       & 424.1        \\  \bottomrule
   \end{tabular}
-  \caption{Vorhergesagt durschnitliche Labelgröße für eine vertex-to-level-Funktion welche durch ein Hitting-Set über 250M Pfade induziert wurde}
+  \caption{Vorhergesagt durchschnittliche Labelgröße für eine vertex-to-level-Funktion welche durch ein Hitting-Set über \num{250000000} Pfade induziert wurde}
   \label{fig:ergebnisse:250_paths}
 \end{table}
 
-\todo{Hitting-Set mit auffüllen}
+Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der \autoref{fig:ergebnisse:efficiency_ch_people} zugrunde liegende Experiment wiederholt, wobei diesmal \num{86.7}\% aller Suchen weniger als 1\% aller Knoten sahen.
+\autoref{fig:ergebnisse:new_efficiency_ch_people} zeigt die Abbildung mit den neuen Daten.
 
-Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der \autoref{fig:ergebnisse:efficiency_ch_people} zugrunde liegende Experiment wiederholt, wobei diesmal \num{86.6}\% aller Suchen weniger als 1\% aller Knoten sahen.
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        tick align=outside,
+        tick pos=left,
+        x grid style={darkgray176},
+        xlabel={Gesehene Knoten (\%)},
+        xmin=-5, xmax=105,
+        xtick style={color=black},
+        xtick={-20,0,20,40,60,80,100,120},
+        xticklabels={\ensuremath{-}20,0,20,40,60,80,100,120},
+        y grid style={darkgray176},
+        ylabel={Anteil aller Suchen (\%)},
+        ymin=0, ymax=0.910038275342993,
+        ytick style={color=black},
+        ytick={0,0.1,0.2,0.3,0.4,0.5,0.6,0.7},
+        yticklabels={0,10,20,30,40,50,60,70}
+      ]
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:0,0) rectangle (axis cs:1,0.866703119374279);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:1,0) rectangle (axis cs:2,0.0200159655236347);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:2,0) rectangle (axis cs:3,0.00872769256270434);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:3,0) rectangle (axis cs:4,0.00569271892105661);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:4,0) rectangle (axis cs:5,0.00354556556629393);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:5,0) rectangle (axis cs:6,0.00217382606724403);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:6,0) rectangle (axis cs:7,0.00153939654893376);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:7,0) rectangle (axis cs:8,0.00157369003640984);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:8,0) rectangle (axis cs:9,0.00189185739243969);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:9,0) rectangle (axis cs:10,0.00180421848000012);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:10,0) rectangle (axis cs:11,0.00173372631129898);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:11,0) rectangle (axis cs:12,0.00117359934918704);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:12,0) rectangle (axis cs:13,0.000939260518099339);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:13,0) rectangle (axis cs:14,0.00104785656177431);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:14,0) rectangle (axis cs:15,0.0013622135303063);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:15,0) rectangle (axis cs:16,0.00103452020553341);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:16,0) rectangle (axis cs:17,0.00116026299294614);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:17,0) rectangle (axis cs:18,0.000956407261837655);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:18,0) rectangle (axis cs:19,0.00076779308071806);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:19,0) rectangle (axis cs:20,0.000855431993157407);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:20,0) rectangle (axis cs:21,0.000737309980739287);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:21,0) rectangle (axis cs:22,0.00110691756798331);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:22,0) rectangle (axis cs:23,0.000672533393284103);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:23,0) rectangle (axis cs:24,0.000544885412122498);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:24,0) rectangle (axis cs:25,0.00051821269964103);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:25,0) rectangle (axis cs:26,0.000615377580823528);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:26,0) rectangle (axis cs:27,0.000802086568194471);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:27,0) rectangle (axis cs:28,0.000603946418331835);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:28,0) rectangle (axis cs:29,0.000977364393072833);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:29,0) rectangle (axis cs:30,0.00054679060587115);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:30,0) rectangle (axis cs:31,0.000417237430961115);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:31,0) rectangle (axis cs:32,0.000918303386863828);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:32,0) rectangle (axis cs:33,0.00080780214944054);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:33,0) rectangle (axis cs:34,0.000621093162069708);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:34,0) rectangle (axis cs:35,0.000703016493262987);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:35,0) rectangle (axis cs:36,0.000459151693431914);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:36,0) rectangle (axis cs:37,0.000994511136811038);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:37,0) rectangle (axis cs:38,0.000455341305934609);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:38,0) rectangle (axis cs:39,0.000497255568405519);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:39,0) rectangle (axis cs:40,0.000302925806040188);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:40,0) rectangle (axis cs:41,0.000424858205955725);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:41,0) rectangle (axis cs:42,0.000360081618500541);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:42,0) rectangle (axis cs:43,0.000245769993579836);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:43,0) rectangle (axis cs:44,0.000470582855924051);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:44,0) rectangle (axis cs:45,0.000716352849503665);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:45,0) rectangle (axis cs:46,0.000605851612080377);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:46,0) rectangle (axis cs:47,0.000426763399704266);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:47,0) rectangle (axis cs:48,0.000394375105976841);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:48,0) rectangle (axis cs:49,0.000169562243632626);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:49,0) rectangle (axis cs:50,0.000316262162280867);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:50,0) rectangle (axis cs:51,0.000251485574825683);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:51,0) rectangle (axis cs:52,0.000417237430961115);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:52,0) rectangle (axis cs:53,0.000983079974318901);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:53,0) rectangle (axis cs:54,0.000659197037043535);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:54,0) rectangle (axis cs:55,0.000565842543357897);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:55,0) rectangle (axis cs:56,0.000706826880760403);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:56,0) rectangle (axis cs:57,0.000744930755734008);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:57,0) rectangle (axis cs:58,0.000699206105765682);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:58,0) rectangle (axis cs:59,0.000413427043463588);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:59,0) rectangle (axis cs:60,0.000783034630707502);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:60,0) rectangle (axis cs:61,0.00049725556840563);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:61,0) rectangle (axis cs:62,0.00021528689360073);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:62,0) rectangle (axis cs:63,0.00050297114965181);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:63,0) rectangle (axis cs:64,0.00043628936844764);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:64,0) rectangle (axis cs:65,0.000683964555776351);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:65,0) rectangle (axis cs:66,0.000558221768363176);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:66,0) rectangle (axis cs:67,0.000525833474635751);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:67,0) rectangle (axis cs:68,0.000525833474635862);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:68,0) rectangle (axis cs:69,0.000424858205955614);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:69,0) rectangle (axis cs:70,0.00056012696211194);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:70,0) rectangle (axis cs:71,0.000527738668384403);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:71,0) rectangle (axis cs:72,0.000908777418120565);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:72,0) rectangle (axis cs:73,0.000430573787201793);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:73,0) rectangle (axis cs:74,0.0011412110554595);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:74,0) rectangle (axis cs:75,0.00102689943053857);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:75,0) rectangle (axis cs:76,0.000708732074509166);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:76,0) rectangle (axis cs:77,0.000866863155649544);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:77,0) rectangle (axis cs:78,0.000748741143231313);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:78,0) rectangle (axis cs:79,0.000760172305723228);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:79,0) rectangle (axis cs:80,0.00082875928067605);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:80,0) rectangle (axis cs:81,0.000931639743104618);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:81,0) rectangle (axis cs:82,0.00129362655535381);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:82,0) rectangle (axis cs:83,0.000443910143442583);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:83,0) rectangle (axis cs:84,0.000575368512101382);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:84,0) rectangle (axis cs:85,0.000882104705638986);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:85,0) rectangle (axis cs:86,0.000363892005997957);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:86,0) rectangle (axis cs:87,0.00102689943053869);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:87,0) rectangle (axis cs:88,0.000887820286884944);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:88,0) rectangle (axis cs:89,0.00134697198031675);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:89,0) rectangle (axis cs:90,0.00190709894242913);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:90,0) rectangle (axis cs:91,0.000531549055881708);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:91,0) rectangle (axis cs:92,0.000274347899810068);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:92,0) rectangle (axis cs:93,0.00159083678014793);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:93,0) rectangle (axis cs:94,0.000556316574614635);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:94,0) rectangle (axis cs:95,0.000318167356029742);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:95,0) rectangle (axis cs:96,0.000998321524308343);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:96,0) rectangle (axis cs:97,0.00191090932992632);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:97,0) rectangle (axis cs:98,0.00277586729182711);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:98,0) rectangle (axis cs:99,0.0051059192464632);
+      \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:99,0) rectangle (axis cs:100,0.015043409839579);
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Anteil der pro CH-PEOPLE Suche auf aegaeis-graph gesehenen Knoten}
+  \label{fig:ergebnisse:new_efficiency_ch_people}
+\end{figure}

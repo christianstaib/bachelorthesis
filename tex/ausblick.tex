@@ -1,12 +1,12 @@
 \chapter{Ausblick}
 
-Mit der Kontraktion durch eine obere Schranke wurde eine Mathode gefunden, welche theoretisch die Top-Down Graphen-Kontraktion von Graphen mit hohen durschnitlichen Knotengraden ermöglicht.
-Praktisch hat sich gezeigt, dass dies der erzielte Speedup für bearbeiteten Sichtbarkeitsgraphen nicht groß genug ist, um die Kontraktion in angemesser Zeit zu ermöglichen.
-Bottom-Up ist hierbei noch zu erkunden.
+Mit der Kontraktion durch eine obere Schranke wurde eine Methode gefunden, welche die Top-Down Graphen-Kontraktion von Graphen mit hohen durchschnittlichen Knotengraden beschleunigen kann.
+Es hat sich gezeigt, dass die erzielte Beschleunigung für die bearbeiteten Sichtbarkeitsgraphen nicht groß genug war, um die Kontraktion in angemessener Zeit zu ermöglichen.
+In weiteren Arbeiten kann die Bedeutung dieser Methode untersucht und andere Kontraktions-Reihenfolgen betrachtet werden, die eine effizientere Kontraktion ermöglichen.
 
-MIt PEOPLE wurde eine Methode gefunden, mit der zu den bearbeiteten Sichtbarkeitsgraphen zu Contracted- und Hub-Graphen erstellt wurden.
-Diese könnne für weitere Analysen der Graphen genutzt werden.
+Mit CH-PEOPLE und PEOPLE wurden Methoden gefunden, mit denen zu den bearbeiteten Sichtbarkeitsgraphen Contracted- und Hub-Graphen erstellt werden können.
+In einem weiteren Schritt können diese Methoden auch auf andere Graphen und Graphklassen angewendet werden.
+Durch die mögliche Parallelisierung können auch größere Graphen bearbeitet werden, für die es bisher keine vergleichbar schnellen Speedup-Techniken gab.
 
-Die vertex-to-level-Funktion war dabei nur recht einfach berechnete worden.
-Mit einer besser Funktion lässt sich vielleicht noch besser Anfrage-Zeiten oder kleiner Suchbäume bei der PEOPLE CH raussholen.
-Da sich die Qualität der vertex-to-level-Funktion schnell annähern lässt, ist kann dies nachfolgend weiter untersucht werden.
+Die Tatsache, dass die meisten CH-PEOPLE Suchen nur einen kleinen Teil aller Knoten sehen, könnte die Teilweise Neuberechnung eines Contracted-Graphen nach der Änderung von Kantengewichten ermöglichen.
+Es ist zu vermuten, dass dies insbesondere auf Straßengraphen effizient sein könnte.

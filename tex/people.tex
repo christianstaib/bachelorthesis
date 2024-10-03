@@ -1,22 +1,22 @@
 \chapter{PEOPLE: Predetermined Order, Pruned Label}\label{chapter:people}
 
-Wie im \autoref{chapter:kontraktion} diskutiert wurde, ist die Kontraktion von Graphen mit hohem durchschnittlichem Knotengrad aufwendig.
-Es ist möglich, dass die Kontraktion von ihnen sogar so aufwendig ist, dass sie sich nicht in sinnvoller Zeit kontrahieren lassen.
+Wie im \autoref{chapter:kontraktion} diskutiert worden ist, ist die Kontraktion von Graphen mit hohem durchschnittlichem Knotengrad aufwendig.
+Es ist möglich, dass der dafür benötigte Aufwand so groß ist, dass sie sich nicht in sinnvoller Zeit kontrahieren lassen.
 Trotzdem wäre es vorteilhaft, wenn sich die Anfrage-Zeiten von Contraction Hierarchies und Hierarchical Hub Labeling auch auf sie übertragen ließen.
-Hierfür geben wir eine neue Charakterisierung des Contracted- und Hub-Graphen und präsentieren anschließend PEOPLE (\textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l), eine Methode, mit der hierarchische Hub-Graphen mit einer vorgegebenen vertex-to-Level-Funktion erstellt werden können, ohne dass eine Knoten-Kontraktion erforderlich ist.
+Hierfür geben wir eine neue Charakterisierung des Contracted- und Hub-Graphen an und präsentieren anschließend PEOPLE (\textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l), eine Methode, mit der hierarchische Hub-Graphen mit einer vorgegebenen vertex-to-Level-Funktion erstellt werden können, ohne dass eine Knoten-Kontraktion erforderlich ist.
 
 \section{Contracted-Graph}
 
 Um die nachfolgende Definition vorzubereiten, betrachten wir ein Beispiel.
 Sei $G = (V, E)$ mit $V \supset \{ u, v, w \}$ und $E = \{ (u, v, {spd}_G (u, v)), (v, w, {spd}_G (v, w)) \}$, ein Produkt einer Kontraktion.
-$G$ enthielt zu Beginn also mehr Kanten und mehr nicht-isolierte Knoten.
+$G$ hat zu Beginn also mehr Kanten und mehr nicht-isolierte Knoten enthalten.
 Es soll nun $v$ kontrahiert werden.
 Hierfür wird eine Kante $(u, w, {spd}_G (u, w))$ eingefügt und die Kanten $(u, v)$ sowie $(v, w)$ entfernt.
 Daraus können zwei Folgerungen gezogen werden:
 
 \begin{enumerate}
   \item
-        Alle Knoten zwischen $u$ und $w$ auf allen kürzesten $u$-$w$-Pfaden wurden bereits kontrahiert und haben daher auch ein niedrigeres Level als $u$ und $w$.
+        Alle Knoten zwischen $u$ und $w$ auf allen kürzesten $u$-$w$-Pfaden sind bereits kontrahiert worden und haben daher auch ein niedrigeres Level als $u$ und $w$.
 
   \item
         $(u, w) \in E_u$ gilt genau dann, wenn $w$ das größte Level auf allen Pfaden von $u$ nach $w$ hat.
@@ -28,7 +28,7 @@ Basierend auf dieser Überlegung, definieren wir den Upward-Graph neu.
 
 \begin{definition}[Upward-Graph]\label{people:def:upward_graph}
   Sei $G = (V, E)$ und ${vtl}$ eine vertex-to-level-Funktion dazu.
-  Dann ist $G_u = (V, E_u)$ ein \emph{Upward-Graph} zu $G$, wenn für jeden Knoten $t \in V$ gilt:
+  Dann ist $G_u = (V, E_u)$ ein \emph{Upward-Graph} zu $G$, wenn für jeden Knoten $t \in V$ folgendes gilt:
 
   \begin{enumerate}
     \item
@@ -108,7 +108,7 @@ Die Definition des Downward-Graphens erfolgt nun analog zu der des Upward-Graphe
 \end{definition}
 
 Ist ein Graph ungerichtet, so ist er äquivalent zu seinem transponierten Graphen, daher sind dann sind auch Upward- und Downward-Graph äquivalent.
-\autoref{ch::fig::upward_graph} entspricht also gleichzeitig dem Downward-Graph des Beispielgraphens.
+\autoref{ch::fig::upward_graph} entspricht somit gleichzeitig dem Downward-Graph des Beispielgraphens.
 Es ist zu zeigen, dass Anfragen auf einem auf diese Art definierten Contracted-Graph $C = (G_u, G_d)$ ebenfalls korrekt sind.
 
 \begin{beweis}[Korrektheit Contracted-Graph Anfrage]
@@ -148,24 +148,25 @@ Es muss keine $(u, w)$ Kante erstellt werden, da $w$ über $v$ erreicht werden k
 
 \subsection{Kontraktion erfüllt diese Definition}
 
-Bei der Knoten-Kontraktion des Knoten $v$ wird für den Vorgänger-Nachfolger-Pfad $(u, v, w)$ eine Abkürzung eingefügt, wenn dies der einzige kürzeste $u$-$w$-Pfad ist.
-Ist dies der Fall, dann wurden die Knoten aller andern kürzesten Pfade zuvor bereits kontrahiert und haben daher ein niedrigeres Level als $u$ und $w$.
-Daher bilden diese Abkürzungen mitsamt den Kanten des ursprünglichen Graphen die Kantenmenge des Upward- und Downward-Graphen (nach der neuen Definition), wobei die Zuordnung zu Downward- und Upward-Graph durch die Reihenfolge der Kontraktion von $u$ und $w$ definiert ist.
+Bei der Knoten-Kontraktion des Knotens $v$ wird für den Vorgänger-Nachfolger-Pfad $(u, v, w)$ eine Abkürzung eingefügt, wenn dies der einzige kürzeste $u$-$w$-Pfad ist.
+Ist dies der Fall, dann sind die Knoten aller andern kürzesten Pfade zuvor bereits kontrahiert worden und haben ein niedrigeres Level als $u$ und $w$.
+Deswegen bilden diese Abkürzungen mitsamt den Kanten des ursprünglichen Graphen die Kantenmenge des Upward- und Downward-Graphen (nach der neuen Definition \ref{people:def:upward_graph}), wobei die Zuordnung zu Downward- und Upward-Graph durch die Reihenfolge der Kontraktion von $u$ und $w$ definiert ist.
 
 Wenn die Kontraktionsbedingung abgeschwächt wird, werden nicht notwendige und nicht optimale Kanten eingefügt, dies lässt die Definition aber zu.
 Daher entspricht ein durch Graphen-Kontraktion erzeugter Graph der neuen Definition.
 
 \subsection{Algorithmus}
 
-Das Berechnen aller kürzesten Pfade zwischen zwei Knoten ist aufwendig, daher wird zum Berechnen eines so definierten Contracted-Graphens die Bedingung, wann eine Kante einzufügen ist, abgeschwächt:
-Wir fügen Kanten ein, sobald wir \emph{einen} optimalen $t$-$h$-Pfad gefunden haben, auf dem $h$ das größte und $t$ das zweitgrößte Level hat.
+Da das Berechnen aller kürzesten Pfade zwischen zwei Knoten aufwendig ist, wird die Bedingung zum Hinzufügen einer Kante bei der Berechnung eines Contracted-Graphens vereinfacht.
+Wir fügen $(t, h)$ Kanten ein, sobald wir \emph{einen} optimalen $t$-$h$-Pfad gefunden haben, auf dem $h$ das größte und $t$ das zweitgrößte Level hat.
 Dies ist hinreichend, fügt im Zweifel jedoch mehr Kanten als notwendig ein.
 
 Um einen Upward-Graphen zu berechnen, wird für jeden Knoten $t \in V$ eine angepasste Dijkstra-Suche ausgeführt, bei der für jeden Knoten jeweils notiert wird, was das größte Level auf dem Pfad zur Wurzel ist.
 Diese Information kann mit der \emph{max-on-path} Funktion ${mop}$ abgerufen werden.
-Ein Knoten $h \in V$, $h \neq t$ ist der Kopf einer Upward-Graph Kante, für die gilt, dass ${mop}(h) = {vtl}(h)$ und ${mop}({pre}(h)) = {vtl}(t)$.
-Das Gewicht der Kante kann der Dijkstra Suche entnommen werden.
-Die Suche kann abgebrochen werden, wenn für alle nicht-expandierten Knoten $h$ gilt, dass ${mop}({pre}(h)) > {vtl}(h)$ ist.
+Ein Knoten $h \in V$, $h \neq t$ ist dabei der Kopf einer Upward-Graph Kante, für die ${mop}(h) = {vtl}(h)$ und ${mop}({pre}(h)) = {vtl}(t)$ gilt.
+Das Gewicht der Kante wird der Dijkstra-Suche entnommen.
+Die Suche kann abgebrochen werden, wenn für alle nicht-expandierten Knoten $h$ die Bedingung ${mop}({pre}(h)) > {vtl}(h)$ erfüllt ist.
+Ist dies erfüllt, so hatt die Wurzel $t$ auf dem $t$-$h$-Pfad nicht das zweitgrößte Level und damit kann $h$ nicht der Kopf einer Upward-Kante sein.
 \autoref{ch:fig:ch_brute_force_suchbaum} zeigt dies für den Knoten $a$ im Beispielgraphen.
 Die linke Zahl steht dabei für das Level des jeweiligen Knotens, die rechte Zahl für das größte Level auf dem Pfad zur Wurzel.
 
@@ -211,9 +212,10 @@ Die linke Zahl steht dabei für das Level des jeweiligen Knotens, die rechte Zah
 Die Information des größten Levels auf dem Pfad zur Wurzel kann dabei beim Update eines Knotens übertragen werden, indem das Maximum des bisherigen größten Levels und das Level des upgedateten Knotens gebildet wird.
 
 
-Die Abbruchbedingung kann durch Betrachtung einer Menge an \emph{lebendigen Knoten} verfolgt werden, sobald diese keine Knoten mehr enthält, kann die Suche abgebrochen werden.
-Zu Beginn ist nur der Startknoten lebendig, die Lebendigkeit wird jeweils an die Kinder vererbt.
-Ein Knoten stirbt, nachdem er expandiert wurde oder wenn er den Kopf einer Upward-Graph Kante bildet.
+Die Abbruchbedingung kann durch Betrachtung einer Menge an \emph{lebendigen Knoten} verfolgt werden.
+Sobald diese keine Knoten mehr enthält, kann die Suche abgebrochen werden.
+Zu Beginn ist nur der Startknoten lebendig, die Lebendigkeit wird dann jeweils an die Kinder vererbt.
+Ein Knoten stirbt, nachdem er expandiert worden ist oder wenn er den Kopf einer Upward-Graph Kante bildet.
 In dem Beispiel in \autoref{ch:fig:ch_brute_force_suchbaum} wäre dies etwa nach der Expansion von $b$ der Fall.
 Bei einer \emph{guten} vertex-to-level-Funktion kann davon ausgegangen werden, dass viele Suchen früh abgebrochen werden können.
 
@@ -284,7 +286,7 @@ Der textuell beschriebene Algorithmus ist im Algorithmus \ref{alg:people:ch} dar
 \subsection{Änderung von Kantengewichten}
 
 Bei Graphen mit hierarchischer Struktur und einer guten vertex-to-Level-Funktion ist anzunehmen, dass die Suche nach Algorithmus \ref{alg:people:ch}  in den meisten Fällen früh abbricht.
-Dies ist einerseits für die Effizienz der Berechnung von Vorteil, verdeutlicht aber auch, dass für die Bestimmung der ausgehenden Kanten des Contracted-Graphen für viele Knoten jeweils nur ihre lokale Umgebung von Bedeutung ist, wobei insbesondere Knoten mit einem hohen Level hierbei eine Ausnahme sind.
+Dies ist einerseits für die Effizienz der Berechnung von Vorteil, verdeutlicht aber auch, dass für die Bestimmung der ausgehenden Kanten des Contracted-Graphen für viele Knoten jeweils nur ihre lokale Umgebung von Bedeutung ist, wobei insbesondere Knoten mit einem hohen Level hierbei eine Ausnahme bilden.
 Änderungen der Kantengewichte außerhalb dieser Umgebung haben daher für viele Knoten keinen Einfluss auf den Suchbaum des Algorithmus \ref{alg:people:ch}.
 
 Diese Eigenschaft lässt sich nutzen, um nach einer Änderung der Kantengewichte nicht für jeden Knoten sämtliche ausgehenden Kanten neu berechnen zu müssen.
@@ -297,14 +299,15 @@ Ob es eine effiziente Methode gibt, mit der der Einflussbereich einer Kante best
 
 \subsection{Abkürzungsproblem}
 
-Es liegt nahe, als abgekürzten Knoten den Knoten mit dem dritthöchsten Level auszuwählen und sich darauf zu verlassen, dass die Suche von diesem Knoten aus die nächste Abkürzung findet, da dies der Knoten-Kontraktion entspricht.
-Dies ist praktisch, da dann jeder Shortcut nur einmal erstellt werden muss, dafür muss jedoch gelten, dass die Vorwärtssuche für $s$-$t$ den gleichen Pfad findet wie die Rückwärtssuche (die Suche auf dem transponierten Graphen) für $t$-$s$.
-Wird als Graph eine Datenstruktur verwendet, welche die Nachbarn nicht in einer definierten Ordnung ausgibt (etwa eine HashMap), oder eine nicht stabile Prioritätswarteschlange verwendet, ist dies nicht garantiert.
+Es liegt nahe, als abgekürzten Knoten denjenigen Knoten mit dem dritthöchsten Level auszuwählen und sich darauf zu verlassen, dass die Suche von diesem aus die nächste Abkürzung findet, da dies der Knoten-Kontraktion entspricht.
+Das ist praktisch, da dann jede Abkürzung nur einmal erstellt werden muss, dafür muss jedoch gelten, dass die Vorwärtssuche für $s$-$t$ den gleichen Pfad findet wie die Rückwärtssuche (die Suche auf dem transponierten Graphen) für $t$-$s$.
+Wird als Graph eine Datenstruktur verwendet, welche die Nachbarn nicht in einer definierten Ordnung ausgibt (etwa eine HashMap), ist dies nicht garantiert.
+Eine nicht stabile Prioritätswarteschlange hat ebenfalls den gleichen Effekt.
 
-\autoref{ch:fig:problem_shortcut} zeigt eine Situation, in der dies auftreten kann.
-In $C$ wurde der $a$-$e$-Pfad $(a, e)$ gefunden, dessen Abkürzungen jetzt ersetzt werden sollen.
-Hierfür wird im ersten Schritt für die Abkürzung $(a, e)$ der abgekürzte Knoten $d$ gefunden, dadurch ist der Pfad $(a, d, e)$.
-Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit dem Knoten $b$ findet, dies geschieht jedoch nicht, wenn $a$ von $d$ aus über $c$ erreicht wird.
+\autoref{ch:fig:problem_shortcut} zeigt ein solches Szenario.
+Im Contracted-Graphen $C$ wurde der $a$-$e$-Pfad $(a, e)$ gefunden, dessen Abkürzungen nun ersetzt werden.
+Zunächst wird für die Abkürzung $(a, e)$ der abgekürzte Knoten $d$ gefunden, was zu dem Pfad $(a, d, e)$ führt.
+Es wird darauf vertraut, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit dem Knoten $b$ findet, jedoch geschieht dies nicht, wenn $a$ von $d$ aus über $c$ erreicht wird.
 
 \begin{figure}[h!]
   \centering
@@ -348,7 +351,7 @@ Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit
       \draw[->] (c) edge[bend right] node[circle, fill=white] {2} (e);
       \draw[->] (a) edge[bend left] node[circle, fill=white] {3} (e);
     \end{tikzpicture}
-    \caption{Upward- und Downard-Graph}
+    \caption{Upward- und Downard-Graph von $C$}
   \end{subfigure}
   \begin{subfigure}[b]{0.49\textwidth}
     \centering
@@ -390,8 +393,10 @@ Wir verlassen uns darauf, dass die Suche von $d$ aus die Abkürzung $(d, a)$ mit
 \end{figure}
 
 Für dieses Problem gibt es zwei Lösungen:
-Die nachfolgenden Abkürzungen, welche benötigt werden, um eine Abkürzung vollständig zu entpacken, werden für jede Abkürzung ebenfalls erstellt.
-Dadurch werden viele Abkürzungen mehrfach erstellt, dies muss daher synchronisiert werden, um den Speicherverbrauch zu minimieren.
+Für jede Abkürzung $(t, h)$ werden alle weiteren Abkürzungen die benötigt werden, um aus $(t, h)$ einen Pfad auf $G$ zu erstellen, gesammelt.
+Dadurch werden viele Abkürzungen mehrfach erstellt, da eine Abkürzung Teil einer anderen Abkürzung sein kann.
+Dies muss daher zwischen den einzelnen CH-PEOPLE Suchen synchronisiert werden, um den Speicherverbrauch zu minimieren.
+
 Alternativ kann die Prioritätswarteschlange modifiziert werden, indem eine Totalordnung der Knoten bestimmt, in welcher Reihenfolge Knoten gleicher Distanz expandiert werden.
 
 \section{PEOPLE}
@@ -420,7 +425,7 @@ Die Korrektheit dieser Definition folgt direkt daraus, dass der Knoten mit dem h
 
 Solche Labels können wieder durch Merging aus einem Contracted-Graph erstellt werden, jedoch folgt aus dieser Definition auch die Möglichkeit, das Label eines bestimmten Knotens zu berechnen.
 Der dafür verwendete Algorithmus ist in Algorithmus \ref{alg:people:people} gelistet, er erzeugt ein gepruntes Label, da er aus einem Dijkstra-Suchbaum auf $G$ das Label erzeugt und dieser nur optimale Distanzen enthält.
-Da er für eine vorgebene vertex-to-level-Funktion geprunte Label erstellt, wird dieser Algorithmus PEOPLE, für \textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l, genannt.
+Da er für eine vorgebene vertex-to-level-Funktion geprunte Label liefert, wird dieser Algorithmus PEOPLE, für \textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l, genannt.
 
 Ein Beispiel einer solchen Suche ist in \autoref{ch:fig:hl_brute_force_suchbaum} gezeichnet.
 Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils größte auf dem Pfad zur Wurzel ist.
@@ -520,11 +525,11 @@ Das Label für $a$ enthält $j$, $f$ und $a$ selbst, da ihr Level das jeweils gr
 Die mit PEOPLE erzeugten Labels können mitunter kleiner sein, als durch Merging erzeugte Label.
 Insbesondere kann das Merging von Contracted-Graphen, welche durch Graphen-Kontraktion erzeugt wurden, Labels erzeugen, die nicht minimal sind.
 
-\autoref{fig:people:better_label_size} zeigt ein solches Beispiel, die Zahl unter dem Namen des Knotens entspricht hierbei dem Level des Knotens.
+\autoref{fig:people:better_label_size} zeigt ein solches Beispiel, wobei die Zahl unter dem Namen des Knotens dem Level des Knotens entspricht.
 Der Upward-Graph kann hierbei sowohl durch PEOPLE als auch durch Graphen-Kontraktion erstellt worden sein.
 Nach der neuen Definition des Forward-Labels muss das Label von $c$ nur $d$ und $b$ enthalten.
 Wird es aber durch Merging erzeugt, so enthält es auch $a$.
-Dieses Verhalten tritt auf, wenn kürzeste Pfaden nicht eindeutig sind, daher ist anzunehmen, dass unter anderem in Grid-Graphen dieses häufiger auftreten kann.
+Dieses Verhalten tritt auf, wenn kürzeste Pfaden nicht eindeutig sind, daher ist anzunehmen, dass unter anderem in Grid-Graphen dieses Phänomen häufiger auftritt.
 
 Um tatsächlich minimale Label zu erzeugen musst der Algorithmus \ref{alg:people:people} verändert werden:
 Kann ein Knoten $v$ über $u$ erreicht werden, aber die Kosten hierfür sind gleichgroß wie bisher, so wird $u$ trotzem als Vorgänger von $v$ gesetzt, wenn ${mop}(u) > {mop}(v)$.
@@ -576,13 +581,14 @@ Kann ein Knoten $v$ über $u$ erreicht werden, aber die Kosten hierfür sind gle
 
 \subsection{Anwendungsgebiet}
 
-Die Berechnung der Graphen-Kontraktion in Straßennetzwerken ist in vertretbarer Zeit möglich, jedoch gilt dies nicht für alle Graphenklassen. Insbesondere bei Graphen mit hohem durchschnittlichen Knotengrad stellt die Dijkstra-Suche für jeden Vorgänger einen signifikanten Kostenfaktor dar, sodass die Berechnung der Labels mittels PEOPLE effizienter sein kann.
-Da die Labels parallel berechnet werden können, ist es durch den Einsatz geeigneter Hardware möglich, die Berechnungszeit zu reduzieren.
+Die Berechnung der Graphen-Kontraktion in Straßennetzwerken ist in vertretbarer Zeit möglich, jedoch gilt dies nicht für alle Graphklassen.
+Insbesondere bei Graphen mit hohem durchschnittlichen Knotengrad stellt die Dijkstra-Suche für jeden Vorgänger einen signifikanten Kostenfaktor dar, sodass die Berechnung der Labels mittels PEOPLE effizienter sein kann.
+Da die Labels parallel berechnet werden können, ist es durch den Einsatz geeigneter Hardware möglich, die Berechnungszeit zu verkürzen.
 
 Der Algorithmus kann auch dazu verwendet werden, die Ergebnisse einer $s$-$t$-Anfrage effizient zu cachen.
 Falls die Labels von $s$ und $t$ noch nicht vorhanden sind, werden sie generiert.
 Nachfolgende Anfragen von $s$ oder nach $t$ können dann direkt auf die gespeicherten Labels zugreifen.
 
 PEOPLE kann auch dafür benutzt werden, die durch eine vertex-to-level-Funktion induzierte durchschnittliche Label Größe anzugeben, ohne zuerst den Contracted-Graph und anschließend den Hub-Graphen zu berechnen.
-Hierfür wird für $n$ Knoten das Label berechnet und über diese die durchschnittliche Größe der Labels angegeben.
+Hierfür wird für $n \in \mathbb{N}$ Knoten das Label berechnet und über diese die durchschnittliche Größe der Labels angegeben.
 Da sich dies leicht parallelisieren lässt, könnte in einem zukünftigen Schritt durch Optimierungsalgorithmen die Label Größe verkleinert werden.

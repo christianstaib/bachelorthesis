@@ -1,12 +1,14 @@
 \chapter{Einleitung}
 
 Sichtbarkeitsgraphen sind Graphen, die alle Knotenpaare miteinander verbinden, die sich \emph{sehen} können, auf deren \emph{Luftlinie} sich also keine \emph{Hindernisse} befinden.
-Aus einer Küstenlinie kann ein Sichtbarkeitsgraph erstellt werden, indem die Knoten auf der Küstenlinie mit allen Knoten verbunden werden, deren Luftlinie keine Küstenlinie kreuzt.
+Aus den Polygonen, die Kontinente darstellen, lässt sich ein Sichtbarkeitsgraph erstellen.
+Dabei werden die Knoten entlang der Küstenlinie mit allen Knoten verbunden, deren direkte Verbindung keine Küstenlinie schneidet.
 \autoref{fig:thessaloniki-visibility} zeigt einen Ausschnitt eines solchen Sichtbarkeitsgraphen.
 Zu sehen ist der Hafen der griechischen Stadt Thessaloniki.
 
 Das Finden von kürzesten Pfaden ist in solchen Graphen rechenaufwendiger als etwa auf Straßengraphen mit vergleichbarer Knotenanzahl, da sie unter anderem einen höheren durchschnittlichen Knotengrad und keine inhärente hierarchische Struktur besitzen.
-Es gibt Möglichkeiten, den Graphen zu verändern und schneller Pfade zu berechnen, etwa durch Triangulierung oder Rasterisierung, allerdings sind diese Pfade nicht mehr garantiert optimal.
+Es gibt Ansätze, solche Graphen anzupassen, um die Pfadberechnung zu beschleunigen, wie beispielsweise Triangulierung oder Rasterisierung.
+Dabei ist jedoch nicht gewährleistet, dass die berechneten Pfade optimal sind.
 
 Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden von kürzesten Pfaden und kürzesten Pfad-Distanzen (\emph{Contraction Hierarchies} und \emph{Hierarchical Hub Labeling}) auf diese Graphen anwenden lassen.
 
