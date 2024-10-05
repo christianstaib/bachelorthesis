@@ -138,7 +138,7 @@ In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten eine
     }%
     \caption{medi-visibility}%
   \end{subfigure}%
-  %\par\bigskip
+  \par\bigskip
   \begin{subfigure}[b]{0.5\textwidth}%
     \resizebox{\textwidth}{!}{%
       \begin{tikzpicture}%
@@ -1089,44 +1089,54 @@ Mit der entstandenen vertex-to-level-Funktion für aegaeis-graph wurde das der \
 \subsection{Weiterer Graph}
 
 Als letzter Teil dieser Arbeit wurde mit \emph{planet-shrunk-visibility} ein Sichtbarkeitsgraph betrachtet, der analog zu den Sichtbarkeitsgraphenvon aegaeis, medi und pata konstruiert wurde, aber die gesamte Welt umfasst.
-\autoref{table:input_graphs_planet-shrunk-visibility} listet die Anzahl der Kanten und Knoten dieses Graphs auf.
+Er bestand aus \num{188030} Knoten und \num{173385124} Kanten.
+Mittels PEOPLE konnte für ihn ein Hub-Graph erstellt werden, mit dem ein Speedup \num[round-mode=places,round-precision=0]{\fpeval{(529.377185*1000)/6.756}} im Vergleich zur Dijkstra erzielt wurde.
 
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 7.0] % Zeit
-      S[table-format = 9.0] % Zeit
-      S[table-format = 4.1] % Zeit
-    }
-    \toprule
-    {Graph}                  & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad}      \\ \midrule
-    planet-shrunk-visibility & 188030      & 173385124   & \fpeval{173385124/188030} \\\bottomrule
-  \end{tabular}
-  \caption{Bearbeite Graphen}
-  \label{table:input_graphs_planet-shrunk-visibility}
-\end{table}
-
-
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{
-      l % Graph
-      S[table-format = 4.1] % Zeit
-      S[table-format = 3.0] % hop-länge
-      S[table-format = 7.0] % rank
-      S[table-format = 7.0] % queue pops
-    }
-    \toprule
-    {Graph}                  & {$\varnothing$ $t({spd})$} & {$\varnothing$  Hop-Länge} & {$\varnothing$ Dijkstra-Rank} & {$\varnothing$ Queue-Pops} \\
-                             & {(\si{\ms})}               &                            &                               &                            \\
-    \midrule
-    planet-shrunk-visibility & 529.377185                 & 22.3786                    & 95053.74                      & 691017.2                   \\
-    \bottomrule
-  \end{tabular}
-  \caption{Kennwerte der Dijkstra Suchen}
-  \label{fig:ergebnisse:dijkstra_planet-shrunk-visibility}
-\end{table}
+% \autoref{table:input_graphs_planet-shrunk-visibility} listet die Anzahl der Kanten und Knoten dieses Graphs auf.
+% 
+% \begin{table}[h!]
+%   \centering
+%   \begin{tabular}{
+%       l % Graph
+%       S[table-format = 7.0] % Zeit
+%       S[table-format = 9.0] % Zeit
+%       S[table-format = 4.1] % Zeit
+%     }
+%     \toprule
+%     {Graph}                  & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad}      \\ \midrule
+%     planet-shrunk-visibility & 188030      & 173385124   & \fpeval{173385124/188030} \\\bottomrule
+%   \end{tabular}
+%   \caption{Bearbeite Graphen}
+%   \label{table:input_graphs_planet-shrunk-visibility}
+% \end{table}
+% 
+% 
+% \begin{table}[h!]
+%   \centering
+%   \begin{tabular}{
+%       l % Graph
+%       S[table-format = 4.1] % Zeit
+%       S[table-format = 3.0] % hop-länge
+%       S[table-format = 7.0] % rank
+%       S[table-format = 7.0] % queue pops
+%     }
+%     \toprule
+%     {Graph}                  & {$\varnothing$ $t({spd})$} & {$\varnothing$  Hop-Länge} & {$\varnothing$ Dijkstra-Rank} & {$\varnothing$ Queue-Pops} \\
+%                              & {(\si{\ms})}               &                            &                               &                            \\
+%     \midrule
+%     planet-shrunk-visibility & 529.377185                 & 22.3786                    & 95053.74                      & 691017.2                   \\
+%     \bottomrule
+%   \end{tabular}
+%   \caption{Kennwerte der Dijkstra Suchen}
+%   \label{fig:ergebnisse:dijkstra_planet-shrunk-visibility}
+% \end{table}
+% 
+% 
+% Running `target/release/investigate_hl -h tests/data/planet-shrunk-vis-fixed-hl.bincode -n 10000000`
+% average label size 1154.5453757379141
+% shortcuts 63174890
+% getting random paths distances takes 6.756µs on average
+% getting random paths takes 11.242µs on average
 
 % Is graph bidirectional? true
 % non trivial vertices: 188030

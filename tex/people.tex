@@ -111,7 +111,7 @@ Ist ein Graph ungerichtet, so ist er äquivalent zu seinem transponierten Graphe
 Es ist zu zeigen, dass Anfragen auf einem auf diese Art definierten Contracted-Graph $C = (G_u, G_d)$ ebenfalls korrekt sind.
 
 \begin{beweis}[Korrektheit Contracted-Graph Anfrage]
-  Da im Upward- und Downward-Graphen nur Kanten existieren, deren Gewicht mindestens dem kürzesten Pfad Abstand der verbundenen Knoten entspricht, kann in $C$ kein Pfad gefunden werden, der nicht auch in $G$ existiert.
+  Da sowohl im Upward- als auch im Downward-Graphen nur Kanten existieren, deren Gewicht mindestens dem kürzesten Pfad Abstand der verbundenen Knoten entspricht, kann in $C$ kein Pfad gefunden werden, der nicht auch in $G$ existiert.
 
   Sei ${sp}_G(s, t)$ der kürzeste $s$-$t$-Pfad auf $G$ der unter allen kürzesten $s$-$t$-Pfaden den Knoten $m$ mit dem höchsten Level enthält.
   Erstelle aus diesem Pfad $(s, \dotsc, t)$ zwei Pfade: $(s, \dotsc, m)$ und $(t, \dotsc, m)$.

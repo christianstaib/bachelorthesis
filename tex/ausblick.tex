@@ -1,10 +1,11 @@
 \chapter{Ausblick}
 
 Mit der Kontraktion durch eine obere Schranke wurde eine Methode gefunden, welche die Top-Down Graphen-Kontraktion von Graphen mit hohen durchschnittlichen Knotengraden beschleunigen kann.
-Es hat sich gezeigt, dass die erzielte Beschleunigung für die bearbeiteten Sichtbarkeitsgraphen nicht groß genug war, um die Kontraktion in angemessener Zeit zu ermöglichen.
+Es hat sich jedoch gezeigt, dass die erzielte Beschleunigung für die bearbeiteten Sichtbarkeitsgraphen nicht groß genug war, um die Kontraktion in angemessener Zeit zu ermöglichen.
 In weiteren Arbeiten kann die Bedeutung dieser Methode untersucht und andere Kontraktions-Reihenfolgen betrachtet werden, die eine effizientere Kontraktion ermöglichen.
 
 Mit CH-PEOPLE und PEOPLE wurden Methoden gefunden, mit denen zu den bearbeiteten Sichtbarkeitsgraphen Contracted- und Hub-Graphen erstellt werden können.
+Wenngleich die Erstellung dieser rechenintensiv ist, so können diese dafür genutzt werden, um weitere Analysen zu ermöglichen, die bisher aufgrund der langen Dijkstra-Laufzeit nicht möglich waren, etwa um den Fehler nicht-optimaler Pfadfindungs-Algorithmen wie von Funke et al. \cite{funkescalable} zu bestimmen.
 In einem weiteren Schritt können diese Methoden auch auf andere Graphen und Graphklassen angewendet werden.
 Durch die mögliche Parallelisierung können auch größere Graphen bearbeitet werden, für die es bisher keine vergleichbar schnellen Speedup-Techniken gab.
 
