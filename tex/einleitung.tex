@@ -14,7 +14,7 @@ Im Folgenden wird untersucht, inwiefern sich zwei Techniken zum schnellen Finden
 
 \begin{figure}[ht]%
   \centering
-  \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth]{img/thessaloniki-visibility.png}}}%
+  \includegraphics[width=.5\linewidth]{img/thessaloniki-visibility.png}
   \caption{Sichtbarkeitsgraph des Hafens von Thessaloniki}%
   \label{fig:thessaloniki-visibility}%
 \end{figure}
@@ -27,7 +27,7 @@ Die beiden betrachteten Speedup-Techniken zum Finden kürzester Pfade benötigen
 
 Die für das Preprocessing benötigte Rechenzeit und der zusätzlich benötigte Speicher sollten in einem sinnvollen Verhältnis zum Speedup und zur Anzahl der Anfragen stehen.
 Ist der Speedup hoch oder sollen viele Anfragen bearbeitet werden, so lohnt es sich, mehr in das Preprocessing zu investieren.
-\autoref{fig:einleitung:preprocessing_to_query} zeigt das erwartete Verhältnis der Vorbehandlungs- zu Anfragezeit von Contraction Hierarchies und Hierarchical Hub Labeling.
+\autoref{fig:einleitung:preprocessing_to_query} zeigt das erwartete Verhältnis der Vorbehandlungs- zu Anfragezeiten von Contraction Hierarchies und Hierarchical Hub Labeling.
 
 \begin{figure}[h!]
   \centering
@@ -49,6 +49,6 @@ Ist der Speedup hoch oder sollen viele Anfragen bearbeitet werden, so lohnt es s
     \fill[black] (4, 1) circle (1pt);
     \node[right] at (4, 1) {Table Lookup};
   \end{tikzpicture}
-  \caption{Verhältnis von Vorbehandlungszeit zu Anfragezeit. Übernommen von John Lazarsfeld\cite{Lazarsfeld}}
+  \caption{Verhältnis von Vorbehandlungszeit zu Anfragezeiten. Übernommen von John Lazarsfeld\cite{Lazarsfeld}}
   \label{fig:einleitung:preprocessing_to_query}
 \end{figure}

@@ -1,6 +1,6 @@
 \chapter{Ergebnisse}
 
-Sofern nicht anders erwähnt, beziehen sich die Laufzeiten auf Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von \num{2.1} GHz und \num{180}GB RAM.
+Sofern nicht anders erwähnt, beziehen sich die Laufzeiten auf Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von \SI{2.1}{\giga\hertz} und \SI{180}{\giga\byte} RAM.
 Die Ergebnisse wurden auf verschiedenen, aber identisch ausgestatteten Systemen des BwUniCluster2.0 erzeugt.
 
 \section{Untersuchung der Graphen}
@@ -134,14 +134,14 @@ In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten eine
           \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:20002,0) rectangle (axis cs:22002,0.00236363167330556);
           \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:22002,0) rectangle (axis cs:24002,2.57967986172503e-05);
         \end{axis}
-      \end{tikzpicture}
-    }
-    \caption{medi-visibility}
-  \end{subfigure}
-  \par\bigskip
-  \begin{subfigure}[b]{0.5\textwidth}
+      \end{tikzpicture}%
+    }%
+    \caption{medi-visibility}%
+  \end{subfigure}%
+  %\par\bigskip
+  \begin{subfigure}[b]{0.5\textwidth}%
     \resizebox{\textwidth}{!}{%
-      \begin{tikzpicture}
+      \begin{tikzpicture}%
         \begin{axis}[
             tick align=outside,
             tick pos=left,
@@ -298,7 +298,7 @@ Zuerst wurden die Knoten, die nicht Teil des Hitting-Sets sind, kontrahiert und 
 
 \subsubsection{Triviale Heuristik}
 
-Die Kontraktion mit der trivialen Heuristik als oberer Schranke ließ sich nicht auf die Sichtbarkeitsgraphen anwenden, da zu viele Abkürzungen eingefügt wurden und das Programm bereits nach wenigen Knoten-Kontraktionen aufgrund eines Speichermangel auf mit \SI{180}{\giga\byte} RAM ausgestatteten Computern abbrach.
+Die Kontraktion mit der trivialen Heuristik als oberer Schranke ließ sich nicht auf die Sichtbarkeitsgraphen anwenden, da zu viele Abkürzungen eingefügt wurden und das Programm bereits nach wenigen Knoten-Kontraktionen aufgrund eines Speichermangels auf mit \SI{180}{\giga\byte} RAM ausgestatteten Computern abbrach.
 Der Verlauf der Anzahl der Kanten des Graphs während der Kontraktion ist in \autoref{img:ergebnisse:all_in} abgebildet.
 
 Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügung standen, wurde das Experiment auf diesen nicht wiederholt, da die Anzahl der Kanten zu stark anstieg, um sinnvolle Ergebnisse erwarten zu können.
@@ -533,8 +533,8 @@ Die vertex-to-level-Funktion wurde hierbei aus \autoref{subsection:kontraktion_o
 
 \subsection{Contracted-Graph}
 
-Durch die Berechnung aller Kanten, die von jedem Knoten im Downward- und Upward-Graphen ausgehen, konnte mit CH-PEOPLE sowohl für die Sichtbarkeitsgraphen als auch für deren Triangulierungen jeweils ein Contracted-Graph erstellt werden
-Die Kennzahlen zur Erzeugungs- und Anfragezeit sind in \autoref{table:ergebnisse:people_ch_speedup} aufgeführt.
+Durch die Berechnung aller Kanten, die von jedem Knoten im Downward- und Upward-Graphen ausgehen, konnte mit CH-PEOPLE sowohl für die Sichtbarkeitsgraphen als auch für deren Triangulierungen jeweils ein Contracted-Graph erstellt werden.
+Die Kennzahlen zur Erzeugungs- und Anfragezeiten sind in \autoref{table:ergebnisse:people_ch_speedup} aufgeführt.
 
 \begin{table}[h!]
   \centering
@@ -569,7 +569,7 @@ Es ist anzunehmen, dass durch den Einsatz einer besseren Funktion, welche durch 
 \subsection{Hub Graph}
 
 Aus den berechneten Contracted-Graphen konnten durch Merging als auch direkt durch PEOPLE Hub-Graphen erstellt werden.
-Beide Wege erstellten nahezu identische Label und erreichten einen fünf- bis sechstelltigen Speedup.
+Beide Wege erstellten nahezu identische Label und erreichten einen fünf- bis sechsstelligen Speedup.
 Es galt zu klären, wie sich diese beiden Ansätze vergleichen lassen.
 
 \subsubsection{Merging}
@@ -607,8 +607,7 @@ Die Verwendung eines parallelen \emph{reduce}-Algorithmus führte zu den Ergebni
 
 \subsubsection{PEOPLE}
 
-Die Hub-Graphen wurden ebenfalls durch PEOPLE berechnet.
-Die entsprechenden Werte sind in \autoref{table:ergebnisse:hl_bruteforce} aufgeführt.
+Die Hub-Graphen wurden ebenfalls durch PEOPLE berechnet, die entsprechenden Werte sind in \autoref{table:ergebnisse:hl_bruteforce} aufgeführt.
 
 \begin{table}[h!]
   \centering
@@ -662,7 +661,7 @@ Es zeigt sich, dass es bei den Sichtbarkeitsgraphen schneller ist, direkt einen 
     pata-graph         & \B 7h \phantom{0}4m    & 1d \phantom{0}4h 26m \\
     pata-visibility    & 2d 10h 52m             & \B 1d 20h 17m        \\  \bottomrule
   \end{tabular}
-  \caption{Vergeleich der benötigten Zeit zum Erstellen von Hub-Graphen}
+  \caption{Vergleich der benötigten Zeit zum Erstellen von Hub-Graphen}
   \label{table:ergebnisse:vergleich_was_schneller}
 \end{table}
 
@@ -771,7 +770,7 @@ Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{52
 Nach der Untersuchung des einzelnen Suchvorganges wurden für aegaeis-graph für alle Knoten die bei der CH-PEOPLE-Suche gesehen Knoten erfasst.
 Die Ergebnisse sind hierbei in \autoref{fig:ergebnisse:efficiency_ch_people} gelistet.
 Bei \num{65}\% aller Suchen wurden weniger als \num{1}\% der \num{524881} Knoten gesehen.
-Da die zugrunde vertex-to-level-Funktion auf einem einem Hitting-Set über nur \num{100000} Pfaden basiert, ist anzunehmen, dass durch eine bessere vertex-to-level-Funktion noch mehr Suchen \emph{lokaler} werden.
+Da die zugrunde vertex-to-level-Funktion auf einem Hitting-Set über nur \num{100000} Pfaden basiert, ist anzunehmen, dass durch eine bessere vertex-to-level-Funktion noch mehr Suchen \emph{lokaler} werden.
 
 \begin{figure}[h!]%
   \centering
@@ -928,14 +927,14 @@ Letztere, in der Tabelle als $\triangle$ notiert, führte zu überraschend klein
     pata-visibility    & 1100.42    & \B 478.80  & 806.95  & 552.90        & 23690.52   & 10174.37 \\
     \bottomrule
   \end{tabular}
-  \caption{Vorhergesagt durschnitliche Labelgröße für verschiedene vertex-to-level-Funktion}
+  \caption{Vorhergesagt durchschnittliche Labelgröße für verschiedene vertex-to-level-Funktion}
   \label{table:ergebnisse:vtl_vergleich}
 \end{table}
 
 \subsection{Große Hitting-Sets}
 
 Mit den erzeugten Hub-Graphen wurden jeweils Hitting-Sets über \num{250000000} Pfade gebildet.
-Die Knoten, die nicht enthalten waren, wurden danach sortiert, wie oft sie auf kürzsten Pfaden lagen, da dies nach \autoref{table:ergebnisse:vtl_vergleich} am Erfolgversprechenden erscheint.
+Die Knoten, die nicht enthalten waren, wurden danach sortiert, wie oft sie auf kürzesten Pfaden lagen, da dies nach \autoref{table:ergebnisse:vtl_vergleich} am Erfolgversprechenden erscheint.
 Mit dieser vertex-to-level-Funktion wurde über \num{10000} Labels die durchschnittliche Labelgröße vorhergesagt, die Ergebnisse sind in \autoref{fig:ergebnisse:250_paths} aufgelistet.
 Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durchschnittliche Labelgröße kleiner als der ursprüngliche durchschnittliche Knotengrad.
 
@@ -959,7 +958,7 @@ Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durchschnittliche Lab
   \label{fig:ergebnisse:250_paths}
 \end{table}
 
-Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der \autoref{fig:ergebnisse:efficiency_ch_people} zugrunde liegende Experiment wiederholt, wobei diesmal \num{86.7}\% aller Suchen weniger als 1\% aller Knoten sahen.
+Mit der entstandenen vertex-to-level-Funktion für aegaeis-graph wurde das der \autoref{fig:ergebnisse:efficiency_ch_people} zugrunde liegende Experiment wiederholt, wobei diesmal \num{86.7}\% aller Suchen weniger als 1\% aller Knoten sahen.
 \autoref{fig:ergebnisse:new_efficiency_ch_people} zeigt die Abbildung mit den neuen Daten.
 
 \begin{figure}

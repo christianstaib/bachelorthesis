@@ -98,7 +98,7 @@ Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zu
 Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und was der Abstand der Knoten ist, bezeichnet man auch als $s$-$t$-Anfrage (Query) und einen gefundenen Pfad als $s$-$t$-Pfad.
 Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig, die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu bestimmen.
 Auch die Umkehrung dieses Problem ist interessant, also die kürzesten Pfade von allen Knoten zu einem Anderen zu bestimmen.
-Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade von diesem Knoten auf dem Transponierten Graph $G^T$ entspricht.
+Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade von diesem Knoten auf dem transponierten Graph $G^T$ entspricht.
 
 \begin{definition}[Transponierter Graph]
   Sei $G = (V, E)$ ein Graph. Dann ist $G^T \coloneq (V, E^T)$ mit $(t, h, w) \in E \Leftrightarrow (h, t, w) \in E^T$ der \emph{transponierte Graph} von $G$.
@@ -150,7 +150,7 @@ Eine formale Definition des Problems findet sich in Definition \ref{def:espp}.
 
 \begin{definition}[Euclidean Shortest Path Problem]\label{def:espp}
   Sei $P$ eine Menge von Polygonen in $\mathbb{R}^2$ und $s, t$ Eckpunkte dieser Polygone.
-  Was ist der kürzeste Pfad von $s$ nach $t$, so dass dieser kein Polygon schneidet?
+  Was ist der kürzeste Pfad von $s$ nach $t$, sodass dieser kein Polygon schneidet?
 \end{definition}
 
 \subsection{Sichtbarkeitsgraphen}
@@ -266,9 +266,9 @@ Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht ve
 
 \begin{figure}[h!]%
   \centering
-  \subfloat[\centering aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
+  \subfloat[\centering{}aegaeis-graph]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-graph.png} }}%
   %\qquad
-  \subfloat[\centering aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
+  \subfloat[\centering{}aegaeis-visibility]{{\includegraphics[width=.5\linewidth - 0.25cm]{img/thessaloniki-visibility.png} }}%
   \caption{Hafen von Thessaloniki}%
   \label{fig:thessaloniki_comparison}%
 \end{figure}

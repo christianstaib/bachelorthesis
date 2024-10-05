@@ -5,7 +5,7 @@ Für die Knoten-Kontraktion muss für jeden Vorgänger eine Dijkstra-Suche durch
 Ein hoher Knotengrad bedeutet somit viele Dijkstra-Suchen und $\abs{\text{Vorgänger}} \cdot \abs{\text{Nachfolger}}$ viele Vergleiche, ob eine Abkürzung notwendig ist.
 
 Bei der Bottom-Up-Kontraktion wird die Kontraktion potenziell mehrfach simuliert, bevor sie wirklich ausgeführt wird.
-Dabei werden beim Lazy-Popping die Knoten oft nicht kontrahiert, sondern mit aktualisiertem Heuristik-Wert in die Warteschlange zurückgeschoben.
+Dabei werden beim Lazy-Popping die Knoten oft nicht kontrahiert, sondern mit aktualisiertem Heuristikwert in die Warteschlange zurückgeschoben.
 Denn durch viele Nachbarn steigt die Wahrscheinlichkeit dafür, dass sich die Knoten-Differenz verändert.
 Beim Neighbor-Update sind jeweils sehr viele Nachbarn zu aktualisieren.
 
@@ -17,7 +17,7 @@ Auch die zur Repräsentation von Graphen verwendeten Datenstrukturen sollten opt
 Anstelle einer rechenintensiven Dijkstra-Suche in $G$ pro Vorgänger kann eine Heuristik pro Paar aus Vorgänger und Nachfolger eine obere Schranke für den Abstand liefern.
 Eine Kante als Abkürzung wird dann eingefügt, wenn ihre Länge kleiner oder gleich der berechneten oberen Schranke ist.
 Damit dies für die Kontraktion eines einzelnen Knotens effizienter ist, muss die Ermittlung der Heuristikwerte für alle Paare aus Vorgänger und Nachfolger schneller sein als die Dijkstra-Suchen und das anschließende Abfragen der Distanzen der Dijkstra-Suche.
-Um die Kontraktion des gesamten Graphen effizienter zu gestallten, müssen die Folgekosten unnötigerweise eingefügter Kanten geringer sein als der Zeitgewinn durch den Einsatz der Heuristik.
+Um die Kontraktion des gesamten Graphen effizienter zu gestalten, müssen die Folgekosten unnötigerweise eingefügter Kanten geringer sein als der Zeitgewinn durch den Einsatz der Heuristik.
 
 \subsection{Triviale Heuristik}
 
@@ -35,7 +35,7 @@ Für Graphen in der euklidischen Ebene existieren Algorithmen, wie etwa die Dela
 
 \subsection{Dreiecksungleichung}
 
-Ähnlich zu ALT\cite{goldberg2005computing} kann eine Menge \emph{Hubs} berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke des Abstands zweier Knoten angeben können.
+Ähnlich zu ALT \cite{goldberg2005computing} kann eine Menge \emph{Hubs} berechnet werden, welche mittels der Dreiecksungleichung eine obere Schranke des Abstands zweier Knoten angeben können.
 Ein Hub ist hierbei ein Knoten $h \in V$, für den die Distanzen zu und von allen Knoten bekannt sind.
 Die obere Schranke des Abstandes zweier Knoten $s, t \in V$ kann dann durch ${spd}_G (s, h) + {spd}_G (h, t)$ berechnet werden.
 Liegt $h$ dabei auf einem kürzesten Pfad von $s$ nach $t$, so entspricht der Wert sogar genau dem Abstand.
@@ -63,7 +63,7 @@ Durch mehr Hubs steigt allerdings auch der Zeitbedarf der Berechnung der oberen 
 \subsection{Kombination mehrerer oberer Schranken}
 Sind für einen Graphen mehrere Heuristiken bekannt, so kann für eine potenzielle Abkürzung aus allen oberen Schranken die kleinste ausgewählt werden.
 Dies ist besonders dann sinnvoll, wenn die Heuristiken jeweils eine Teilmenge aller Knotenpaare \emph{gut} abdecken.
-Insbesondere die Kombination von Dreiecksungleichung und vereinfachtem Graph ist hierbei vielversprechend, unter der Annahme, dass die erste für große und die zweite für kleine Hop-Abstände gute obere Schranken liefert.
+Insbesondere die Kombination von Dreiecksungleichung und vereinfachtem Graph ist hierbei vielversprechend, unter der Annahme, dass die Dreiecksungleichung für große und der vereinfachte Graph für kleine Hop-Abstände gute obere Schranken liefert.
 
 \section{Datenstruktur}
 

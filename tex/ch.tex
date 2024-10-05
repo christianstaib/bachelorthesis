@@ -39,7 +39,7 @@ Der Begriff Contraction Hierarchies leitet sich vom Konzept der Knoten-Kontrakti
   \end{enumerate}
 \end{definition}
 
-Nach der Kontraktion $v$ ist somit isoliert.
+Nach der Kontraktion ist $v$ somit isoliert.
 Um die Abkürzungen zu erzeugen, kann von jedem Vorgänger eine modifizierte Dijkstra-Suche zu allen Nachfolgern ausgeführt werden, bei der die $(v, w)$ Kanten nicht begangen werden.
 Ist die Länge der potenziellen Abkürzung kürzer als die des in der modifizierten Dijkstra-Suche gefundenen Pfades, so ist $(u, v, w)$ der einzige kürzeste $u$-$w$-Pfad.
 Die Knoten-Kontraktion bewahrt daher Abstände zwischen den verbleibenden Knoten.
@@ -158,7 +158,7 @@ Der kürzeste $a$-$j$-Pfad ist $(a, i, j)$, daher wird eine Kante zwischen $a$ u
 
 Häufig wird die Kontraktionsbedingung abgeschwächt, indem dann eine Kante eingefügt wird, wenn der zu kontrahierende Knoten auf \emph{einem} kürzesten Pfad liegt.
 Dazu kann eine normale Dijkstra-Suche verwendet werden: Ist die Länge einer potenziellen Abkürzung optimal, dann wird sie eingefügt.
-Da die Suche, die $(v, w)$ nicht durchläuft, den gesamten Graphen absucht wenn $(u, v, w)$ der einzige $u$-$w$-Pfad ist, kann die normale Dijkstra-Suche im Vergleich zur modifizierten deutlich effektiver sein.
+Da die Suche, die $(v, w)$ nicht durchläuft, den gesamten Graphen absucht, wenn $(u, v, w)$ der einzige $u$-$w$-Pfad ist, kann die normale Dijkstra-Suche im Vergleich zur Modifizierten deutlich effektiver sein.
 Weiter kann die Anzahl der Hops der Suche begrenzt werden.
 Dadurch können jedoch auch Kanten eingefügt werden, die nicht unbedingt für die Erhaltung der Abstände erforderlich sind.
 
@@ -255,7 +255,7 @@ Hierbei ist die Kante $(a, j)$ eine Abkürzung, sie kürzt $i$ ab, was durch die
     \draw[->, dotted]  (i) -- (j);
 
   \end{tikzpicture}
-  \caption{Beispiel einer Suche im Contrated Graph}
+  \caption{Beispiel einer Suche im Contracted-Graph}
   \label{fig:ch:beispiel_suche}
 \end{figure}
 
@@ -271,7 +271,7 @@ In \autoref{ch:subsection:pfad_gewinnung} wird darauf eingegangen, wie diese ent
   \caption{Contraction Hierarchies Query}
   \begin{algorithmic}[1]
     \Require Upward-Graph $G_u = (V, E_u)$, Downward-Graph $G_d = (V, E_d)$, Startknoten $s \in V$, Zielknoten $t \in V$
-    \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$, ${pre}_u$, ${dist}_d$, ${pre}_d$
+    \Ensure Treffpunktknoten $m \in V \cup \{ {none} \}$, ${dist}_u$, ${pre}_u$, ${dist}_d$, ${pre}_d$
     \State ${dist}_u$, ${pre}_u$ $\leftarrow$ Dijkstra$(G_u, s)$
     \State ${dist}_d$, ${pre}_d$ $\leftarrow$ Dijkstra$(G_d, t)$
 
@@ -363,7 +363,7 @@ Einen möglichen Algorithmus, der Abkürzungen in einem Pfad ersetzt, ist in Alg
 Dieser betrachtet den Pfad mit Abkürzungen als Stapel und bearbeitet jeweils nur die beiden obersten Knoten, weil das Einfügen an einer bestimmten Stelle in ein Array rechenintensiv ist.
 
 \begin{algorithm}[ht]
-  \caption{Shortcut replacement}
+  \caption{Shortcut Replacement}
   \begin{algorithmic}[1]
     \Require Pfad $p$ mit Abkürzungen, Abkürzungsfunktion $S \colon V \times V \to V \cup \{ {none} \}$
     \Ensure Pfad $p'$ ohne Shortcuts
@@ -401,7 +401,7 @@ Dieser betrachtet den Pfad mit Abkürzungen als Stapel und bearbeitet jeweils nu
   \label{ch:alg:shortcut_replacement}
 \end{algorithm}
 
-\subsection{Early stop}
+\subsection{Early Stop}
 
 Algorithmus \ref{ch:query_simple} hat primär theoretische Bedeutung.
 Implementierungen ähneln der bidirektionalen Dijkstra-Suche, dabei werden abwechselnd Knoten der Upward-Suche und der Downward-Suche expandiert.
@@ -422,8 +422,7 @@ Hierfür wird die Expansion eines Knotens abgebrochen, wenn er über eine Kante 
   Gleiches gilt analog für $G_d$.
 \end{definition}
 
-Veranschaulicht wird dies an dem Beispiel in \autoref{fig:ch:stall_example}.
-Wir befinden uns in der Suche des Upward-Graphen.
+Veranschaulicht wird dies an dem Beispiel in \autoref{fig:ch:stall_example}, das die Suche des Upward-Graphen betrachtet.
 Die blauen Kanten repräsentieren Kanten der Upward-Suche, während die rote Kante eine von $u$ ausgehende Downward-Kante darstellt.
 Bisher wurde $v$ in der Upward-Suche mit einer Distanz von eins expandiert, im nächsten Schritt soll $u$ expandiert werden.
 Der Knoten $u$ hat die Distanz drei in der Upward-Suche, kann jedoch über die Upward-Kante mit einer Distanz von zwei erreicht werden.
@@ -461,8 +460,7 @@ Bei der Top-Down-Kontraktion ist die level-to-vertex-Funktion ${ltv}$ vorgegeben
 Die Knoten werden in der Reihenfolge ihres Levels kontrahiert, wobei mit dem niedrigsten Level begonnen wird.
 Diese Herangehensweise bietet die Möglichkeit eine optimale Reihenfolge anzuwenden, wobei die für hinreichend große Graphen nur schwer bestimmbar ist.
 
-Bei der \emph{Sortierung nach Grad} werden die Knoten nach ihrem Grad sortiert, wobei die Knoten mit den kleinsten Graden zuerst kontrahiert werden.
-Die Überlegung dahinter ist, dass Knoten mit vielen Nachbarn auch viele neue Kanten einfügen können, was vermieden werden soll.
+Knoten mit vielen Nachbarn können potenziell viele neue Kanten erzeugen, weshalb sie bei der \emph{Sortierung nach Grad} erst später kontrahiert werden, um dies zu verhindern.
 
 Die Knoten können auch über ein Hitting-Set sortiert werden:
 Hierbei wird auf Grundlage einer möglichst großen Anzahl von Pfaden ein Hitting-Set gebildet.
@@ -528,7 +526,7 @@ Da die Labels den Suchbäumen der Upward- und Downward-Suche entsprechen, ist di
   \caption{Hub-Label-Anfrage}
   \begin{algorithmic}[1]
     \Require Forward-Label-Funktion $L_f$, Backward-Label-Funktion $L_b$, Startknoten $s \in V$, Zielknoten $t \in V$
-    \Ensure Treffknoten $m \in V \cup \{ {none} \}$, ${dist}_u$
+    \Ensure Treffpunktknoten $m \in V \cup \{ {none} \}$, ${dist}_u$
     \State $l_s \leftarrow L_f (s)$
     \State $l_t \leftarrow L_b (t)$
 
@@ -551,9 +549,9 @@ Da die Labels den Suchbäumen der Upward- und Downward-Suche entsprechen, ist di
 
 \subsection{Pfaderstellung}
 
-Nachdem ein Treffpunkt-Knoten $m$ gefunden wurde, sind noch zusätzliche Informationen notwendig, um einen Pfad in $G$ erstellen zu können, denn zuerst muss ein Pfad in $C$ erstellt werden, und anschließend müssen die Abkürzungen ersetzt werden.
+Nachdem ein Treffpunktknoten $m$ gefunden wurde, sind noch zusätzliche Informationen notwendig, um einen Pfad in $G$ erstellen zu können, denn zuerst muss ein Pfad in $C$ erstellt werden, und anschließend müssen die Abkürzungen ersetzt werden.
 Dazu muss für jeden Knoten in einem Label der Vorgänger, falls vorhanden, bekannt sein.
-Dafür wird die Definition des Label von einer Teilmenge von $V \times \mathbb{R}$ erweitert auf eine Teilmenge von $V \times \mathbb{R} \times (V \cup \{ none \}) $.
+Dafür wird die Definition des Labels von einer Teilmenge von $V \times \mathbb{R}$ erweitert auf eine Teilmenge von $V \times \mathbb{R} \times (V \cup \{ none \}) $.
 Der zusätzliche Eintrag speichert hierbei den Vorgänger.
 Um den Pfad zu erstellen, beginnt man beim Treffpunktknoten und folgt den Vorgängern, bis kein Vorgänger mehr existiert.
 Durch das Ersetzen der Abkürzungen, etwa mit dem Algorithmus \ref{ch:alg:shortcut_replacement}, erhält man so einen gültigen Pfad auf $G$.
