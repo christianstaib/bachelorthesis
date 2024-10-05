@@ -262,6 +262,7 @@ Da dieses Programm ein anderes Speicherformat verwendet, konnten die Anfragezeit
 Es kontrahierte im Vergleich zum in dieser Arbeit verwendeten Programm schneller, fügte jedoch mehr Abkürzungen ein.
 Das Programm kontrahiert mehrere Knoten gleichzeitig, indem es \emph{unabhängige Teilmengen} von Knoten identifiziert, was eine effizientere parallele Verarbeitung ermöglicht \cite{vetter2009parallel}.
 Angesichts des hohen durchschnittlichen Knotengrades der Sichtbarkeitsgraphen ist anzunehmen, dass nur wenige und kleine unabhängige Teilmengen existieren.
+Dies schränkt den Nutzen der parallelen Kontraktion erheblich ein.
 Auch dieses Programm konnte nach drei Tagen Laufzeit keine Ergebnisse liefern.
 
 \begin{table}[h!]
@@ -570,13 +571,14 @@ Es ist anzunehmen, dass durch den Einsatz einer besseren Funktion, welche durch 
 
 Aus den berechneten Contracted-Graphen konnten durch Merging als auch direkt durch PEOPLE Hub-Graphen erstellt werden.
 Beide Wege erstellten nahezu identische Label und erreichten einen fünf- bis sechsstelligen Speedup.
-Es galt zu klären, wie sich diese beiden Ansätze vergleichen lassen.
+Es galt zu klären, wie sich diese beiden Ansätze vergleichen lassen und wie schneller ein Hub-Graph generiert werden kann.
 
 \subsubsection{Merging}
 
 Ein zunächst verwendetes Programm, das einen Hub-Graphen aus einem Contracted-Graphen ohne Parallelisierung erzeugte, war nicht in der Lage, innerhalb von drei Tagen die Hub-Graphen der Sichtbarkeitsgraphen zu berechnen.
 Der Grund hierfür liegt in der enormen Anzahl an Labels und Einträgen, die dabei zusammengeführt werden müssen: Ein Knoten der Contracted-Graphen der Sichtbarkeitsgraphen weist einen Grad im drei- bis vierstelligen Bereich auf, und für jeden dieser Nachbarn existiert ein Label, das gemerged werden muss.
-Die Verwendung eines parallelen \emph{reduce}-Algorithmus führte zu den Ergebnissen in \autoref{table:ergebnisse:hl_ch_bruteforce}.
+Die Verwendung eines parallelen \emph{reduce}-Algorithmus führte zu den Ergebnissen in \autoref{table:ergebnisse:hl_ch_bruteforce},
+dieser konnte für alle Graphen innerhalb von drei Tagen Hub-Graphen generieren.
 
 \begin{table}[h!]
   \centering
@@ -637,8 +639,7 @@ Die Hub-Graphen wurden ebenfalls durch PEOPLE berechnet, die entsprechenden Wert
 
 \subsubsection{Vergleich}
 
-
-Da Hub-Graphen auf zwei Wegen erzeugt werden können, muss geklärt werden, welcher effizienter ist.
+Da Hub-Graphen auf zwei Wegen erzeugt werden können, muss geklärt werden, welcher effizienter ist, wobei effizienter sich hierbei nur die Laufzeit, nicht auf andere Metriken bezieht.
 Dafür wurde die Zeit für die Erstellung des Contracted-Graphen mit CH-PEOPLE zu der Zeit für das Mergen addiert und anschließend mit der Zeit für die direkte Erstellung eines Hub-Graphen mittels PEOPLE verglichen.
 Die entsprechenden Werte sind in \autoref{table:ergebnisse:vergleich_was_schneller} dargestellt.
 
@@ -667,6 +668,7 @@ Es zeigt sich, dass es bei den Sichtbarkeitsgraphen schneller ist, direkt einen 
 
 Wie in \autoref{subsection:people:label_size} erwähnt, können die durch PEOPLE erzeugten Labels kleiner sein als die durch Merging erzeugten, was auch hier der Fall ist.
 Der Unterschied in Bezug auf die Labelgröße ist zwar nicht besonders groß, aber dennoch erkennbar.
+Da sich die Labelgrößen unterscheiden ist auch anzunehmen, dass die kürzesten Pfade auf den bearbeiteten Graphen nicht eindeutig sind.
 
 \subsection{Performance Overhead}
 

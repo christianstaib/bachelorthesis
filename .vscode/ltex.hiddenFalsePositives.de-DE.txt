@@ -39,3 +39,5 @@
 {"rule":"FEHLENDER_PUNKT_BEI_DATUM","sentence":"^\\QSofern nicht anders erwähnt, beziehen sich die Laufzeiten auf Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von 2.1 und 180 RAM.\\E$"}
 {"rule":"GERMAN_SPELLER_RULE","sentence":"^\\QMittels PEOPLE konnte für ihn ein Hub-Graph erstellt werden, mit dem ein Speedup [round-mode=places,round-precision=4](529.377185*1000)/6.756 im Vergleich zur Dijkstra erzielt wurde.\\E$"}
 {"rule":"GERMAN_SPELLER_RULE","sentence":"^\\QMittels PEOPLE konnte für ihn ein Hub-Graph erstellt werden, mit dem ein Speedup [round-mode=places,round-precision=0](529.377185*1000)/6.756 im Vergleich zur Dijkstra erzielt wurde.\\E$"}
+{"rule":"GERMAN_SPELLER_RULE","sentence":"^\\QDie Verwendung eines parallelen reduce-Algorithmus führte zu den Ergebnissen in \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, dieser konnte für alle Graphen inerhalb von drei Tagen Hub-Graphen generieren.\\E$"}
+{"rule":"GERMAN_SPELLER_RULE","sentence":"^\\QDie Verwendung eines parallelen reduce-Algorithmus führte zu den Ergebnissen in \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q, dieser konnte für alle Graphen innerhalb von drei Tagen Hub-Graphen generieren.\\E$"}
