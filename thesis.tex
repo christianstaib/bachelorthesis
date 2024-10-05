@@ -13,11 +13,9 @@
 \author{Christian Staib}
 \date{\today}
 
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{1}
 
 \begin{document}
-\thispagestyle{empty}
-\pagenumbering{roman}
 
 \include{tex/titlepage}
 \cleardoublepage
@@ -28,8 +26,9 @@
 \tableofcontents
 
 \cleardoublepage
-\pagenumbering{arabic}
 
+
+\mainmatter
 \include{tex/einleitung}
 \include{tex/graphs}
 \include{tex/ch}
@@ -40,6 +39,7 @@
 \include{tex/acknowledgement}
 
 
+\backmatter
 \printbibliography
 
 \cleardoublepage

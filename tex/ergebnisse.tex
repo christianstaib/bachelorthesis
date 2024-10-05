@@ -1,6 +1,6 @@
 \chapter{Ergebnisse}
 
-Sofern nicht anders erwähnt, beziehen sich die Laufzeiten auf Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von 2.1 Ghz und 180GB RAM.
+Sofern nicht anders erwähnt, beziehen sich die Laufzeiten auf Systeme mit zwei Intel Xeon Gold 6230 Prozessoren mit einer Taktrate von \num{2.1} GHz und \num{180}GB RAM.
 Die Ergebnisse wurden auf verschiedenen, aber identisch ausgestatteten Systemen des BwUniCluster2.0 erzeugt.
 
 \section{Untersuchung der Graphen}
@@ -43,7 +43,7 @@ Die ermittelten Zeiten für das Finden des $s$-$t$-Abstands sind in Tabelle \ref
 Aus den Ergebnissen geht hervor, dass die Dijkstra-Suchen auf den Sichtbarkeitsgraphen im Vergleich zu auf ihren Triangulierungen deutlich höhere Laufzeiten aufweisen.
 
 Zusätzlich zur durchschnittlichen Dijkstra-Laufzeit wurden die Durchschnittswerte der Hop-Längen, des Dijkstra-Ranks und der Queue-Pops über \num{10000} parallele $s$-$t$-Dijkstra-Suchen ermittelt, um ein Verständnis für die Laufzeiten zu erlangen.
-Der Dijkstra-Rank ist die Anzahl der expaniderten Knoten zum Zeitpunkt der Expansion des Zielknoten, die Queue-Pops die Anzahl der aus der Prioritätswarteschlange der Dijkstra-Suche entnommen Knoten.
+Der Dijkstra-Rank ist die Anzahl der expandierten Knoten zum Zeitpunkt der Expansion des Zielknotens, die Queue-Pops die Anzahl der aus der Prioritätswarteschlange der Dijkstra-Suche entnommen Knoten.
 Es zeigte sich, dass die durchschnittliche Hop-Länge in den Sichtbarkeitsgraphen signifikant kürzer ist als in den Triangulierungen.
 Obwohl die Sichtbarkeitsgraphen weniger Knoten aufweisen, ist die durchschnittliche Anzahl der Queue-Pops dennoch höher.
 
@@ -57,7 +57,7 @@ Obwohl die Sichtbarkeitsgraphen weniger Knoten aufweisen, ist die durchschnittli
       S[table-format = 7.0] % queue pops
     }
     \toprule
-    {Graph}            & {$\varnothing$ $t({spd})$} & {$\varnothing$  Hop-Länge} & {$\varnothing$ Dijkstra Rank} & {$\varnothing$ Queue pops} \\
+    {Graph}            & {$\varnothing$ $t({spd})$} & {$\varnothing$  Hop-Länge} & {$\varnothing$ Dijkstra-Rank} & {$\varnothing$ Queue-Pops} \\
                        & {(\si{\ms})}               &                            &                               &                            \\
     \midrule
     aegaeis-graph      & 60.281198                  & 215.7201                   & 260447.36                     & 325845.56                  \\
@@ -521,7 +521,7 @@ Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der
     \end{tikzpicture}
     \caption{pata-visibility}
   \end{subfigure}
-  \caption{Graphen-Kontraktion mit oberer Schranke durch Triangulations und Hubs}
+  \caption{Graphen-Kontraktion mit oberer Schranke durch triangulierten Graph und Hubs}
   \label{fig:ergebnisse:hl_and_hubs}
 \end{figure}
 
@@ -576,7 +576,7 @@ Es galt zu klären, wie sich diese beiden Ansätze vergleichen lassen.
 
 Ein zunächst verwendetes Programm, das einen Hub-Graphen aus einem Contracted-Graphen ohne Parallelisierung erzeugte, war nicht in der Lage, innerhalb von drei Tagen die Hub-Graphen der Sichtbarkeitsgraphen zu berechnen.
 Der Grund hierfür liegt in der enormen Anzahl an Labels und Einträgen, die dabei zusammengeführt werden müssen: Ein Knoten der Contracted-Graphen der Sichtbarkeitsgraphen weist einen Grad im drei- bis vierstelligen Bereich auf, und für jeden dieser Nachbarn existiert ein Label, das gemerged werden muss.
-Die Verwendung eines parallelen \emph{reduce}-Algorithmus zum Mergen führte zu den Ergebnissen in \autoref{table:ergebnisse:hl_ch_bruteforce}.
+Die Verwendung eines parallelen \emph{reduce}-Algorithmus führte zu den Ergebnissen in \autoref{table:ergebnisse:hl_ch_bruteforce}.
 
 \begin{table}[h!]
   \centering
@@ -621,15 +621,15 @@ Die entsprechenden Werte sind in \autoref{table:ergebnisse:hl_bruteforce} aufgef
       S[table-format = 3.1] % average time sp
     }
     \toprule
-    {Graph}            & {Erstellung}         & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup$({spd})$}                 & {$\varnothing$ $t({spd})$} \\
-    {}                 & {}                   & {}                                   & {(\si{\us})}               & {}                                 & {(\si{\us})}               \\
+    {Graph}            & {Erstellung}         & {$\varnothing$ $\abs{\text{Label}}$} & {$\varnothing$ $t({spd})$} & {Speedup$({spd})$}                 & {$\varnothing$ $t({sp})$} \\
+    {}                 & {}                   & {}                                   & {(\si{\us})}               & {}                                 & {(\si{\us})}              \\
     \midrule
-    aegaeis-graph      & 1h 26m               & 225.18963155458096                   & 1.612                      & \fpeval{(60.281198*1000)/1.612}    & 53.997                     \\
-    aegaeis-visibility & 5h 57m               & 2446.9511241543973                   & 9.595                      & \fpeval{(630.434928*1000)/9.595}   & 17.31                      \\
-    medi-graph         & 3h 11m               & 262.32183266591755                   & 1.787                      & \fpeval{(87.08376*1000)/1.787}     & 81.234                     \\
-    medi-visibility    & 21h 57m              & 3527.5645951837378                   & 13.506                     & \fpeval{(1279.67479*1000)/13.506}  & 26.671                     \\
-    pata-graph         & 1d \phantom{0}4h 26m & 451.71017734369667                   & 2.512                      & \fpeval{(265.825771*1000)/2.512}   & 263.59                     \\
-    pata-visibility    & 1d 20h 17m           & 1822.0561604813242                   & 16.635                     & \fpeval{(1017.695977*1000)/16.635} & 27.324                     \\
+    aegaeis-graph      & 1h 26m               & 225.18963155458096                   & 1.612                      & \fpeval{(60.281198*1000)/1.612}    & 53.997                    \\
+    aegaeis-visibility & 5h 57m               & 2446.9511241543973                   & 9.595                      & \fpeval{(630.434928*1000)/9.595}   & 17.31                     \\
+    medi-graph         & 3h 11m               & 262.32183266591755                   & 1.787                      & \fpeval{(87.08376*1000)/1.787}     & 81.234                    \\
+    medi-visibility    & 21h 57m              & 3527.5645951837378                   & 13.506                     & \fpeval{(1279.67479*1000)/13.506}  & 26.671                    \\
+    pata-graph         & 1d \phantom{0}4h 26m & 451.71017734369667                   & 2.512                      & \fpeval{(265.825771*1000)/2.512}   & 263.59                    \\
+    pata-visibility    & 1d 20h 17m           & 1822.0561604813242                   & 16.635                     & \fpeval{(1017.695977*1000)/16.635} & 27.324                    \\
     \bottomrule
   \end{tabular}
   \caption{Kennwerte von mit PEOPLE erstellen Hub-Graphen}
@@ -667,7 +667,7 @@ Es zeigt sich, dass es bei den Sichtbarkeitsgraphen schneller ist, direkt einen 
 \end{table}
 
 Wie in \autoref{subsection:people:label_size} erwähnt, können die durch PEOPLE erzeugten Labels kleiner sein als die durch Merging erzeugten, was auch hier der Fall ist.
-Der Unterschied in Bezug auf die Label-Größe ist zwar nicht besonders groß, aber dennoch erkennbar.
+Der Unterschied in Bezug auf die Labelgröße ist zwar nicht besonders groß, aber dennoch erkennbar.
 
 \subsection{Performance Overhead}
 
@@ -947,13 +947,13 @@ Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durchschnittliche Lab
       S[table-format = 4.1] % average time
     }
     \toprule
-    {Graph}            & {Erstellung} & {Label size} \\ \midrule
-    aegaeis-graph      & 6h 12m       & 90.8         \\
-    aegaeis-visibility & 8h 11m       & 1309.8       \\
-    medi-graph         & 4h 47m       & 88.5         \\
-    medi-visibility    & 12h 26m      & 1739.4       \\
-    pata-graph         & 2d 10h 37m   & 99.3         \\
-    pata-visibility    & 9h 29m       & 424.1        \\  \bottomrule
+    {Graph}            & {Erstellung} & {$\varnothing$ $\abs{\text{Label}}$} \\ \midrule
+    aegaeis-graph      & 6h 12m       & 90.8                                 \\
+    aegaeis-visibility & 8h 11m       & 1309.8                               \\
+    medi-graph         & 4h 47m       & 88.5                                 \\
+    medi-visibility    & 12h 26m      & 1739.4                               \\
+    pata-graph         & 2d 10h 37m   & 99.3                                 \\
+    pata-visibility    & 9h 29m       & 424.1                                \\  \bottomrule
   \end{tabular}
   \caption{Vorhergesagt durchschnittliche Labelgröße für eine vertex-to-level-Funktion welche durch ein Hitting-Set über \num{250000000} Pfade induziert wurde}
   \label{fig:ergebnisse:250_paths}
@@ -1086,3 +1086,59 @@ Mit der enstanden vertex-to-level-Funktion für aegaeis-graph wurde das der \aut
   \caption{Anteil der pro CH-PEOPLE Suche auf aegaeis-graph gesehenen Knoten}
   \label{fig:ergebnisse:new_efficiency_ch_people}
 \end{figure}
+
+\subsection{Weiterer Graph}
+
+Als letzter Teil dieser Arbeit wurde mit \emph{planet-shrunk-visibility} ein Sichtbarkeitsgraph betrachtet, der analog zu den Sichtbarkeitsgraphenvon aegaeis, medi und pata konstruiert wurde, aber die gesamte Welt umfasst.
+\autoref{table:input_graphs_planet-shrunk-visibility} listet die Anzahl der Kanten und Knoten dieses Graphs auf.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 7.0] % Zeit
+      S[table-format = 9.0] % Zeit
+      S[table-format = 4.1] % Zeit
+    }
+    \toprule
+    {Graph}                  & {\# Knoten} & {\# Kanten} & {$\varnothing$ Grad}      \\ \midrule
+    planet-shrunk-visibility & 188030      & 173385124   & \fpeval{173385124/188030} \\\bottomrule
+  \end{tabular}
+  \caption{Bearbeite Graphen}
+  \label{table:input_graphs_planet-shrunk-visibility}
+\end{table}
+
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{
+      l % Graph
+      S[table-format = 4.1] % Zeit
+      S[table-format = 3.0] % hop-länge
+      S[table-format = 7.0] % rank
+      S[table-format = 7.0] % queue pops
+    }
+    \toprule
+    {Graph}                  & {$\varnothing$ $t({spd})$} & {$\varnothing$  Hop-Länge} & {$\varnothing$ Dijkstra-Rank} & {$\varnothing$ Queue-Pops} \\
+                             & {(\si{\ms})}               &                            &                               &                            \\
+    \midrule
+    planet-shrunk-visibility & 529.377185                 & 22.3786                    & 95053.74                      & 691017.2                   \\
+    \bottomrule
+  \end{tabular}
+  \caption{Kennwerte der Dijkstra Suchen}
+  \label{fig:ergebnisse:dijkstra_planet-shrunk-visibility}
+\end{table}
+
+% Is graph bidirectional? true
+% non trivial vertices: 188030
+% trivial: 188030
+% average degree is 922.1135
+% sum of squared degree 422505182196
+% Values over 10000 parallel searches
+% average path hops len 22.3786
+% average dijkstra_rank 95053.74
+% average queue pops 691017.2
+% 2xDijsktra per node for all nodes would take 14810.959127085s
+% Value over 100 sequential searches
+% Average dijkstra duration for path creation is 573.84923ms
+% Average dijkstra duration for path distance is 529.377185ms

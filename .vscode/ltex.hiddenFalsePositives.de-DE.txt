@@ -1,2 +1,3 @@
 {"rule":"DE_CASE","sentence":"^\\QDie Graphen mit dem Präfix aegaeis beinhalten das Ägäische Meer, mit medi das Mittelmeer und mit die mit pata die Chilenische Fjorde.\\E$"}
 {"rule":"DE_CASE","sentence":"^\\QDie Graphen mit dem Präfix aegaeis beinhalten das Ägäische Meer, mit medi das Mittelmeer und die mit pata die Chilenische Fjorde.\\E$"}
+{"rule":"GERMAN_SPELLER_RULE","sentence":"^\\QBasierend auf bestehenden Charakterisierungen werden mit PEOPLE und CH-PEOPLE (PrEdetermined Order, Pruned Label) zwei Algorithmen vorgestellt, die es ermöglichen, ohne Kontraktion sowohl Hierarchical Hub Labelings als auch die für CH-Anfragen benötigte Datenstruktur zu erstellen.\\E$"}
