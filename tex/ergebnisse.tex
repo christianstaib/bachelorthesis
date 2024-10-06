@@ -32,7 +32,7 @@ Insbesondere ist die in \autoref{table:input_graphs} aufgelistete Anzahl an Kant
     pata-graph         & 2240339     & 11632900    & \fpeval{11632900/2240339}  \\
     pata-visibility    & 1002235     & 315653892   & \fpeval{315653892/1002235} \\ \bottomrule
   \end{tabular}
-  \caption{Bearbeite Graphen}
+  \caption{Bearbeitete Graphen}
   \label{table:input_graphs}
 \end{table}
 
@@ -138,7 +138,7 @@ In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten eine
     }%
     \caption{medi-visibility}%
   \end{subfigure}%
-  \par\bigskip
+  \par\bigskip\bigskip
   \begin{subfigure}[b]{0.5\textwidth}%
     \resizebox{\textwidth}{!}{%
       \begin{tikzpicture}%
@@ -202,7 +202,7 @@ Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen 
 
 \section{Graphen-Kontraktion}\label{section:ch_graph_kontraktion}
 
-Es wurde versucht, die bearbeiteten Graphen mit einem eigens für die Arbeit entwickelten Programm zu kontrahieren.
+Die Kontraktion der bearbeiteten Graphen wurde mithilfe eines eigens für diese Arbeit entwickelten Programms durchgeführt.
 Die Reihenfolge der Knoten-Kontraktionen wurde durch die Kanten-Differenz mit Lazy-Popping bestimmt.
 
 Während es bei den triangulierten Graphen möglich war, einen Contracted-Graph zu erstellen, musste die Erstellung bei den Sichtbarkeitsgraphen nach drei Tagen abgebrochen werden, da in diesem Zeitraum nicht einmal alle initialen Kanten-Differenzen berechnet werden konnten.
@@ -260,7 +260,7 @@ Die Ergebnisse hierfür sind in \autoref{fig:ergebnisse:fmi_ch_graph_kontraktion
 
 Da dieses Programm ein anderes Speicherformat verwendet, konnten die Anfragezeiten nicht ermittelt werden.
 Es kontrahierte im Vergleich zum in dieser Arbeit verwendeten Programm schneller, fügte jedoch mehr Abkürzungen ein.
-Das Programm kontrahiert mehrere Knoten gleichzeitig, indem es \emph{unabhängige Teilmengen} von Knoten identifiziert, was eine effizientere parallele Verarbeitung ermöglicht \cite{vetter2009parallel}.
+Das Programm kontrahiert mehrere Knoten gleichzeitig, indem es wie von Vetter \cite{vetter2009parallel} beschrieben \emph{unabhängige Teilmengen} von Knoten identifiziert, was eine effizientere parallele Verarbeitung ermöglicht.
 Angesichts des hohen durchschnittlichen Knotengrades der Sichtbarkeitsgraphen ist anzunehmen, dass nur wenige und kleine unabhängige Teilmengen existieren.
 Dies schränkt den Nutzen der parallelen Kontraktion erheblich ein.
 Auch dieses Programm konnte nach drei Tagen Laufzeit keine Ergebnisse liefern.
@@ -299,7 +299,7 @@ Zuerst wurden die Knoten, die nicht Teil des Hitting-Sets sind, kontrahiert und 
 
 \subsubsection{Triviale Heuristik}
 
-Die Kontraktion mit der trivialen Heuristik als oberer Schranke ließ sich nicht auf die Sichtbarkeitsgraphen anwenden, da zu viele Abkürzungen eingefügt wurden und das Programm bereits nach wenigen Knoten-Kontraktionen aufgrund eines Speichermangels auf mit \SI{180}{\giga\byte} RAM ausgestatteten Computern abbrach.
+Die Kontraktion mit der trivialen Heuristik als oberer Schranke ließ sich nicht auf die Sichtbarkeitsgraphen anwenden, da zu viele Abkürzungen eingefügt wurden und das Programm bereits nach wenigen Knoten-Kontraktionen aufgrund eines Speichermangels, trotz der Ausstattung der Computer mit \SI{180}{\giga\byte} RAM, abbrach.
 Der Verlauf der Anzahl der Kanten des Graphs während der Kontraktion ist in \autoref{img:ergebnisse:all_in} abgebildet.
 
 Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügung standen, wurde das Experiment auf diesen nicht wiederholt, da die Anzahl der Kanten zu stark anstieg, um sinnvolle Ergebnisse erwarten zu können.
@@ -333,7 +333,7 @@ Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügun
     \end{tikzpicture}
     \caption{medi-visibility}%
   \end{subfigure}%
-  \par%
+  \par\bigskip\bigskip%
   \begin{subfigure}[b]{0.5\textwidth}%
     \begin{tikzpicture}
       \begin{axis}[
@@ -352,8 +352,7 @@ Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügun
   \label{img:ergebnisse:all_in}
 \end{figure}
 
-\subsubsection{Hubs, Vereinfachter Graph}
-
+\subsubsection{Hubs und Vereinfachter Graph}
 
 Die Abstände in triangulierten Graphen stellen, wie in \autoref{chapter:kontraktion} beschrieben, eine obere Schranke für die Abstände in Sichtbarkeitsgraphen dar.
 Um den Fehler dieser Schranke zu quantifizieren, wurden die Abstände von einer \num{1000000} $s$-$t$-Paaren in den Sichtbarkeitsgraphen analysiert.
@@ -362,7 +361,7 @@ Der dabei ermittelte durchschnittliche Fehler pro Hop-Länge ist in \autoref{img
 Diese Abbildung zeigt auch den durchschnittlichen Fehler, der durch den Einsatz von $n \in \mathbb{N}$ Hubs entsteht, welche mithilfe eines Hitting-Sets über \num{100000} Pfade bestimmt wurden.
 Hierfür wurde die Erstellung des Hitting-Sets nach $n$ Iterationen vorzeitig abgebrochen.
 Zusätzlich wurde der Fehler visualisiert, der sich aus der Wahl der kleinsten oberen Schranke zwischen 80 Hubs und den triangulierten Graphen ergibt.
-Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr erfolgreich; insbesondere bei größeren Hop-Längen ist der Fehler oberen Schranke sehr gering.
+Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr erfolgreich; insbesondere bei größeren Hop-Längen ist der Fehler der oberen Schranken sehr gering.
 
 \begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
   \begin{subfigure}[b]{0.5\textwidth}
@@ -429,7 +428,7 @@ Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr er
     \end{tikzpicture}
     \caption{medi-visibility}
   \end{subfigure}
-  \par\bigskip
+  \par\bigskip\bigskip
   \begin{subfigure}[b]{0.5\textwidth}
     \begin{tikzpicture}
       \begin{axis}[
@@ -470,7 +469,7 @@ Basierend auf dieser Untersuchung wurde versucht, die Sichtbarkeitsgraphen zu ko
 Obwohl nach der vorhergehenden Analyse der Fehler der oberen Schranke als sehr klein betrachtet werden kann, war die Kontraktion nicht erfolgreich.
 
 \autoref{fig:ergebnisse:hl_and_hubs} zeigt den Verlauf der Anzahl der Kanten während der Kontraktion.
-Nach drei Tagen Rechenzeit waren die Graphen immer noch nicht kontrahiert, weshalb das Experiment abgebrochen wurde.
+Nach drei Tagen Laufzeit waren die Graphen immer noch nicht kontrahiert, weshalb das Experiment abgebrochen wurde.
 Die Anzahl der Kanten stieg während der Kontraktion wieder an, wenn auch langsamer als bei der trivialen Heuristik, wobei aegaeis-visibility und medi-visibility zum Zeitpunkt des Abbruchs den Höhepunkt der Anzahl der Kanten bereits erreicht hatten.
 
 Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der oberen Schranke noch weiter reduziert werden, wobei dies nicht Teil dieser Arbeit ist.
@@ -506,7 +505,7 @@ Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der
     \end{tikzpicture}
     \caption{medi-visibility}
   \end{subfigure}
-  \par\bigskip
+  \par\bigskip\bigskip
   \begin{subfigure}[b]{0.5\textwidth}
     \centering
     \begin{tikzpicture}
@@ -576,7 +575,7 @@ Es galt zu klären, wie sich diese beiden Ansätze vergleichen lassen und wie sc
 \subsubsection{Merging}
 
 Ein zunächst verwendetes Programm, das einen Hub-Graphen aus einem Contracted-Graphen ohne Parallelisierung erzeugte, war nicht in der Lage, innerhalb von drei Tagen die Hub-Graphen der Sichtbarkeitsgraphen zu berechnen.
-Der Grund hierfür liegt in der enormen Anzahl an Labels und Einträgen, die dabei zusammengeführt werden müssen: Ein Knoten der Contracted-Graphen der Sichtbarkeitsgraphen weist einen Grad im drei- bis vierstelligen Bereich auf, und für jeden dieser Nachbarn existiert ein Label, das gemerged werden muss.
+Der Grund hierfür liegt in der enormen Anzahl an Labels und Einträgen, die dabei zusammengeführt werden müssen: Ein Knoten der Contracted-Graphen der Sichtbarkeitsgraphen weist einen Grad im drei- bis vierstelligen Bereich auf, für jeden dieser Nachbarn existiert ein Label, das gemerged werden muss.
 Die Verwendung eines parallelen \emph{reduce}-Algorithmus führte zu den Ergebnissen in \autoref{table:ergebnisse:hl_ch_bruteforce},
 dieser konnte für alle Graphen innerhalb von drei Tagen Hub-Graphen generieren.
 
@@ -667,13 +666,13 @@ Es zeigt sich, dass es bei den Sichtbarkeitsgraphen schneller ist, direkt einen 
 \end{table}
 
 Wie in \autoref{subsection:people:label_size} erwähnt, können die durch PEOPLE erzeugten Labels kleiner sein als die durch Merging erzeugten, was auch hier der Fall ist.
-Der Unterschied in Bezug auf die Labelgröße ist zwar nicht besonders groß, aber dennoch erkennbar.
+Der Unterschied ist signifikant, aber klein.
 Da sich die Labelgrößen unterscheiden ist auch anzunehmen, dass die kürzesten Pfade auf den bearbeiteten Graphen nicht eindeutig sind.
 
 \subsection{Performance Overhead}
 
 Die Erzeugung der ausgehenden Kanten im Contracted-Graph sowie der Labels im Hub-Graph erfolgt durch modifizierte Dijkstra-Suchen und beinhaltet zusätzlich unter anderem die Sammlung von Abkürzungen.
-Zur Quantifizierung des zusätzlichen Rechenaufwands im Vergleich zu Dijkstra-Suchen wurden für jeden Graphen, bei jeweils \emph{10000} Knoten, zwei Dijkstra-Suchen zu allen anderen Knoten durchgeführt.
+Zur Quantifizierung des zusätzlichen Rechenaufwands im Vergleich zu Dijkstra-Suchen wurden in jedem Graphen \emph{20000} Dijkstra-Suchen zu allen anderen Knoten durchgeführt.
 Die dafür benötigte Rechenzeit wurde anschließend auf die Gesamtzahl der Knoten im Graphen skaliert.
 \autoref{table:ergebnisse:dijkstra_vs_ch_vs_hl} zeigt die erforderliche Zeit zur Erstellung eines Contracted- und eines Hub-Graphen im Verhältnis zu dieser skalierten Zeit.
 
@@ -905,9 +904,9 @@ Da die zugrunde vertex-to-level-Funktion auf einem Hitting-Set über nur \num{10
 Wie im  \autoref{chapter:people} erwähnt, lässt sich die durch eine vertex-to-level-Funktion induzierte durchschnittliche Labelgröße vorhersagen, indem für $n \in \mathbb{N}$ zufällig ausgewählte Knoten die Labels berechnet und von diesen die durchschnittliche Labelgröße bestimmt wird.
 Diese Methode wurde verwendet, um verschiedene Funktionen zu vergleichen, die Ergebnisse sind in \autoref{table:ergebnisse:vtl_vergleich} gelistet.
 
-Es wurden sechs vertex-to-level-Funktionen verglichen. Drei davon basierten auf einem Hitting-Set über \num{1000000}, wobei Knoten, die nicht im Hitting-Set enthalten waren, nach einer weiteren Metrik sortiert wurden. Diese war entweder eine zufällige Sortierung, eine Sortierung nach Grad (von klein nach groß) oder eine Sortierung danach, auf wie vielen kürzesten Pfaden die Knoten liegen.
+Es wurden sechs vertex-to-level-Funktionen verglichen. Drei davon basierten auf einem Hitting-Set über \num{1000000}, wobei Knoten, die nicht im Hitting-Set enthalten waren, nach einer weiteren Metrik sortiert wurden. Diese war entweder eine zufällige Sortierung, eine Sortierung nach Grad (aufsteigend nach Grad) oder eine Sortierung danach, auf wie vielen kürzesten Pfaden die Knoten liegen.
 
-Die anderen drei Funktionen waren eine zufällige Sortierung, eine Sortierung nach Grad (von klein nach groß) sowie die Übernahme der vertex-to-Level-Funktion, die durch die Graphen-Kontraktion der triangulierten Graphen entstand.
+Die anderen drei Funktionen waren eine zufällige Sortierung, eine Sortierung nach Grad sowie die Übernahme der vertex-to-Level-Funktion, die durch die Graphen-Kontraktion der triangulierten Graphen entstand.
 Letztere, in der Tabelle als $\triangle$ notiert, führte zu überraschend kleinen Labels.
 
 \begin{table}[h!]
@@ -936,7 +935,7 @@ Letztere, in der Tabelle als $\triangle$ notiert, führte zu überraschend klein
 \subsection{Große Hitting-Sets}
 
 Mit den erzeugten Hub-Graphen wurden jeweils Hitting-Sets über \num{250000000} Pfade gebildet.
-Die Knoten, die nicht enthalten waren, wurden danach sortiert, wie oft sie auf kürzesten Pfaden lagen, da dies nach \autoref{table:ergebnisse:vtl_vergleich} am Erfolgversprechenden erscheint.
+Die Knoten, die nicht enthalten waren, wurden danach sortiert, wie oft sie auf kürzesten Pfaden lagen, da dies nach \autoref{table:ergebnisse:vtl_vergleich} erfolgversprechend erscheint.
 Mit dieser vertex-to-level-Funktion wurde über \num{10000} Labels die durchschnittliche Labelgröße vorhergesagt, die Ergebnisse sind in \autoref{fig:ergebnisse:250_paths} aufgelistet.
 Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durchschnittliche Labelgröße kleiner als der ursprüngliche durchschnittliche Knotengrad.
 

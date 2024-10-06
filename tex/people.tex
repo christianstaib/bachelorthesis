@@ -423,7 +423,7 @@ Die Korrektheit dieser Definition folgt direkt daraus, dass der Knoten mit dem h
 \subsection{Algorithmus}
 
 Solche Labels können wieder durch Merging aus einem Contracted-Graph erstellt werden, jedoch folgt aus dieser Definition auch die Möglichkeit, das Label eines bestimmten Knotens zu berechnen.
-Der dafür verwendete Algorithmus ist in Algorithmus \ref{alg:people:people} gelistet, er erzeugt ein gepruntes Label, da er aus einem Dijkstra-Suchbaum auf $G$ das Label erzeugt und dieser nur optimale Distanzen enthält.
+Der dafür verwendete Algorithmus \ref{alg:people:people} erzeugt direkt ein gepruntes Label, da er aus einem Dijkstra-Suchbaum auf $G$ das Label erzeugt und dieser nur optimale Distanzen enthält.
 Da er für eine vorgegebene vertex-to-level-Funktion geprunte Label liefert, wird dieser Algorithmus PEOPLE, für \textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l, genannt.
 
 Ein Beispiel einer solchen Suche ist in \autoref{ch:fig:hl_brute_force_suchbaum} gezeichnet.
@@ -528,7 +528,8 @@ Insbesondere kann das Merging von Contracted-Graphen, welche durch Graphen-Kontr
 Der Upward-Graph kann hierbei sowohl durch PEOPLE als auch durch Graphen-Kontraktion erstellt worden sein.
 Nach der neuen Definition des Forward-Labels muss das Label von $c$ nur $d$ und $b$ enthalten.
 Wird es aber durch Merging erzeugt, so enthält es auch $a$.
-Dieses Verhalten tritt auf, wenn kürzeste Pfaden nicht eindeutig sind, daher ist anzunehmen, dass unter anderem in Grid-Graphen dieses Phänomen häufiger auftritt.
+Dieses Verhalten tritt auf, wenn kürzeste Pfaden nicht eindeutig sind.
+Daher ist anzunehmen, dass unter anderem in Grid-Graphen dieses Phänomen häufiger auftritt.
 
 Um tatsächlich minimale Label zu erzeugen, muss der Algorithmus \ref{alg:people:people} verändert werden:
 Kann ein Knoten $v$ über $u$ erreicht werden, aber die Kosten hierfür sind gleich groß wie bisher, so wird $u$ trotzdem als Vorgänger von $v$ gesetzt, wenn ${mop}(u) > {mop}(v)$.
