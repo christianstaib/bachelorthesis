@@ -95,7 +95,7 @@ Zwischen zwei Knoten kann es Pfade unterschiedlicher Länge geben, dies führt z
   Weiter bezeichnet ${sp}_{G} (s, t)$ (Shortest Path) einen kürzesten Pfad zwischen $s$ und $t$.
 \end{definition}
 
-Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und was der Abstand der Knoten ist, bezeichnet man auch als $s$-$t$-Anfrage und einen gefundenen Pfad als $s$-$t$-Pfad.
+Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und wie groß der Abstand der Knoten ist, bezeichnet man auch als $s$-$t$-Anfrage und einen gefundenen Pfad als $s$-$t$-Pfad.
 Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig, die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu bestimmen.
 Auch die Umkehrung dieses Problem ist interessant, also die kürzesten Pfade von allen Knoten zu einem Anderen zu bestimmen.
 Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade von diesem Knoten auf dem transponierten Graph $G^T$ entspricht.
@@ -166,7 +166,7 @@ Die gestrichelten Linien bilden mit den Kanten der Polygone zusammen die Kanten 
 
 \begin{figure}[h!]
   \centering
-  \begin{tikzpicture}
+  \begin{tikzpicture}[scale=1.5]
     % Variablen für das erste Polygon
     \coordinate (a0) at (0.5,0+0.2);
     \coordinate (a1) at (1,2+0.2);

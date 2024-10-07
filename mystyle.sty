@@ -5,7 +5,7 @@
 
 % Typography
 \usepackage{lmodern}
-\usepackage{microtype}
+\usepackage[final,stretch=10,shrink=10,tracking=true,expansion=true,protrusion=true]{microtype}
 \usepackage{ellipsis}
 \usepackage[T1]{fontenc}
 
@@ -98,7 +98,7 @@
 
 % Hyperlinks
 \usepackage{hyperref}
-\usepackage[all]{nowidow}
+
 
 
 
@@ -106,6 +106,14 @@
 
 \usepackage{etoolbox}
 \newrobustcmd\B{\DeclareFontSeriesDefault[rm]{bf}{b}\bfseries}
+
+
+\setlength{\emergencystretch}{3em}
+
+\clubpenalty=10000  % Verhindert Waisenkinder (erste Zeile eines Absatzes am Ende der Seite)
+\widowpenalty=10000 % Verhindert Hurenkinder (letzte Zeile eines Absatzes am Anfang der Seite)
+\displaywidowpenalty=10000
+\brokenpenalty=10000
 
 % Optional packages (commented out)
 % \usepackage{subfig}
