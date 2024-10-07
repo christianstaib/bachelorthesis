@@ -85,17 +85,17 @@ Hat ein Knoten keine Vorgänger oder Nachfolger, so nennt man ihn \emph{isoliert
 \end{definition}
 
 Häufig wird für den Startknoten der Buchstabe $s$ (Source) und für den Zielknoten der Buchstabe $t$ (Target) verwendet.
-Zwischen zwei Knoten kann es Pfade unterschiedliche Länge geben, dies führt zur Definition des kürzesten Pfades.
+Zwischen zwei Knoten kann es Pfade unterschiedlicher Länge geben, dies führt zur Definition des kürzesten Pfades.
 
 \begin{definition}[Kürzester Pfad]
   Ein Pfad $p = (v_1 , \dotsc , v_n)$ ist \emph{ein kürzester Pfad}, wenn die Länge von $p$ unter allen Pfaden von $v_1$ nach $v_n$ minimal ist.
   Die Länge des kürzesten Pfades wird als \emph{Abstand} von $v_1$ und $v_n$ bezeichnet.
 
   Die Funktion ${spd}_G \colon V \times V \to \mathbb{R}^+_0 \cup \{ \infty \} $ (Shortest Path Distance) weist einem Knotenpaar den Abstand zu, wobei dieser unendlich ist, wenn kein Pfad zwischen ihnen existiert.
-  Dann bezeichnet ${sp}_{G} (s, t)$ (Shortest Path) einen kürzesten Pfad zwischen $s$ und $t$.
+  Weiter bezeichnet ${sp}_{G} (s, t)$ (Shortest Path) einen kürzesten Pfad zwischen $s$ und $t$.
 \end{definition}
 
-Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und was der Abstand der Knoten ist, bezeichnet man auch als $s$-$t$-Anfrage (Query) und einen gefundenen Pfad als $s$-$t$-Pfad.
+Die zu beantwortende Frage, ob es zwischen zwei Knoten $s, t \in V$ einen Pfad gibt und was der Abstand der Knoten ist, bezeichnet man auch als $s$-$t$-Anfrage und einen gefundenen Pfad als $s$-$t$-Pfad.
 Zusätzlich zum Finden eines Pfades zwischen zwei Knoten ist es häufig notwendig, die kürzesten Pfade von einem Knoten zu allen anderen Knoten zu bestimmen.
 Auch die Umkehrung dieses Problem ist interessant, also die kürzesten Pfade von allen Knoten zu einem Anderen zu bestimmen.
 Diese Probleme sind äquivalent, da das Finden aller kürzesten Pfade zu einem Knoten auf einem Graph $G$ dem Finden aller kürzester Pfade von diesem Knoten auf dem transponierten Graph $G^T$ entspricht.
@@ -128,7 +128,7 @@ Der Greedy-Algorithmus \ref{graphs:alg:greedy-hitting-set} bietet jedoch eine Ap
     \While{$P \neq \emptyset$}
     \State Wähle $v \in V$ mit $\abs{ \{ p \mid p \in P \colon v \in p \}}$ maximal
     \State $H \gets H \cup \{  v \}$
-    \State $P \gets P \setminus \{p \in P \mid v \in p\}$
+    \State $P \gets P \setminus \{p  \mid \in P \colon v \in p\}$
     \EndWhile
 
     \State
@@ -159,10 +159,10 @@ Sichtbarkeitsgraphen sind eine Möglichkeit das Euclidean Shortest Path Problem 
 Sie sind Graphen, die Punkte in der euklidischen Ebene miteinander verbinden, die sich direkt \emph{sehen} können, das heißt, zwischen denen keine Hindernisse liegen.
 Sie können zum Beispiel dazu verwendet werden, um den optimalen Pfad eines Roboters durch eine Umgebung mit Hindernissen zu bestimmen oder um die Platzierung von Mobilfunkmasten zu optimieren, sodass sie eine möglichst große Fläche abdecken.
 Sichtbarkeitsgraphen können in höheren Dimensionen $\mathbb{R}^n$ mit $n \geq 2$ konstruiert werden, diese Arbeit konzentriert sich jedoch auf die euklidische Ebene $\mathbb{R}^2$.
-Die Anzahl der Kanten ist dabei, abhängig von der Form und Platzierung der Polygone, im schlimmsten Fall quadratisch zu der Anzahl der Eckpunkte.
+Die Anzahl der Kanten ist dabei, abhängig von der Form und Platzierung der Polygone, im schlimmsten Fall aber quadratisch zu der Anzahl der Eckpunkte.
 
-\autoref{fig:graphs:eulcidian_shotest_path_problem} zeigt eine solche Situation.
-Die gestrichelten Linien sind dabei Kanten des Sichtbarkeitsgraphen.
+\autoref{fig:graphs:eulcidian_shotest_path_problem} zeigt einen solchen Graphen.
+Die gestrichelten Linien bilden mit den Kanten der Polygone zusammen die Kanten des Sichtbarkeitsgraphen.
 
 \begin{figure}[h!]
   \centering
@@ -250,9 +250,9 @@ Sie besitzen eine hierarchische Struktur: Einfach gesagt, je schneller auf einer
 Die Wichtigkeit der benutzten Straßen eines kürzesten Pfades steigt im Allgemeinen an, bis etwa eine Autobahn erreicht wird, und nimmt schließlich wieder ab, bis das Ziel erreicht wird.
 
 Eine weitere Eigenschaft dieser hierarchischen Struktur ist, dass hinreichend lange Pfade durch ein vergleichsweise kleines Hitting-Set abgedeckt werden können, etwa durch alle Autobahnkreuze und Anschlussstellen.
-Diese Beobachtung führt zur Definition der \emph{Highway Dimension}, einem Konzept, das von \cite{abraham2010highway} eingeführt wurde.
+Diese Beobachtung führt zur Definition der \emph{Highway Dimension}, einem Konzept, das von Abraham et al. \cite{abraham2010highway} eingeführt wurde.
 
-Aufgrund der unterschiedlichen Strukturen von Sichtbarkeitsgraphen und Straßengraphen können Algorithmen, die für Straßengraphen gute Laufzeiten aufweisen, zwar auf Sichtbarkeitsgraphen angewendet werden, allerdings ist ihre Rechenzeit häufig zu hoch, um eine effiziente Verarbeitung zu ermöglichen.
+Aufgrund der unterschiedlichen Strukturen von Sichtbarkeitsgraphen und Straßengraphen können Algorithmen, die für Straßengraphen gute Laufzeiten aufweisen, zwar auf Sichtbarkeitsgraphen angewendet werden, allerdings kann ihre Rechenzeit zu hoch sein, um eine effiziente Verarbeitung zu ermöglichen.
 
 \subsubsection{Triangulierung}
 
@@ -261,7 +261,7 @@ Dieser Ansatz kann jedoch lange, schmale Dreiecke erzeugen, die anschließend be
 Das Verfahren zur Erstellung der in dieser Arbeit verwendeten Triangulierung wird ausführlich von Funke et al. \cite{funkescalable} beschrieben.
 
 Die Knoten eines triangulierten Graphen $G_g$ bilden hierbei eine Obermenge zur Menge der Knoten des dazugehörigen Sichtbarkeitsgraphen $G_v$.
-Die Triangulation darf den kürzesten Pfad Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.
+Die Triangulation darf den Abstand zweier Knoten $a, b$ nicht verkleinern, aber vergrößern.
 \autoref{fig:thessaloniki_comparison} vergleicht einen Sichtbarkeitsgraphen und dessen Triangulierung anhand eines Ausschnitts.
 
 \begin{figure}[h!]%

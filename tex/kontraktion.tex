@@ -72,7 +72,7 @@ Während für Dijkstra-Suchen vor allem das schnelle Auffinden ausgehender Kante
 
 Die Knoten-Kontraktion erfolgt hierbei in zwei Schritten.
 Zuerst werden alle einzufügenden Kanten berechnet, wobei zwischen neuen und zu aktualisierenden Kanten unterschieden wird.
-Eine Kante wird nur dann aktualisiert, wenn bereits eine Kante mit höherem Gewicht existiert.
+Eine Kante wird dann aktualisiert, wenn bereits eine Kante mit höherem Gewicht existiert.
 Das Abfragen des Kantengewichts sollte daher unmittelbar, ohne eine Suche, möglich sein.
 Das Aktualisieren von Kanten kann bei den meisten Datenstrukturen parallel erfolgen, während das Einfügen neuer Kanten nur eingeschränkt parallelisierbar ist.
 Im zweiten Schritt wird der Graph modifiziert, indem die neuen Kanten eingefügt und der zu kontrahierende Knoten isoliert wird.

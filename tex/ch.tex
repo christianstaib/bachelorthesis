@@ -13,7 +13,7 @@ Zudem wird in \autoref{chapter:kontraktion}  die Anwendbarkeit dieser Techniken 
 
 \section{Contraction Hierarchies}
 
-Die grundlegende Idee von Contraction Hierarchies besteht darin, die Berechnung von kürzesten Wegen in großen Graphen, wie Straßennetzen, durch eine effiziente \emph{Vorverarbeitung} zu beschleunigen.
+Die grundlegende Idee von Contraction Hierarchies besteht darin, die Berechnung von kürzesten Wegen in großen Graphen, wie Straßennetzen, durch eine \emph{Vorverarbeitung} zu beschleunigen.
 
 Während der Vorverarbeitung werden die Knoten des Graphen in einer bestimmten Reihenfolge \emph{kontrahiert}, was bedeutet, dass sie entfernt werden.
 Beim Entfernen eines Knotens werden \emph{Abkürzungen} zwischen seinen Nachbarn hinzugefügt, um sicherzustellen, dass die Abstände im übrigen Graphen erhalten bleiben.
@@ -32,7 +32,7 @@ Der Begriff Contraction Hierarchies leitet sich vom Konzept der Knoten-Kontrakti
 
   \begin{enumerate}
     \item\label{ch:contraction:when_shortcut}
-    Für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ wird, wenn $(u, v, w)$ der einzige kürzeste $u$-$w$-Pfad ist, eine Abkürzung $(u, w, {spd}_G((u, w)))$ zu $E$ hinzugefügt.
+    Für jeden Vorgänger $u \in V$ und jeden Nachfolger $w \in V$ von $v$ wird, wenn $(u, v, w)$ der einzige kürzeste $u$-$w$-Pfad ist, eine Abkürzung $(u, w, {spd}_G(u, w))$ zu $E$ hinzugefügt.
 
     \item
           Alle Kanten von und zu $v$ werden entfernt.
@@ -165,7 +165,7 @@ Dadurch können jedoch auch Kanten eingefügt werden, die nicht unbedingt für d
 \subsection{Graphen-Kontraktion}
 
 Um die Datenstruktur für die Beantwortung von Anfragen, den \emph{Contracted-Graph}, zu erstellen, müssen alle Knoten eines Graphen kontrahiert werden. Die Kanten, die in jedem Schritt entfernt werden, werden dabei gesammelt.
-Hierbei hat die Reihenfolge, in der das geschieht, einen großen Einfluss auf die Performance der nachfolgenden Kontraktionen und den mit der Methode erzielte Speedup.
+Hierbei hat die Reihenfolge, in der dies geschieht, einen großen Einfluss auf die Performance der nachfolgenden Kontraktionen und den mit der Methode erzielten Speedup.
 Die Reihenfolge der Kontraktion wird durch eine \emph{vertex-to-level}-Funktion angegeben.
 Sie ist bijektiv und definiert als ${vtl} \colon V \to L$ mit $L \subset \mathbb{N}$, $\abs{L} = \abs{V}$ und $\max(L) = \abs{V}$.
 Der Knoten mit dem niedrigsten \emph{Level} wird dabei zuerst kontrahiert.
@@ -178,8 +178,8 @@ Ihre Umkehrfunktion wird \emph{level-to-vertex}-Funktion genannt.
 \end{definition}
 
 Der Name Upward-Graph leitet sich daraus ab, dass die Suche innerhalb dieses Graphen bezogen auf die Level ausschließlich \emph{aufwärts} erfolgt.
-Geisberger et al. \cite{geisberger2008contraction} transponieren die Kanten des Downward-Graphen nicht, daher geht ihre Suche \emph{abwärts}.
-Die Transposition der Kanten ist hierbei nur eine Methode, damit auf dem Downward-Graphen wie auf dem Upward-Graphen \emph{vorwärts} gesucht wird.
+Geisberger et al. \cite{geisberger2008contraction} transponieren die Kanten des Downward-Graphen nicht, daher geht ihre Vorwärtssuche \emph{abwärts}.
+Die Transposition der Kanten ist hierbei nur ein Trick, damit auf dem Downward-Graphen wie auf dem Upward-Graphen \emph{vorwärts} gesucht wird.
 
 Der entstandene Graph ist azyklisch, da er nur Kanten enthält, deren Kopf ein größeres Level als der dazugehörige Fuß hat.
 Die Anzahl der in einer Breitensuche gefundenen Knoten ist geringer als im Ursprungsgraphen.
@@ -230,8 +230,8 @@ Der optimale $c$-$a$-Pfad in $G$ hat die Distanz zwei, in $G_u$ hat er jedoch di
 
 Die Suche eines kürzesten Pfades von $a$ nach $e$ auf dem Beispielgraphen gestaltet sich nun wie folgt:
 Auf $G_u$ wird eine Dijkstra-Suche von $a$ und auf $G_d$ eine Dijkstra-Suche von $e$ durchgeführt.
-Aus den von beiden Dijkstra-Suchen besuchten Knoten wird nun derjenige ausgewählt, der die niedrigste Summe beider Distanzen aufweist.
-\autoref{fig:ch:beispiel_suche} zeigt den auf diese Weise gefundenen Pfad im Beispielgraphen von $a$ nach $e$.
+Aus den von beiden Dijkstra-Suchen besuchten Knoten wird anschließend derjenige ausgewählt, der die niedrigste Summe beider Distanzen aufweist.
+\autoref{fig:ch:beispiel_suche} zeigt einen auf diese Weise gefundenen Pfad im Beispielgraphen von $a$ nach $e$.
 Die Level der Knoten auf dem Pfad steigen von beiden Seiten an, bis sie den Treffpunktknoten $j$ erreichen.
 Hierbei ist die Kante $(a, j)$ eine Abkürzung, sie kürzt $i$ ab, was durch die gestrichelten Pfeile angedeutet wird.
 
@@ -261,9 +261,9 @@ Hierbei ist die Kante $(a, j)$ eine Abkürzung, sie kürzt $i$ ab, was durch die
 
 Algorithmus \ref{ch:query_simple} definiert dies formal.
 Wie bei einer bidirektionalen Dijkstra-Suche wird der Pfad, sofern existent, aus den Teilpfaden beider Suchen erstellt.
-Diese haben die Form $(u, \dotsc, t)$ beziehungsweise $(v, \dotsc, t)$.
-Um einen gültigen Pfad zu erstellen, muss $t$ aus einem dieser Teilpfade entfernt und der Pfad des Downward-Graphen umgekehrt werden.
-Anschließend können beide Pfade konkateniert werden, somit entsteht ein Pfad auf $C$ der Form $(u, \dotsc, t, \dotsc, v)$.
+Diese haben die Form $(s, \dotsc, m)$ beziehungsweise $(t, \dotsc, m)$.
+Um einen gültigen Pfad zu erstellen, muss $m$ aus einem dieser Teilpfade entfernt und der Pfad des Downward-Graphen umgekehrt werden.
+Anschließend können beide Pfade konkateniert werden, somit entsteht ein Pfad auf $C$ der Form $(s, \dotsc, m, \dotsc, t)$.
 Dieser muss jedoch nicht unbedingt ein gültiger Pfad auf $G$ sein, da er noch Abkürzungen enthalten kann.
 In \autoref{ch:subsection:pfad_gewinnung} wird darauf eingegangen, wie diese entfernt werden können.
 
@@ -301,7 +301,7 @@ Der Beweis hierfür betrachtet einen kürzesten Pfad auf $G$ und argumentiert, w
   Daher kann ein $s$-$t$-Pfad in $C$ nur dann gefunden werden, wenn auch in $G$ ein solcher Pfad existiert.
 
   Es ist zu zeigen, dass eine Suche auf $C$ den Abstand in $G$ liefert.
-  Sei $\text{sp}_G(s, t)$ ein kürzester Pfad auf $G$, der unter allen kürzesten Pfaden den Knoten $m$ mit dem höchsten Level enthält.
+  Sei $\text{sp}_G(s, t)$ der kürzeste Pfad auf $G$, der unter allen kürzesten Pfaden den Knoten $m$ mit dem höchsten Level enthält.
   Aus diesem Pfad $(s, \dotsc, t)$ werden zwei Teilpfade konstruiert: $(s, \dotsc, m)$ und $(t, \dotsc, m)$.
 
   Betrachte den Teilpfad $(s, \dotsc, m)$ mit der Hop-Länge $n_u$.
@@ -358,9 +358,9 @@ Daher reicht es für die Ersetzung der Abkürzungen in Pfaden in $C$ \emph{eine}
   \caption{Beispiel des iterativen Ersetzen von Abkürzungen}
 \end{figure}
 
-Um diese Funktion zu erhalten, müssen die Abkürzungen, welche beim Kontrahieren des Graphen eingefügt werden, und die dabei übersprungenen Knoten gesammelt werden.
+Um diese Funktion zu erhalten, müssen die Abkürzungen, welche beim Kontrahieren des Graphen eingefügt werden, und die dabei übersprungenen Knoten, gesammelt werden.
 Einen möglichen Algorithmus, der Abkürzungen in einem Pfad ersetzt, ist in Algorithmus \ref{ch:alg:shortcut_replacement} zu sehen.
-Dieser betrachtet den Pfad mit Abkürzungen als Stapel und bearbeitet jeweils nur die beiden obersten Knoten, weil das Einfügen an einer bestimmten Stelle in ein Array rechenintensiv ist.
+Dieser betrachtet den Pfad mit Abkürzungen als Stapel und bearbeitet jeweils nur die beiden obersten Knoten, da das Einfügen an einer bestimmten Stelle in eine Liste rechenintensiv ist.
 
 \begin{algorithm}[ht]
   \caption{Shortcut Replacement}
@@ -379,7 +379,7 @@ Dieser betrachtet den Pfad mit Abkürzungen als Stapel und bearbeitet jeweils nu
     \While {$\text{len}(p) >= 2$}
     \State $w \leftarrow \text{pop}(p)$
     \State $u \leftarrow \text{pop}(p)$
-    \State $v \leftarrow S((u, w))$
+    \State $v \leftarrow S(u, w)$
     \State
 
     \If {$v \neq none$}
@@ -408,14 +408,14 @@ Implementierungen ähneln der bidirektionalen Dijkstra-Suche, dabei werden abwec
 Die Expansion einer Suchrichtung wird gestoppt, wenn die kleinste Distanz der Vorwärtswarteschlange größer als die bisherige kleinste Treffpunkt-Distanz ist.
 Sobald beide Suchen gestoppt wurden, ist der kürzeste Pfad, falls vorhanden, gefunden.
 
-\subsection{stall-on-demand}
+\subsection{Stall-on-Demand}
 
 Wie \autoref{graphs:fig:counterexample_optimal_Upward} zeigt, sind manche der im Upward- und Downward-Graphen gefundenen Distanzen nicht optimal.
 Für das Finden eines kürzesten Pfades sind jedoch nur die Knoten interessant, deren Distanz optimal ist.
-Mit der von Schultes und Sanders \cite{schultes2007dynamic} vorgestellten Methode \emph{stall-on-demand} ist es möglich, den Suchraum der beiden Teilsuchen einzuschränken.
+Mit der von Schultes und Sanders \cite{schultes2007dynamic} vorgestellten Methode \emph{Stall-on-Demand} ist es möglich, den Suchraum der beiden Teilsuchen einzuschränken.
 Hierfür wird die Expansion eines Knotens abgebrochen, wenn er über eine Kante des jeweils anderen Graphen günstiger erreicht werden kann.
 
-\begin{definition}[stall-on-demand]
+\begin{definition}[Stall-on-Demand]
   Sei $C = (G_u, G_d)$ ein Contracted-Graph mit $G_u = (V, E_u)$ und $G_d = (V, E_d)$.
   Der Knoten $u \in V$ hat keine optimale Distanz in der Dijkstra-Suche von $s$ in $G_u$, wenn es zum Zeitpunkt seiner Expansion eine Kante $(u, v, d) \in E_d$, $v \in V$, $d \in \mathbb{R}$ gibt mit ${dist}(v) + d < {dist}(u)$.
   Die Expansion von $u$ kann dann abgebrochen werden, die aus $u$ ausgehenden Kanten müssen nicht betrachtet werden.
@@ -426,7 +426,7 @@ Veranschaulicht wird dies an dem Beispiel in \autoref{fig:ch:stall_example}, das
 Die blauen Kanten repräsentieren Kanten der Upward-Suche, während die rote Kante eine von $u$ ausgehende Downward-Kante darstellt.
 Bisher wurde $v$ in der Upward-Suche mit einer Distanz von eins expandiert, im nächsten Schritt soll $u$ expandiert werden.
 Der Knoten $u$ hat die Distanz drei in der Upward-Suche, kann jedoch über die Upward-Kante mit einer Distanz von zwei erreicht werden.
-Also ist die Distanz drei nicht optimal, und von $u$ ausgehenden Kanten müssen nicht betrachtet werden.
+Also ist die Distanz drei nicht optimal, und von $u$ ausgehende Kanten müssen nicht betrachtet werden.
 
 \begin{figure}
   \centering
@@ -445,7 +445,7 @@ Also ist die Distanz drei nicht optimal, und von $u$ ausgehenden Kanten müssen 
     \draw[->,blue]  (uv) edge node[circle, fill=white] {1} (v);
     \draw[->,blue]  (uu) edge node[circle, fill=white] {3} (u);
   \end{tikzpicture}
-  \caption{Beispiel stall-on-demand}
+  \caption{Beispiel Stall-on-Demand}
   \label{fig:ch:stall_example}
 \end{figure}
 
@@ -458,7 +458,7 @@ Der Prozess der Erstellung kann nach mehreren Kriterien bewertet werden, so kann
 \subsubsection{Top-Down}
 Bei der Top-Down-Kontraktion ist die level-to-vertex-Funktion ${ltv}$ vorgegeben.
 Die Knoten werden in der Reihenfolge ihres Levels kontrahiert, wobei mit dem niedrigsten Level begonnen wird.
-Diese Herangehensweise bietet die Möglichkeit eine optimale Reihenfolge anzuwenden, wobei die für hinreichend große Graphen nur schwer bestimmbar ist.
+Diese Herangehensweise bietet die Möglichkeit eine optimale Reihenfolge anzuwenden, wobei diese für hinreichend große Graphen nur schwer bestimmbar ist.
 
 Knoten mit vielen Nachbarn können potenziell viele neue Kanten erzeugen, weshalb sie bei der \emph{Sortierung nach Grad} erst später kontrahiert werden, um dies zu verhindern.
 
@@ -478,7 +478,7 @@ Die Kanten-Differenz gibt an, wie sich die Anzahl der Kanten im gesamten Graphen
 Sie wird berechnet, indem die Anzahl der neu hinzugefügten Kanten von der Anzahl der entfernten Kanten subtrahiert wird, wobei die Kontraktion des Knotens \emph{simuliert} wird.
 Die Kontraktion eines Knotens kann die Heuristikwerte anderer Knoten beeinflussen.
 Um sicherzustellen, dass stets der Knoten mit dem niedrigsten Heuristikwert ausgewählt wird, müssten nach jeder Kontraktion alle Heuristikwerte neu berechnet werden.
-Da dies jedoch in der Praxis zu teuer ist, haben sich zwei Methoden als effektiv erwiesen:
+Da dies jedoch in der Praxis zu teuer ist, haben sich zwei Methoden effektiver erwiesen.
 
 Beim \emph{Lazy-Popping} wird angenommen, dass ein Knoten nur an Wichtigkeit gewinnen kann.
 Aus der Warteschlange wird ein Knoten entnommen und geprüft, ob sein Heuristikwert gestiegen ist.
@@ -494,7 +494,7 @@ Dabei darf nur die letzte und beste Abkürzung gespeichert werden.
 
 Die Contracted-Graph-Anfrage ohne Stopbedingung baut jeweils den vollständigen Suchbaum für den Start- und Zielknoten auf und sucht aus den expandierten Knoten beider Suchen den Knoten mit der geringsten Summe der Distanzen in beiden Suchen.
 Die Idee hinter dem Labeling besteht darin, den Suchbaum des Upward- bzw. Downward-Graphen zu speichern, sodass eine $s$-$t$-Anfrage nur noch den Vergleich zweier Labels erfordert.
-In der von \cite{abraham2011hub} vorgestellten Terminologie wird das Label des Upward-Graphen \emph{Forward-Label} und das des Downward-Graphen \emph{Backward-Label} genannt.
+In der von Abraham et al. \cite{abraham2011hub} vorgestellten Terminologie wird das Label des Upward-Graphen \emph{Forward-Label} und das des Downward-Graphen \emph{Backward-Label} genannt.
 Ein kürzester Pfad wird bestimmt, indem der Knoten mit der geringsten Summe der Distanzen im Forward- und Backward-Label gefunden wird.
 
 \begin{definition}[Hub Graph]
@@ -509,12 +509,12 @@ Ein kürzester Pfad wird bestimmt, indem der Knoten mit der geringsten Summe der
 \end{definition}
 
 Die Definition der Labels ähnelt dem Beweis der Korrektheit der Contracted-Graph-Anfrage, bei dem ebenfalls mit einem Treffpunktknoten $m$ argumentiert wird.
-Aus einem Contracted-Graphen lässt sich ein Hub-Graph konstruieren, indem die Suchbäume des Upward-Graphen als Forward-Labels und die des Downward-Graphen als Backward-Labels betrachtet werden, da sich die Suchbäume im Knoten mit dem höchsten Level und dem optimalen Abstand treffen.
+Aus einem Contracted-Graphen lässt sich ein Hub-Graph konstruieren, indem die Suchbäume des Upward-Graphen als Forward-Labels und die des Downward-Graphen als Backward-Labels betrachtet werden, da sich die Suchbäume im Knoten mit dem höchsten Level mit dem optimalen Abstand treffen.
 
 Die Erstellung der Labels kann auf zwei Arten erfolgen: durch eine Dijkstra-Suche im Upward- bzw. Downward-Graphen für jeden Knoten oder durch \emph{Merging}.
 Die so erstellten Labels sind \emph{hierarchisch}:
 Es existiert eine Reihenfolge der Knoten (definiert durch die vertex-to-level-Funktion), sodass das Forward- und Backward-Label eines Knotens $u$ nur Knoten $h$ mit höherem Level enthält.
-Es gibt auch Labels, die diese hierarchische Eigenschaft nicht erfüllen, solche Labels können für bestimmte Graphen erheblich kleiner sein als hierarchische Labels \cite{goldberg2013separating}.
+Es gibt auch Labels, die diese hierarchische Eigenschaft nicht erfüllen, solche Labels können für bestimmte Graphen erheblich kleiner sein als hierarchische Labels wie Goldberg et al. zeigten \cite{goldberg2013separating}.
 
 \subsubsection{Anfrage}
 
@@ -526,7 +526,7 @@ Da die Labels den Suchbäumen der Upward- und Downward-Suche entsprechen, ist di
   \caption{Hub-Label-Anfrage}
   \begin{algorithmic}[1]
     \Require Forward-Label-Funktion $L_f$, Backward-Label-Funktion $L_b$, Startknoten $s \in V$, Zielknoten $t \in V$
-    \Ensure Treffpunktknoten $m \in V \cup \{ {none} \}$, ${dist}_u$
+    \Ensure Treffpunktknoten $m \in V \cup \{ {none} \}$, Abstand $d \in \mathbb{R}^+_0 \cup \{ \infty \}$
     \State $l_s \leftarrow L_f (s)$
     \State $l_t \leftarrow L_b (t)$
 

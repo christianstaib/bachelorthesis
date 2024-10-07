@@ -83,7 +83,7 @@ Backward-Labels
 Abdeckungseigenschaft
 Stopbedingung
 Vorwärtswarteschlange
-stall-on-demand
+Stall-on-Demand
 Downward-
 gemerged
 Pruning

@@ -7,7 +7,7 @@ Die Ergebnisse wurden auf verschiedenen, aber identisch ausgestatteten Systemen 
 
 Der Fokus dieser Arbeit liegt auf drei Sichtbarkeitsgraphen, die jeweils einen Ausschnitt der Ozeane repräsentieren.
 Ihre Knoten liegen dabei auf den Küsten.
-Für jeden dieser drei Sichtbarkeitsgraphen existiert zusätzlich eine Triangulierung, deren Abstände eine untere Schranke zu den Abständen der jeweiligen Sichtbarkeitsgraphen darstellen.
+Für jeden dieser drei Sichtbarkeitsgraphen existiert zusätzlich eine Triangulierung, deren Abstände eine obere Schranke zu den Abständen der jeweiligen Sichtbarkeitsgraphen darstellen.
 \autoref{table:input_graphs} listet die Anzahl der Kanten und Knoten der Graphen auf.
 Die Graphen mit dem Präfix \emph{aegaeis} umfassen das Ägäische Meer, diejenigen mit \emph{medi} decken das Mittelmeer ab, und die mit \emph{pata} repräsentieren die Chilenischen Fjorde.
 Graphen mit dem Suffix \emph{visibility} sind Sichtbarkeitsgraphen, mit \emph{graph} Triangulierungen.
@@ -67,14 +67,15 @@ Obwohl die Sichtbarkeitsgraphen weniger Knoten aufweisen, ist die durchschnittli
     pata-graph         & 265.825771                 & 883.979                    & 1120841.9                     & 1387047.8                  \\
     pata-visibility    & 1017.695977                & 63.817                     & 498570.2                      & 2429689.8                  \\ \bottomrule
   \end{tabular}
-  \caption{Kennwerte der Dijkstra Suchen}
+  \caption{Kennwerte der Dijkstra-Suchen}
   \label{fig:ergebnisse:dijkstra}
 \end{table}
 
 \subsection{Knotengrade}
 
 Es wurde die Verteilung der Knotengrade untersucht, die resultierenden Histogramme sind in \autoref{ergebnisse:fig:degree_hist} dargestellt.
-In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten einen Grad von weniger als \num{2000}.
+Als Indikator dafür, wie stark sich die Graphen kontrahieren lassen, wurde die Summe der quadratischen Knotengrade berechnet, diese sind in \autoref{table:sum_quad_degree} aufgelistet.
+Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen größer als bei ihren Triangulierungen, was darauf hindeutet, dass die Kontraktion dieser Graphen deutlich rechenintensiver sein dürfte.
 
 \begin{figure}[p]
   \begin{subfigure}[b]{0.5\textwidth}
@@ -175,10 +176,6 @@ In allen untersuchten Sichtbarkeitsgraphen haben mindestens 90\% der Knoten eine
   \caption{Verteilung der Kantengrade}
   \label{ergebnisse:fig:degree_hist}
 \end{figure}
-
-Als Indikator dafür, wie stark sich die Graphen kontrahieren lassen, wurde die Summe der quadratischen Knotengrade berechnet, diese sind in \autoref{table:sum_quad_degree} aufgelistet.
-Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen größer als bei ihren Triangulierungen, was darauf hindeutet, dass die Kontraktion dieser Graphen deutlich rechenintensiver sein dürfte.
-
 \begin{table}[ht]
   \centering
   \begin{tabular}{
@@ -199,6 +196,8 @@ Bei den Sichtbarkeitsgraphen ist die Summe jeweils um mehrere Größenordnungen 
   \caption{Summe quadratischer Knotengrade}
   \label{table:sum_quad_degree}
 \end{table}
+
+
 
 \section{Graphen-Kontraktion}\label{section:ch_graph_kontraktion}
 
@@ -355,10 +354,10 @@ Obwohl für diese Arbeit auch Computer mit \SI{3}{\tera\byte} RAM  zur Verfügun
 \subsubsection{Hubs und Vereinfachter Graph}
 
 Die Abstände in triangulierten Graphen stellen, wie in \autoref{chapter:kontraktion} beschrieben, eine obere Schranke für die Abstände in Sichtbarkeitsgraphen dar.
-Um den Fehler dieser Schranke zu quantifizieren, wurden die Abstände von einer \num{1000000} $s$-$t$-Paaren in den Sichtbarkeitsgraphen analysiert.
+Um den Fehler dieser Schranke zu quantifizieren, wurden die Abstände von \num{1000000} $s$-$t$-Paaren in den Sichtbarkeitsgraphen analysiert.
 Der dabei ermittelte durchschnittliche Fehler pro Hop-Länge ist in \autoref{img:ergebnisse:upper_bound} als Datenreihe $\triangle$ dargestellt.
 
-Diese Abbildung zeigt auch den durchschnittlichen Fehler, der durch den Einsatz von $n \in \mathbb{N}$ Hubs entsteht, welche mithilfe eines Hitting-Sets über \num{100000} Pfade bestimmt wurden.
+Diese Abbildung zeigt auch den durchschnittlichen Fehler, der durch die Verwendung von $n \in \mathbb{N}$ Hubs entsteht, welche mithilfe eines Hitting-Sets über \num{100000} Pfade bestimmt wurden.
 Hierfür wurde die Erstellung des Hitting-Sets nach $n$ Iterationen vorzeitig abgebrochen.
 Zusätzlich wurde der Fehler visualisiert, der sich aus der Wahl der kleinsten oberen Schranke zwischen 80 Hubs und den triangulierten Graphen ergibt.
 Wie erwartet war die Kombination des triangulierten Graphen mit den Hubs sehr erfolgreich; insbesondere bei größeren Hop-Längen ist der Fehler der oberen Schranken sehr gering.
@@ -471,7 +470,6 @@ Obwohl nach der vorhergehenden Analyse der Fehler der oberen Schranke als sehr k
 \autoref{fig:ergebnisse:hl_and_hubs} zeigt den Verlauf der Anzahl der Kanten während der Kontraktion.
 Nach drei Tagen Laufzeit waren die Graphen immer noch nicht kontrahiert, weshalb das Experiment abgebrochen wurde.
 Die Anzahl der Kanten stieg während der Kontraktion wieder an, wenn auch langsamer als bei der trivialen Heuristik, wobei aegaeis-visibility und medi-visibility zum Zeitpunkt des Abbruchs den Höhepunkt der Anzahl der Kanten bereits erreicht hatten.
-
 Damit die Kontraktion mit der oberen Schranke gelingen kann, muss der Fehler der oberen Schranke noch weiter reduziert werden, wobei dies nicht Teil dieser Arbeit ist.
 
 \begin{figure}[p]% Die Daten in den .csv Dateien sind gelippt auf 100. pgf hat Probleme mit zu großen Zahlen.
@@ -534,7 +532,7 @@ Die vertex-to-level-Funktion wurde hierbei aus \autoref{subsection:kontraktion_o
 \subsection{Contracted-Graph}
 
 Durch die Berechnung aller Kanten, die von jedem Knoten im Downward- und Upward-Graphen ausgehen, konnte mit CH-PEOPLE sowohl für die Sichtbarkeitsgraphen als auch für deren Triangulierungen jeweils ein Contracted-Graph erstellt werden.
-Die Kennzahlen zur Erzeugungs- und Anfragezeiten sind in \autoref{table:ergebnisse:people_ch_speedup} aufgeführt.
+Die Kennzahlen zur Erzeugungs- und Anfragezeiten sind in \autoref{table:ergebnisse:people_ch_speedup} aufgeführt, wobei jeweils \num{10000} sequentielle $s$-$t$-Anfragen ausgeführt wurden.
 
 \begin{table}[h!]
   \centering
@@ -578,6 +576,7 @@ Ein zunächst verwendetes Programm, das einen Hub-Graphen aus einem Contracted-G
 Der Grund hierfür liegt in der enormen Anzahl an Labels und Einträgen, die dabei zusammengeführt werden müssen: Ein Knoten der Contracted-Graphen der Sichtbarkeitsgraphen weist einen Grad im drei- bis vierstelligen Bereich auf, für jeden dieser Nachbarn existiert ein Label, das gemerged werden muss.
 Die Verwendung eines parallelen \emph{reduce}-Algorithmus führte zu den Ergebnissen in \autoref{table:ergebnisse:hl_ch_bruteforce},
 dieser konnte für alle Graphen innerhalb von drei Tagen Hub-Graphen generieren.
+Es wurden pro Graph jeweils \num{10000000} sequentielle $s$-$t$-Anfragen ausgeführt.
 
 \begin{table}[h!]
   \centering
@@ -703,7 +702,7 @@ Dies deutet darauf hin, dass in den meisten Fällen die Suche nur spät gestoppt
 Für die Triangulierungen der Sichtbarkeitsgraphen ist es deutlich effizienter, Contracted-Graphen zu erstellen, anstatt für jeden Knoten jeweils zwei Dijkstra-Suchen durchzuführen.
 Das deutet darauf hin, dass die Dijkstra-Suchen häufig vorzeitig abgebrochen werden konnten.
 
-Um dieses Verhalten besser zu verstehen, wurde die CH-PEOPLE Suche in aegaeis-graph näher untersucht.
+Um dieses Verhalten besser zu verstehen, wurde die CH-PEOPLE Suche im Graph aegaeis-graph näher untersucht.
 \autoref{fig:ergebnisse:ch_people_suchbaum} zeigt einen Suchbaum der CH-PEOPLE Suche.
 In der Abbildung repräsentieren schwarze Punkte die Köpfe von Upward-Kanten, deren Fuß sich im weißen Punkt befindet.
 Die durchgezogenen Linien stellen Kanten zu \emph{lebendigen} Knoten dar, während die gestrichelten Linien Kanten zu Knoten zeigen, die nicht mehr lebendig sind.
@@ -771,7 +770,7 @@ Für den betrachteten Knoten wurde lediglich ein Bruchteil der insgesamt \num{52
 Nach der Untersuchung des einzelnen Suchvorganges wurden für aegaeis-graph für alle Knoten die bei der CH-PEOPLE-Suche gesehen Knoten erfasst.
 Die Ergebnisse sind hierbei in \autoref{fig:ergebnisse:efficiency_ch_people} gelistet.
 Bei \num{65}\% aller Suchen wurden weniger als \num{1}\% der \num{524881} Knoten gesehen.
-Da die zugrunde vertex-to-level-Funktion auf einem Hitting-Set über nur \num{100000} Pfaden basiert, ist anzunehmen, dass durch eine bessere vertex-to-level-Funktion noch mehr Suchen \emph{lokaler} werden.
+Es ist anzunehmen, dass durch eine bessere vertex-to-level-Funktion noch mehr Suchen \emph{lokaler} werden.
 
 \begin{figure}[h!]%
   \centering
@@ -955,7 +954,7 @@ Für die Sichtbarkeitsgraphen von aegaeis und medi ist die durchschnittliche Lab
     pata-graph         & 2d 10h 37m   & 99.3                                 \\
     pata-visibility    & 9h 29m       & 424.1                                \\  \bottomrule
   \end{tabular}
-  \caption{Vorhergesagt durchschnittliche Labelgröße für eine vertex-to-level-Funktion welche durch ein Hitting-Set über \num{250000000} Pfade induziert wurde}
+  \caption{Vorhergesagt durchschnittliche Labelgröße für vertex-to-level-Funktionen über jeweils \num{250000000} Pfade}
   \label{fig:ergebnisse:250_paths}
 \end{table}
 
@@ -978,8 +977,8 @@ Mit der entstandenen vertex-to-level-Funktion für aegaeis-graph wurde das der \
         ylabel={Anteil aller Suchen (\%)},
         ymin=0, ymax=0.910038275342993,
         ytick style={color=black},
-        ytick={0,0.1,0.2,0.3,0.4,0.5,0.6,0.7},
-        yticklabels={0,10,20,30,40,50,60,70}
+        ytick={0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8},
+        yticklabels={0,10,20,30,40,50,60,70,80}
       ]
       \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:0,0) rectangle (axis cs:1,0.866703119374279);
       \draw[pattern=north east lines, pattern color=CadetBlue] (axis cs:1,0) rectangle (axis cs:2,0.0200159655236347);
@@ -1089,9 +1088,9 @@ Mit der entstandenen vertex-to-level-Funktion für aegaeis-graph wurde das der \
 
 \subsection{Weiterer Graph}
 
-Als letzter Teil dieser Arbeit wurde mit \emph{planet-shrunk-visibility} ein Sichtbarkeitsgraph betrachtet, der analog zu den Sichtbarkeitsgraphenvon aegaeis, medi und pata konstruiert wurde, aber die gesamte Welt umfasst.
+Als letzter Teil dieser Arbeit wurde mit \emph{planet-shrunk-visibility} ein Sichtbarkeitsgraph betrachtet, der analog zu den Sichtbarkeitsgraphen von aegaeis, medi und pata konstruiert wurde, aber die gesamte Welt umfasst.
 Er bestand aus \num{188030} Knoten und \num{173385124} Kanten.
-Mittels PEOPLE konnte für ihn ein Hub-Graph erstellt werden, mit dem ein Speedup \num[round-mode=places,round-precision=0]{\fpeval{(529.377185*1000)/6.756}} im Vergleich zur Dijkstra erzielt wurde.
+Mittels PEOPLE konnte für ihn ein Hub-Graph erstellt werden, mit dem ein Speedup \num[round-mode=places,round-precision=0]{\fpeval{(529.377185*1000)/6.756}} im Vergleich zur Dijkstra-Suche erzielt wurde.
 
 % \autoref{table:input_graphs_planet-shrunk-visibility} listet die Anzahl der Kanten und Knoten dieses Graphs auf.
 % 
@@ -1128,7 +1127,7 @@ Mittels PEOPLE konnte für ihn ein Hub-Graph erstellt werden, mit dem ein Speedu
 %     planet-shrunk-visibility & 529.377185                 & 22.3786                    & 95053.74                      & 691017.2                   \\
 %     \bottomrule
 %   \end{tabular}
-%   \caption{Kennwerte der Dijkstra Suchen}
+%   \caption{Kennwerte der Dijkstra-Suchen}
 %   \label{fig:ergebnisse:dijkstra_planet-shrunk-visibility}
 % \end{table}
 % 
