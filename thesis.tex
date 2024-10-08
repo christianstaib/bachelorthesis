@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,parskip]{scrbook}
+\documentclass[12pt,a4paper,parskip,bibliography=totoc]{scrbook}
 \usepackage{mystyle}
 
 % faster tikz. Needs to be here because of overleaf
@@ -36,10 +36,10 @@
 \include{tex/people}
 \include{tex/ergebnisse}
 \include{tex/ausblick}
-\include{tex/acknowledgement}
 
 
 \backmatter
+\include{tex/acknowledgement}
 \printbibliography
 
 \cleardoublepage

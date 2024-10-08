@@ -1,4 +1,4 @@
-\chapter*{Kurzfassung}
+\chapter{Kurzfassung}
 
 Während Contraction Hierarchies (CH) auf Straßengraphen erfolgreich eingesetzt werden und hohe Speedups bei der Berechnung von kürzesten Pfaden ermöglichen, ist ihre Anwendung auf große Sichtbarkeitsgraphen in angemessener Zeit nicht möglich.
 Da bisher keine Contraction Hierarchies für die bearbeiteten Sichtbarkeitsgraphen erstellt werden konnten, war auch die Erzeugung von Hierarchical Hub Labelings (HHL) nicht realisierbar.
@@ -7,6 +7,6 @@ Diese Arbeit untersucht die Hindernisse bei der Anwendung von Contraction Hierar
 Trotz der Anwendung dieser Heuristiken konnten die Sichtbarkeitsgraphen nicht kontrahiert werden.
 
 Basierend auf bestehenden Charakterisierungen werden mit PEOPLE und CH-PEOPLE (\textbf{P}r\textbf{E}determined \textbf{O}rder, \textbf{P}runed \textbf{L}ab\textbf{e}l) zwei Algorithmen vorgestellt, die es ermöglichen, ohne Kontraktion sowohl Hierarchical Hub Labelings als auch die für CH-Anfragen benötigte Datenstruktur zu erstellen.
-Beide Algorithmen sind trivial parallelisierbar und wurden erfolgreich auf die bearbeiteten Graphen angewendet.
+Beide Algorithmen sind trivial parallelisierbar und wurden erfolgreich auf die bearbeiteten Sichtbarkeitsgraphen angewendet.
 Während CH-Anfragen nur einen geringen Speedup erzielten, zeigte sich bei HHL-Anfragen ein deutlicher Performance-Gewinn.
 Zudem war die durchschnittliche Labelgröße der Sichtbarkeitsgraphen vergleichbar mit ihrem durchschnittlichen Knotengrad.
